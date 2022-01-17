@@ -803,7 +803,6 @@ public class PrintStream extends FilterOutputStream
      */
     public void println(String x) {
         synchronized (this) {
-            print("---");
             print(x);
             newLine();
         }
