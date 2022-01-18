@@ -377,7 +377,7 @@ public abstract class AbstractQueuedSynchronizer
      * expert group, for helpful ideas, discussions, and critiques
      * on the design of this class.
      */
-    static final class Node {
+    static final class Node {//等待队列的结点
         /** Marker to indicate a node is waiting in shared mode */
         static final Node SHARED = new Node();
         /** Marker to indicate a node is waiting in exclusive mode */
@@ -1827,7 +1827,7 @@ public abstract class AbstractQueuedSynchronizer
      * <p>This class is Serializable, but all fields are transient,
      * so deserialized conditions have no waiters.
      */
-    public class ConditionObject implements Condition, java.io.Serializable {
+    public class ConditionObject implements Condition, java.io.Serializable {//AQS内部类实现 Condition
         private static final long serialVersionUID = 1173984872572414699L;
         /** First node of condition queue. */
         private transient Node firstWaiter;
@@ -1845,19 +1845,19 @@ public abstract class AbstractQueuedSynchronizer
          * Adds a new waiter to wait queue.
          * @return its new wait node
          */
-        private Node addConditionWaiter() {
+        private Node addConditionWaiter() {//队尾新增 condition状态 结点
             Node t = lastWaiter;
             // If lastWaiter is cancelled, clean out.
-            if (t != null && t.waitStatus != Node.CONDITION) {
+            if (t != null && t.waitStatus != Node.CONDITION) {//非condition状态结点
                 unlinkCancelledWaiters();
                 t = lastWaiter;
             }
             Node node = new Node(Thread.currentThread(), Node.CONDITION);
             if (t == null)
-                firstWaiter = node;
+                firstWaiter = node;//空队列，新结点作为头结点
             else
-                t.nextWaiter = node;
-            lastWaiter = node;
+                t.nextWaiter = node;//t -> new node
+            lastWaiter = node;//最后队尾都是new node
             return node;
         }
 
@@ -1904,21 +1904,21 @@ public abstract class AbstractQueuedSynchronizer
          * without requiring many re-traversals during cancellation
          * storms.
          */
-        private void unlinkCancelledWaiters() {
+        private void unlinkCancelledWaiters() {//移除非condition结点
             Node t = firstWaiter;
             Node trail = null;
-            while (t != null) {
+            while (t != null) {//从头结点开始，直到结点为空
                 Node next = t.nextWaiter;
-                if (t.waitStatus != Node.CONDITION) {
-                    t.nextWaiter = null;
-                    if (trail == null)
+                if (t.waitStatus != Node.CONDITION) {//头结点状态为 非condition
+                    t.nextWaiter = null;//取消头结点的next 结点指向
+                    if (trail == null)//如果trail 为空，firstWaiter指向next，否则trail的下一结点指向next
                         firstWaiter = next;
                     else
-                        trail.nextWaiter = next;
+                        trail.nextWaiter = next;//此处trail 相当于 t 的prev结点，删除结点t，结果 trail -> next
                     if (next == null)
-                        lastWaiter = trail;
+                        lastWaiter = trail;//下结点为空，可能是处理到队尾了，终止循环
                 }
-                else
+                else//头结点状态为 condition
                     trail = t;
                 t = next;
             }
