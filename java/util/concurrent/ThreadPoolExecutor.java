@@ -378,21 +378,21 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
      * that workerCount is 0 (which sometimes entails a recheck -- see
      * below).
      */
-    private final AtomicInteger ctl = new AtomicInteger(ctlOf(RUNNING, 0));
-    private static final int COUNT_BITS = Integer.SIZE - 3;
-    private static final int CAPACITY   = (1 << COUNT_BITS) - 1;
+    private final AtomicInteger ctl = new AtomicInteger(ctlOf(RUNNING, 0));//-536870912: 1110 0000 0000 0000 0000 0000 0000 0000
+    private static final int COUNT_BITS = Integer.SIZE - 3;//29
+    private static final int CAPACITY   = (1 << COUNT_BITS) - 1;//536870911: 0000 0000 0000 0000 0000 0000 0000 0001 -> 0010 0000 0000 0000 0000 0000 0000 0000 -> 0001 1111 1111 1111 1111 1111 1111 1111
 
     // runState is stored in the high-order bits
-    private static final int RUNNING    = -1 << COUNT_BITS;
-    private static final int SHUTDOWN   =  0 << COUNT_BITS;
-    private static final int STOP       =  1 << COUNT_BITS;
-    private static final int TIDYING    =  2 << COUNT_BITS;
-    private static final int TERMINATED =  3 << COUNT_BITS;
+    private static final int RUNNING    = -1 << COUNT_BITS;//-536870912: 1111 1111 1111 1111 1111 1111 1111 1111 -> 1110 0000 0000 0000 0000 0000 0000 0000
+    private static final int SHUTDOWN   =  0 << COUNT_BITS;//0 -> 0
+    private static final int STOP       =  1 << COUNT_BITS;//536870912:  0000 0000 0000 0000 0000 0000 0000 0001 -> 0010 0000 0000 0000 0000 0000 0000 0000
+    private static final int TIDYING    =  2 << COUNT_BITS;//1073741824: 0000 0000 0000 0000 0000 0000 0000 0010 -> 0100 0000 0000 0000 0000 0000 0000 0000
+    private static final int TERMINATED =  3 << COUNT_BITS;//1610612736: 0000 0000 0000 0000 0000 0000 0000 0011 -> 0110 0000 0000 0000 0000 0000 0000 0000
 
     // Packing and unpacking ctl
-    private static int runStateOf(int c)     { return c & ~CAPACITY; }
-    private static int workerCountOf(int c)  { return c & CAPACITY; }
-    private static int ctlOf(int rs, int wc) { return rs | wc; }
+    private static int runStateOf(int c)     { return c & ~CAPACITY; }//c & 1110 0000 0000 0000 0000 0000 0000 0000
+    private static int workerCountOf(int c)  { return c & CAPACITY; }//c & 0001 1111 1111 1111 1111 1111 1111 1111
+    private static int ctlOf(int rs, int wc) { return rs | wc; }//rs:runState;wc:workerCount; (RUNNING, 0): 1110 0000 0000 0000 0000 0000 0000 0000 | 0
 
     /*
      * Bit field accessors that don't require unpacking ctl.
@@ -616,7 +616,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
         Worker(Runnable firstTask) {
             setState(-1); // inhibit interrupts until runWorker
             this.firstTask = firstTask;
-            this.thread = getThreadFactory().newThread(this);
+            this.thread = getThreadFactory().newThread(this);//若使用DefaultThreadFactory，调静态内部类方法创建线程
         }
 
         /** Delegates main run loop to outer runWorker  */
@@ -827,7 +827,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
      * Package-protected for use by ScheduledThreadPoolExecutor.
      */
     final void reject(Runnable command) {
-        handler.rejectedExecution(command, this);
+        handler.rejectedExecution(command, this);//实现接口RejectedExecutionHandler 的策略 invoke rejectedExecution
     }
 
     /**
@@ -916,7 +916,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
                 if (wc >= CAPACITY ||
                     wc >= (core ? corePoolSize : maximumPoolSize))
                     return false;
-                if (compareAndIncrementWorkerCount(c))
+                if (compareAndIncrementWorkerCount(c))//workerCount +1, workerCountOf(ctl.get())
                     break retry;
                 c = ctl.get();  // Re-read ctl
                 if (runStateOf(c) != rs)
@@ -930,10 +930,10 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
         Worker w = null;
         try {
             w = new Worker(firstTask);
-            final Thread t = w.thread;
+            final Thread t = w.thread;//新创建的线程
             if (t != null) {
                 final ReentrantLock mainLock = this.mainLock;
-                mainLock.lock();
+                mainLock.lock();//上锁，新任务的worker实例 加入 workers set
                 try {
                     // Recheck while holding lock.
                     // Back out on ThreadFactory failure or if
@@ -944,7 +944,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
                         (rs == SHUTDOWN && firstTask == null)) {
                         if (t.isAlive()) // precheck that t is startable
                             throw new IllegalThreadStateException();
-                        workers.add(w);
+                        workers.add(w);//加入workers set
                         int s = workers.size();
                         if (s > largestPoolSize)
                             largestPoolSize = s;
@@ -954,7 +954,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
                     mainLock.unlock();
                 }
                 if (workerAdded) {
-                    t.start();
+                    t.start();//启动线程执行任务
                     workerStarted = true;
                 }
             }
@@ -1307,12 +1307,12 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
                               BlockingQueue<Runnable> workQueue,
                               ThreadFactory threadFactory,
                               RejectedExecutionHandler handler) {
-        if (corePoolSize < 0 ||
+        if (corePoolSize < 0 ||//核心线程数、最大线程数、线程存活时间的边界判断
             maximumPoolSize <= 0 ||
             maximumPoolSize < corePoolSize ||
             keepAliveTime < 0)
             throw new IllegalArgumentException();
-        if (workQueue == null || threadFactory == null || handler == null)
+        if (workQueue == null || threadFactory == null || handler == null)//空指针判断，不能为空的参数
             throw new NullPointerException();
         this.acc = System.getSecurityManager() == null ?
                 null :
@@ -1368,7 +1368,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
                 return;
             c = ctl.get();
         }
-        if (isRunning(c) && workQueue.offer(command)) {
+        if (isRunning(c) && workQueue.offer(command)) {//wokerCount 超过核心线程池时，Runnable 加入workQueue
             int recheck = ctl.get();
             if (! isRunning(recheck) && remove(command))
                 reject(command);
@@ -2058,7 +2058,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
          * @throws RejectedExecutionException always
          */
         public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
-            throw new RejectedExecutionException("Task " + r.toString() +
+            throw new RejectedExecutionException("Task " + r.toString() +//拒绝策略，拒绝时抛出运行时异常
                                                  " rejected from " +
                                                  e.toString());
         }
