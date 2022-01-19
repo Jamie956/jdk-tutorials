@@ -1649,7 +1649,7 @@ public abstract class AbstractQueuedSynchronizer
      * Called only when needed by isOnSyncQueue.
      * @return true if present
      */
-    private boolean findNodeFromTail(Node node) {
+    private boolean findNodeFromTail(Node node) {//从队尾查找指定结点
         Node t = tail;
         for (;;) {
             if (t == node)
@@ -1852,7 +1852,7 @@ public abstract class AbstractQueuedSynchronizer
                 unlinkCancelledWaiters();
                 t = lastWaiter;
             }
-            Node node = new Node(Thread.currentThread(), Node.CONDITION);
+            Node node = new Node(Thread.currentThread(), Node.CONDITION);//当前线程作为队结点，状态为condition
             if (t == null)
                 firstWaiter = node;//空队列，新结点作为头结点
             else
@@ -1972,7 +1972,7 @@ public abstract class AbstractQueuedSynchronizer
             Node node = addConditionWaiter();
             int savedState = fullyRelease(node);
             boolean interrupted = false;
-            while (!isOnSyncQueue(node)) {
+            while (!isOnSyncQueue(node)) {//如果结点不在sync 队列就中断线程
                 LockSupport.park(this);
                 if (Thread.interrupted())
                     interrupted = true;

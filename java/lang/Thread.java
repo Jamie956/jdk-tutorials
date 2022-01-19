@@ -261,7 +261,7 @@ class Thread implements Runnable {
      *
      * @return  the currently executing thread.
      */
-    public static native Thread currentThread();
+    public static native Thread currentThread();//静态方法，获取当前线程
 
     /**
      * A hint to the scheduler that the current thread is willing to yield
@@ -279,7 +279,7 @@ class Thread implements Runnable {
      * concurrency control constructs such as the ones in the
      * {@link java.util.concurrent.locks} package.
      */
-    public static native void yield();
+    public static native void yield();//当前线程交出CPU资源 回到就绪状态 不释放锁，让同优先级的线程有机会获取CPU
 
     /**
      * Causes the currently executing thread to sleep (temporarily cease
@@ -943,7 +943,7 @@ class Thread implements Runnable {
      * @see #isInterrupted()
      * @revised 6.0
      */
-    public static boolean interrupted() {
+    public static boolean interrupted() {//测试 当前线程 是否已经是中断状态，执行后具有清除状态功能
         return currentThread().isInterrupted(true);
     }
 
@@ -960,7 +960,7 @@ class Thread implements Runnable {
      * @see     #interrupted()
      * @revised 6.0
      */
-    public boolean isInterrupted() {
+    public boolean isInterrupted() {//测试线程 Thread 对象 是否已经是中断状态，但不清除状态标志
         return isInterrupted(false);
     }
 
