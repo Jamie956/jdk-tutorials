@@ -581,15 +581,15 @@ public abstract class AbstractQueuedSynchronizer
      * @return node's predecessor
      */
     private Node enq(final Node node) {
-        for (;;) {
+        for (;;) {//CAS可能失败，自旋可以重试
             Node t = tail;
             if (t == null) { // Must initialize
-                if (compareAndSetHead(new Node()))
-                    tail = head;
+                if (compareAndSetHead(new Node()))//尾指针为空时，初始化头结点，并把尾指针指向头结点
+                    tail = head;//将在之后的自旋再把新node加入链表
             } else {
-                node.prev = t;
-                if (compareAndSetTail(t, node)) {
-                    t.next = node;
+                node.prev = t;//t <- node
+                if (compareAndSetTail(t, node)) {//CAS update node结点为尾结点
+                    t.next = node;//t -> node
                     return t;
                 }
             }
@@ -1671,7 +1671,7 @@ public abstract class AbstractQueuedSynchronizer
         /*
          * If cannot change waitStatus, the node has been cancelled.
          */
-        if (!compareAndSetWaitStatus(node, Node.CONDITION, 0))
+        if (!compareAndSetWaitStatus(node, Node.CONDITION, 0))//CAS 修改 waitStatus，修改失败就返回false
             return false;
 
         /*
@@ -1682,8 +1682,8 @@ public abstract class AbstractQueuedSynchronizer
          */
         Node p = enq(node);
         int ws = p.waitStatus;
-        if (ws > 0 || !compareAndSetWaitStatus(p, ws, Node.SIGNAL))
-            LockSupport.unpark(node.thread);
+        if (ws > 0 || !compareAndSetWaitStatus(p, ws, Node.SIGNAL))//ws>0 为cancelled状态
+            LockSupport.unpark(node.thread);//cancelled 状态 或 CAS 修改状态失败时，阻塞node 线程
         return true;
     }
 
@@ -1869,8 +1869,8 @@ public abstract class AbstractQueuedSynchronizer
          */
         private void doSignal(Node first) {
             do {
-                if ( (firstWaiter = first.nextWaiter) == null)
-                    lastWaiter = null;
+                if ( (firstWaiter = first.nextWaiter) == null)//first -> first.nextWaiter
+                    lastWaiter = null;//first.nextWaiter 为空时，将 lastWaiter 设为null
                 first.nextWaiter = null;
             } while (!transferForSignal(first) &&
                      (first = firstWaiter) != null);
@@ -1880,12 +1880,12 @@ public abstract class AbstractQueuedSynchronizer
          * Removes and transfers all nodes.
          * @param first (non-null) the first node on condition queue
          */
-        private void doSignalAll(Node first) {
+        private void doSignalAll(Node first) {//由first 结点开始，逐个结点 signal
             lastWaiter = firstWaiter = null;
             do {
                 Node next = first.nextWaiter;
                 first.nextWaiter = null;
-                transferForSignal(first);
+                transferForSignal(first);//CAS uodate waitStatus 并且结点加入队尾
                 first = next;
             } while (first != null);
         }
@@ -1935,7 +1935,7 @@ public abstract class AbstractQueuedSynchronizer
          *         returns {@code false}
          */
         public final void signal() {
-            if (!isHeldExclusively())//判断当前线程是不是独占资源的线程，AQS 抽象方法，由继承类重写
+            if (!isHeldExclusively())//判断当前线程是不是独占资源的线程，AQS 抽象方法，由继承类重写；当前线程独占进入时，才允许signal
                 throw new IllegalMonitorStateException();
             Node first = firstWaiter;
             if (first != null)
@@ -1949,8 +1949,8 @@ public abstract class AbstractQueuedSynchronizer
          * @throws IllegalMonitorStateException if {@link #isHeldExclusively}
          *         returns {@code false}
          */
-        public final void signalAll() {
-            if (!isHeldExclusively())
+        public final void signalAll() {//由 first node 开始 signal 全部结点
+            if (!isHeldExclusively())//当前线程非独占的线程时，抛出异常
                 throw new IllegalMonitorStateException();
             Node first = firstWaiter;
             if (first != null)
@@ -2036,7 +2036,7 @@ public abstract class AbstractQueuedSynchronizer
             int savedState = fullyRelease(node);
             int interruptMode = 0;
             while (!isOnSyncQueue(node)) {
-                LockSupport.park(this);
+                LockSupport.park(this);//node 不在 sync queue 就挂起
                 if ((interruptMode = checkInterruptWhileWaiting(node)) != 0)
                     break;
             }
