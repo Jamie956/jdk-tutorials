@@ -1258,9 +1258,9 @@ public abstract class AbstractQueuedSynchronizer
      * @return the value returned from {@link #tryRelease}
      */
     public final boolean release(int arg) {
-        if (tryRelease(arg)) {
+        if (tryRelease(arg)) {//是否释放了所有锁
             Node h = head;
-            if (h != null && h.waitStatus != 0)
+            if (h != null && h.waitStatus != 0)//等待队列头结点不为空 且 结点有状态
                 unparkSuccessor(h);
             return true;
         }
@@ -1845,20 +1845,20 @@ public abstract class AbstractQueuedSynchronizer
          * Adds a new waiter to wait queue.
          * @return its new wait node
          */
-        private Node addConditionWaiter() {//队尾新增 condition状态 结点
+        private Node addConditionWaiter() {//condition 队尾新增 condition状态 结点
             Node t = lastWaiter;
             // If lastWaiter is cancelled, clean out.
-            if (t != null && t.waitStatus != Node.CONDITION) {//非condition状态结点
+            if (t != null && t.waitStatus != Node.CONDITION) {//队尾结点状态 非condition
                 unlinkCancelledWaiters();
                 t = lastWaiter;
             }
-            Node node = new Node(Thread.currentThread(), Node.CONDITION);//当前线程作为队结点，状态为condition
+            Node node = new Node(Thread.currentThread(), Node.CONDITION);//实例新condition 队列结点，线程是当前线程，状态为condition
             if (t == null)
-                firstWaiter = node;//空队列，新结点作为头结点
+                firstWaiter = node;//队列为空，把新结点作为头结点
             else
-                t.nextWaiter = node;//t -> new node
-            lastWaiter = node;//最后队尾都是new node
-            return node;
+                t.nextWaiter = node;//更新前任尾结点的nextWaiter 指针，指向新结点
+            lastWaiter = node;//更新队尾指针lastWaiter，指向新结点
+            return node;//t.nextWaiter -> node <- lastWaiter
         }
 
         /**
@@ -2030,9 +2030,9 @@ public abstract class AbstractQueuedSynchronizer
          * </ol>
          */
         public final void await() throws InterruptedException {
-            if (Thread.interrupted())
+            if (Thread.interrupted())//检查当前线程是否中断状态，native方法
                 throw new InterruptedException();
-            Node node = addConditionWaiter();
+            Node node = addConditionWaiter();//新增一个condition 状态结点到 conditon 队列的队尾
             int savedState = fullyRelease(node);
             int interruptMode = 0;
             while (!isOnSyncQueue(node)) {
