@@ -2035,7 +2035,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
          */
         public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
             if (!e.isShutdown()) {
-                r.run();
+                r.run();//直接执行拒绝的任务
             }
         }
     }
@@ -2058,7 +2058,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
          * @throws RejectedExecutionException always
          */
         public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
-            throw new RejectedExecutionException("Task " + r.toString() +//拒绝策略，拒绝时抛出运行时异常
+            throw new RejectedExecutionException("Task " + r.toString() +//直接拒绝，抛出运行时异常
                                                  " rejected from " +
                                                  e.toString());
         }
@@ -2080,7 +2080,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
          * @param r the runnable task requested to be executed
          * @param e the executor attempting to execute this task
          */
-        public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
+        public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {//不做任何处理
         }
     }
 
@@ -2106,8 +2106,8 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
          */
         public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
             if (!e.isShutdown()) {
-                e.getQueue().poll();
-                e.execute(r);
+                e.getQueue().poll();//获取队列头元素 runnable
+                e.execute(r);//runnable交给 线程池处理
             }
         }
     }
