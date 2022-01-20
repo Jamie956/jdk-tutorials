@@ -602,11 +602,11 @@ public abstract class AbstractQueuedSynchronizer
      * @param mode Node.EXCLUSIVE for exclusive, Node.SHARED for shared
      * @return the new node
      */
-    private Node addWaiter(Node mode) {
-        Node node = new Node(Thread.currentThread(), mode);
+    private Node addWaiter(Node mode) {//new node add wait queue tail
+        Node node = new Node(Thread.currentThread(), mode);//结点实例化
         // Try the fast path of enq; backup to full enq on failure
-        Node pred = tail;
-        if (pred != null) {
+        Node pred = tail;//wait queue tail node
+        if (pred != null) {//new node add wait queue tail
             node.prev = pred;
             if (compareAndSetTail(pred, node)) {
                 pred.next = node;
@@ -792,7 +792,7 @@ public abstract class AbstractQueuedSynchronizer
      * @param node the node
      * @return {@code true} if thread should block
      */
-    private static boolean shouldParkAfterFailedAcquire(Node pred, Node node) {//pred <- node
+    private static boolean shouldParkAfterFailedAcquire(Node pred, Node node) {//
         int ws = pred.waitStatus;
         if (ws == Node.SIGNAL)//前驱节点唤醒状态，node需要park
             /*
@@ -1195,8 +1195,8 @@ public abstract class AbstractQueuedSynchronizer
      *        can represent anything you like.
      */
     public final void acquire(int arg) {
-        if (!tryAcquire(arg) &&
-            acquireQueued(addWaiter(Node.EXCLUSIVE), arg))
+        if (!tryAcquire(arg) &&//1.update state from 0 to expect, 当前线程设为独占线程；2.可重入锁，更新state=当前state+expect；3.锁被占用且当前线程不是独占线程，获取锁失败；
+            acquireQueued(addWaiter(Node.EXCLUSIVE), arg))//addWaiter: new node add wait queue tail;
             selfInterrupt();
     }
 

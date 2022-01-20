@@ -4,49 +4,72 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class ReentrantLockTest {
-
-    public static void noLockWork() {
-        try {
-            for (int i = 0; i < 10; i++) {
-                TimeUnit.SECONDS.sleep(1);
-                System.out.println(Thread.currentThread().getName() + " " + i);
+    public static void lockTest() {
+        //断点
+        ReentrantLock lock = new ReentrantLock();
+        new Thread(() -> {
+            //断点
+            lock.lock();
+            try {
+                for (int i = 0; i < 10; i++) {
+                    TimeUnit.SECONDS.sleep(1);
+                    System.out.println(Thread.currentThread().getName() + " " + i);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                //断点，释放锁
+                lock.unlock();
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 没有锁时，任务无序执行
-     */
-    public static void noLockWorkTest() {
-        new Thread(() -> noLockWork()).start();
-        new Thread(() -> noLockWork()).start();
-        new Thread(() -> noLockWork()).start();
-    }
-
-    public static void lockWork(ReentrantLock lock) {
-        lock.lock();
-        try {
-            for (int i = 0; i < 10; i++) {
-                TimeUnit.SECONDS.sleep(1);
-                System.out.println(Thread.currentThread().getName() + " " + i);
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } finally {
-            lock.unlock();
-        }
+        }).start();
     }
 
     /**
      * 3个线程使用同一个 ReentrantLock，上锁的代码其他线程不可进入
      */
-    public static void lockWorkTest() {
+    public static void lockTest2() {
         ReentrantLock lock = new ReentrantLock();
-        new Thread(() -> lockWork(lock)).start();
-        new Thread(() -> lockWork(lock)).start();
-        new Thread(() -> lockWork(lock)).start();
+        new Thread(() -> {
+            lock.lock();
+            try {
+                TimeUnit.SECONDS.sleep(1);
+                //断点 suspend thread
+                System.out.println(Thread.currentThread().getName());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                lock.unlock();
+            }
+        }).start();
+
+        new Thread(() -> {
+            //断点 suspend thread，此时已经有一条线程占用锁
+            lock.lock();
+            try {
+                for (int i = 0; i < 10; i++) {
+                    TimeUnit.SECONDS.sleep(1);
+                    System.out.println(Thread.currentThread().getName() + " " + i);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                lock.unlock();
+            }
+        }).start();
+
+        new Thread(() -> {
+            lock.lock();
+            try {
+                for (int i = 0; i < 10; i++) {
+                    TimeUnit.SECONDS.sleep(1);
+                    System.out.println(Thread.currentThread().getName() + " " + i);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                lock.unlock();
+            }
+        }).start();
     }
 
     public static void reLockWork(ReentrantLock lock) {
@@ -153,6 +176,8 @@ public class ReentrantLockTest {
     }
 
     public static void main(String[] args) {
-        twoLockTest2();
+//        lockTest();
+//        lockTest2();
+        reLockWorkTest();
     }
 }
