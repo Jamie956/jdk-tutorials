@@ -1880,12 +1880,12 @@ public abstract class AbstractQueuedSynchronizer
          * Removes and transfers all nodes.
          * @param first (non-null) the first node on condition queue
          */
-        private void doSignalAll(Node first) {//由first 结点开始，逐个结点 signal
-            lastWaiter = firstWaiter = null;
+        private void doSignalAll(Node first) {//condition queue 的每个节点加到 wait queue
+            lastWaiter = firstWaiter = null;//由于唤醒condition queue全部节点，指针没必要存储了
             do {
                 Node next = first.nextWaiter;
-                first.nextWaiter = null;
-                transferForSignal(first);//CAS uodate waitStatus 并且结点加入队尾
+                first.nextWaiter = null;//first unlink next
+                transferForSignal(first);//1.CAS update node waitStatus from condition to none.;2.add the node to wait queue tail.
                 first = next;
             } while (first != null);
         }
@@ -1954,7 +1954,7 @@ public abstract class AbstractQueuedSynchronizer
                 throw new IllegalMonitorStateException();
             Node first = firstWaiter;
             if (first != null)
-                doSignalAll(first);
+                doSignalAll(first);//condition queue 的每个节点加到 wait queue
         }
 
         /**
