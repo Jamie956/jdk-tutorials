@@ -126,12 +126,12 @@ public class ReentrantLock implements Lock, java.io.Serializable {
          * Performs non-fair tryLock.  tryAcquire is implemented in
          * subclasses, but both need nonfair try for trylock method.
          */
-        final boolean nonfairTryAcquire(int acquires) {
+        final boolean nonfairTryAcquire(int acquires) {//CAS update state 获取锁;当前线程设为独占线程;
             final Thread current = Thread.currentThread();
             int c = getState();
             if (c == 0) {
-                if (compareAndSetState(0, acquires)) {
-                    setExclusiveOwnerThread(current);
+                if (compareAndSetState(0, acquires)) {//CAS update state 获取锁
+                    setExclusiveOwnerThread(current);//当前线程设为独占线程
                     return true;
                 }
             }
@@ -145,20 +145,20 @@ public class ReentrantLock implements Lock, java.io.Serializable {
             return false;
         }
 
-        protected final boolean tryRelease(int releases) {//入参要释放的锁的数量，更新state，返回是否释放所有锁
-            int c = getState() - releases;//计算当前state 与参数releases 的差值，即剩余的state
-            if (Thread.currentThread() != getExclusiveOwnerThread())//当前线程不是独占的线程，抛出异常
-                throw new IllegalMonitorStateException();
+        protected final boolean tryRelease(int releases) {//尝试释放锁，只有全部锁释放才返回true
+            int c = getState() - releases;//计算释放锁后的 state
+            if (Thread.currentThread() != getExclusiveOwnerThread())
+                throw new IllegalMonitorStateException();//当前线程不是独占的线程，抛出异常
             boolean free = false;
             if (c == 0) {
-                free = true;//表示已经把全部锁释放
+                free = true;//表示已经把全部锁释放，state=0
                 setExclusiveOwnerThread(null);
             }
             setState(c);//更新state
             return free;
         }
 
-        protected final boolean isHeldExclusively() {
+        protected final boolean isHeldExclusively() {//判断当前线程是否是独占线程
             // While we must in general read state before owner,
             // we don't need to do so to check if current thread is owner
             return getExclusiveOwnerThread() == Thread.currentThread();
@@ -209,8 +209,8 @@ public class ReentrantLock implements Lock, java.io.Serializable {
                 acquire(1);
         }
 
-        protected final boolean tryAcquire(int acquires) {
-            return nonfairTryAcquire(acquires);
+        protected final boolean tryAcquire(int acquires) {//CAS update state 获取锁;当前线程设为独占线程;
+            return nonfairTryAcquire(acquires);//CAS update state 获取锁;当前线程设为独占线程;
         }
     }
 
