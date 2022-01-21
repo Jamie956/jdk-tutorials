@@ -2,9 +2,9 @@
 
 
 
-[测试代码](https://github.com/Jamie956/jdk-src/jdk-test)
+[测试代码](https://github.com/Jamie956/jdk-src/tree/main/jdk-test)
 
-[src.zip解压文件](https://github.com/Jamie956/jdk-src/src)
+[src.zip解压文件](https://github.com/Jamie956/jdk-src/tree/main/src)
 
 
 
