@@ -19,7 +19,7 @@ public class FileWriteTest {
      * FileWriter执行耗时:7 毫秒
      */
     public static void main(String[] args) {
-        com.jamie.io.FileWriteTest fileWriteTest = new com.jamie.io.FileWriteTest();
+        FileWriteTest fileWriteTest = new FileWriteTest();
         fileWriteTest.fileOutputStreamNoBuffer();
         fileWriteTest.fileOutputStreamBuffer();
         fileWriteTest.fileWriter();
