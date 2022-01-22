@@ -142,7 +142,7 @@ public class HashSet<E>
      *             than zero
      */
     public HashSet(int initialCapacity) {
-        map = new HashMap<>(initialCapacity);
+        map = new HashMap<>(initialCapacity);//实际上是一个HashMap
     }
 
     /**
@@ -217,7 +217,7 @@ public class HashSet<E>
      * element
      */
     public boolean add(E e) {
-        return map.put(e, PRESENT)==null;
+        return map.put(e, PRESENT)==null;//set元素加到map key，value为静态对象
     }
 
     /**

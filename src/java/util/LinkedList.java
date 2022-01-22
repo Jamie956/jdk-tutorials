@@ -137,14 +137,14 @@ public class LinkedList<E>
     /**
      * Links e as last element.
      */
-    void linkLast(E e) {
-        final Node<E> l = last;
-        final Node<E> newNode = new Node<>(l, e, null);
-        last = newNode;
-        if (l == null)
-            first = newNode;
+    void linkLast(E e) {//链尾新增节点
+        final Node<E> l = last;//尾节点指针
+        final Node<E> newNode = new Node<>(l, e, null);//实例化链表节点，前驱节点是尾节点
+        last = newNode;//更新尾节点指针
+        if (l == null)//原尾指针为空，说明链表原来是空的
+            first = newNode;//链表为空，头指针指向新节点
         else
-            l.next = newNode;
+            l.next = newNode;//原尾节点next指针关联新节点
         size++;
         modCount++;
     }
@@ -216,17 +216,17 @@ public class LinkedList<E>
             first = next;
         } else {
             prev.next = next;
-            x.prev = null;
+            x.prev = null;//help GC
         }
 
         if (next == null) {
             last = prev;
         } else {
             next.prev = prev;
-            x.next = null;
+            x.next = null;//help GC
         }
 
-        x.item = null;
+        x.item = null;//help GC
         size--;
         modCount++;
         return element;
@@ -334,7 +334,7 @@ public class LinkedList<E>
      * @param e element to be appended to this list
      * @return {@code true} (as specified by {@link Collection#add})
      */
-    public boolean add(E e) {
+    public boolean add(E e) {//链尾新增节点，O(1)时间复杂度
         linkLast(e);
         return true;
     }
@@ -474,7 +474,7 @@ public class LinkedList<E>
      */
     public E get(int index) {
         checkElementIndex(index);
-        return node(index).item;
+        return node(index).item;//一次二分 查找
     }
 
     /**
@@ -523,7 +523,7 @@ public class LinkedList<E>
      */
     public E remove(int index) {
         checkElementIndex(index);
-        return unlink(node(index));
+        return unlink(node(index));//unlinked node
     }
 
     /**
@@ -551,7 +551,7 @@ public class LinkedList<E>
     }
 
     private void checkElementIndex(int index) {
-        if (!isElementIndex(index))
+        if (!isElementIndex(index))//检查是否越界
             throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
     }
 
@@ -563,15 +563,15 @@ public class LinkedList<E>
     /**
      * Returns the (non-null) Node at the specified element index.
      */
-    Node<E> node(int index) {
+    Node<E> node(int index) {//一次二分 查找，返回查找到的节点
         // assert isElementIndex(index);
 
-        if (index < (size >> 1)) {
+        if (index < (size >> 1)) {//index < size*(1/2)，从开头开始查找，极端情况最多查找size*(1/2) 次
             Node<E> x = first;
             for (int i = 0; i < index; i++)
                 x = x.next;
             return x;
-        } else {
+        } else {//index >= size*(1/2)，从结尾开始查找
             Node<E> x = last;
             for (int i = size - 1; i > index; i--)
                 x = x.prev;
@@ -967,7 +967,7 @@ public class LinkedList<E>
         }
     }
 
-    private static class Node<E> {
+    private static class Node<E> {//链表节点，双指针+元素
         E item;
         Node<E> next;
         Node<E> prev;

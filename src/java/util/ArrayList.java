@@ -150,7 +150,7 @@ public class ArrayList<E> extends AbstractList<E>
      */
     public ArrayList(int initialCapacity) {
         if (initialCapacity > 0) {
-            this.elementData = new Object[initialCapacity];
+            this.elementData = new Object[initialCapacity];//创建指定长度的数组
         } else if (initialCapacity == 0) {
             this.elementData = EMPTY_ELEMENTDATA;
         } else {
@@ -220,7 +220,7 @@ public class ArrayList<E> extends AbstractList<E>
         }
     }
 
-    private static int calculateCapacity(Object[] elementData, int minCapacity) {//计算初始容量
+    private static int calculateCapacity(Object[] elementData, int minCapacity) {//计算初始容量，容量至少为10
         if (elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA) {
             return Math.max(DEFAULT_CAPACITY, minCapacity);//数组为空，容量至少为10
         }
@@ -228,15 +228,15 @@ public class ArrayList<E> extends AbstractList<E>
     }
 
     private void ensureCapacityInternal(int minCapacity) {
-        ensureExplicitCapacity(calculateCapacity(elementData, minCapacity));//
+        ensureExplicitCapacity(calculateCapacity(elementData, minCapacity));//calculateCapacity：计算初始容量，容量至少为10；ensureExplicitCapacity：0.计算新容量；1.分配内存，创建数组；2.将原数组复制到刚刚创建的扩容数组
     }
 
-    private void ensureExplicitCapacity(int minCapacity) {
-        modCount++;//list被修改次数
+    private void ensureExplicitCapacity(int minCapacity) {//0.计算新容量；1.分配内存，创建数组；2.将原数组复制到刚刚创建的扩容数组
+        modCount++;//扩容前，modCount+1
 
         // overflow-conscious code
         if (minCapacity - elementData.length > 0)
-            grow(minCapacity);
+            grow(minCapacity);//0.计算新容量；1.分配内存，创建数组；2.将原数组复制到刚刚创建的扩容数组
     }
 
     /**
@@ -253,16 +253,16 @@ public class ArrayList<E> extends AbstractList<E>
      *
      * @param minCapacity the desired minimum capacity
      */
-    private void grow(int minCapacity) {
+    private void grow(int minCapacity) {//0.计算新容量；1.分配内存，创建数组；2.将原数组复制到刚刚创建的扩容数组
         // overflow-conscious code
-        int oldCapacity = elementData.length;
-        int newCapacity = oldCapacity + (oldCapacity >> 1);//新容量，是原来的1.5倍
+        int oldCapacity = elementData.length;//数组真实长度
+        int newCapacity = oldCapacity + (oldCapacity >> 1);//新容量，是原来的1.5倍(x(1+1/2))
         if (newCapacity - minCapacity < 0)
-            newCapacity = minCapacity;
-        if (newCapacity - MAX_ARRAY_SIZE > 0)
+            newCapacity = minCapacity;//如果1.5倍的新容量比最小容量还小，就使用最小容量
+        if (newCapacity - MAX_ARRAY_SIZE > 0)//判断超过最大容量
             newCapacity = hugeCapacity(minCapacity);
         // minCapacity is usually close to size, so this is a win:
-        elementData = Arrays.copyOf(elementData, newCapacity);
+        elementData = Arrays.copyOf(elementData, newCapacity);//1.分配内存，创建数组；2.将原数组复制到刚刚创建的扩容数组
     }
 
     private static int hugeCapacity(int minCapacity) {
@@ -419,7 +419,7 @@ public class ArrayList<E> extends AbstractList<E>
 
     @SuppressWarnings("unchecked")
     E elementData(int index) {
-        return (E) elementData[index];
+        return (E) elementData[index];//根据索引从数组获取值，并向下转型
     }
 
     /**
@@ -430,9 +430,9 @@ public class ArrayList<E> extends AbstractList<E>
      * @throws IndexOutOfBoundsException {@inheritDoc}
      */
     public E get(int index) {
-        rangeCheck(index);
+        rangeCheck(index);//数组越界检查
 
-        return elementData(index);
+        return elementData(index);//根据索引从数组获取值，并向下转型
     }
 
     /**
@@ -459,8 +459,8 @@ public class ArrayList<E> extends AbstractList<E>
      * @return <tt>true</tt> (as specified by {@link Collection#add})
      */
     public boolean add(E e) {
-        ensureCapacityInternal(size + 1);  // Increments modCount!!
-        elementData[size++] = e;
+        ensureCapacityInternal(size + 1);  // Increments modCount!!//calculateCapacity：计算初始容量，容量至少为10；ensureExplicitCapacity：0.计算新容量；1.分配内存，创建数组；2.将原数组复制到刚刚创建的扩容数组
+        elementData[size++] = e;//数组移动指针，添加元素
         return true;
     }
 
@@ -492,17 +492,17 @@ public class ArrayList<E> extends AbstractList<E>
      * @return the element that was removed from the list
      * @throws IndexOutOfBoundsException {@inheritDoc}
      */
-    public E remove(int index) {
-        rangeCheck(index);
+    public E remove(int index) {//数组复制，覆盖原来的元素
+        rangeCheck(index);//检查数组越界
 
         modCount++;
-        E oldValue = elementData(index);
+        E oldValue = elementData(index);//根据索引从数组获取值，并向下转型
 
-        int numMoved = size - index - 1;
-        if (numMoved > 0)
+        int numMoved = size - index - 1;//需要移动的子数组长度
+        if (numMoved > 0)//有需要移动的子数组，就把子数组复制到新的位置
             System.arraycopy(elementData, index+1, elementData, index,
                              numMoved);
-        elementData[--size] = null; // clear to let GC do its work
+        elementData[--size] = null; // clear to let GC do its work//移动前数组最后一位元素需要清空
 
         return oldValue;
     }
@@ -521,7 +521,7 @@ public class ArrayList<E> extends AbstractList<E>
      * @return <tt>true</tt> if this list contained the specified element
      */
     public boolean remove(Object o) {
-        if (o == null) {
+        if (o == null) {//如果要删除的是null，会把全部null删除
             for (int index = 0; index < size; index++)
                 if (elementData[index] == null) {
                     fastRemove(index);
@@ -529,7 +529,7 @@ public class ArrayList<E> extends AbstractList<E>
                 }
         } else {
             for (int index = 0; index < size; index++)
-                if (o.equals(elementData[index])) {
+                if (o.equals(elementData[index])) {//O(n) 遍历比较删除
                     fastRemove(index);
                     return true;
                 }
@@ -541,7 +541,7 @@ public class ArrayList<E> extends AbstractList<E>
      * Private remove method that skips bounds checking and does not
      * return the value removed.
      */
-    private void fastRemove(int index) {
+    private void fastRemove(int index) {//大致跟remove(int index) 差不多，少了越界检查和返回删除元素
         modCount++;
         int numMoved = size - index - 1;
         if (numMoved > 0)
@@ -653,7 +653,7 @@ public class ArrayList<E> extends AbstractList<E>
      * which throws an ArrayIndexOutOfBoundsException if index is negative.
      */
     private void rangeCheck(int index) {
-        if (index >= size)
+        if (index >= size)//检查数组越界
             throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
     }
 

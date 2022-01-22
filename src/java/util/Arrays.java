@@ -3178,7 +3178,7 @@ public class Arrays {
      */
     @SuppressWarnings("unchecked")
     public static <T> T[] copyOf(T[] original, int newLength) {
-        return (T[]) copyOf(original, newLength, original.getClass());
+        return (T[]) copyOf(original, newLength, original.getClass());//1.分配内存，创建数组；2.将原数组复制到刚刚创建的扩容数组
     }
 
     /**
@@ -3205,13 +3205,13 @@ public class Arrays {
      *     an array of class <tt>newType</tt>
      * @since 1.6
      */
-    public static <T,U> T[] copyOf(U[] original, int newLength, Class<? extends T[]> newType) {
+    public static <T,U> T[] copyOf(U[] original, int newLength, Class<? extends T[]> newType) {//1.分配内存，创建数组；2.将原数组复制到刚刚创建的扩容数组
         @SuppressWarnings("unchecked")
-        T[] copy = ((Object)newType == (Object)Object[].class)
-            ? (T[]) new Object[newLength]
+        T[] copy = ((Object)newType == (Object)Object[].class)//判断是否是 Object[].class
+            ? (T[]) new Object[newLength]//分配内存，创建数组
             : (T[]) Array.newInstance(newType.getComponentType(), newLength);
         System.arraycopy(original, 0, copy, 0,
-                         Math.min(original.length, newLength));
+                         Math.min(original.length, newLength));//native方法复制数组，将原数组复制到刚刚创建的扩容数组
         return copy;
     }
 
