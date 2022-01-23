@@ -2,84 +2,119 @@ package com.cat.concurrency.pool;
 
 import org.junit.Test;
 
-import java.text.MessageFormat;
 import java.util.concurrent.*;
 
+/**
+ * - 任务数 < 核心corePoolSize，新建一个线程执行当前任务
+ * - 任务数>corePoolSize，任务加入阻塞队列 blockingQueue
+ * - blockingQueue 满了，并且 任务数<maxPoolSize，新建一个线程执行当前任务
+ * - blockingQueue 满了，并且 任务数>maxPoolSize，采取拒绝策略
+ */
 public class ThreadPoolExecutorTest {
     public static void main(String[] args) {
-        new ThreadPoolExecutorTest().t2();
+        ThreadPoolExecutorTest t = new ThreadPoolExecutorTest();
+//        t.poolInitTest();
+//        t.poolAddQueueTest();
+//        t.poolMaxTest();
+        t.poolRejectTest();
     }
 
     /**
-     * 超过最大线程数时，拒绝策略的执行
+     * 任务数<核心线程数corePoolSize，新建一个线程执行当前任务
      */
-    public void t0() {
-        //任务最大个数：队列大小+线程池最大线程数
-        LinkedBlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>(3);
-        //Executors.defaultThreadFactory(): 实例化一个DefaultThreadFactory
-        ThreadPoolExecutor pool = new ThreadPoolExecutor(
-                1, 2, 1,
-                TimeUnit.MILLISECONDS, workQueue,
-                Executors.defaultThreadFactory(),
-                new ThreadPoolExecutor.AbortPolicy());
+    public void poolInitTest() {
+        //初始化变量
+        ThreadPoolExecutor pool = new ThreadPoolExecutor(2, 2,
+                0L, TimeUnit.MILLISECONDS,
+                new LinkedBlockingQueue<>());
+
         Runnable task = () -> {
             try {
-                //断点阻塞各个线程执行任务
-                System.out.println(MessageFormat.format("{0} start: pool size={1} blocking queue size={2}",
-                        Thread.currentThread().getName(), pool.getPoolSize(), workQueue.size()));
-
-                TimeUnit.SECONDS.sleep(3);
+                System.out.printf("thread:%s, pool:%s%n",
+                        Thread.currentThread().getName(), pool.toString());
+                TimeUnit.SECONDS.sleep(1);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         };
-        pool.execute(task);
-
-        pool.execute(task);
+        //线程数size < 核心corePoolSize，新建一个线程执行当前任务
         pool.execute(task);
         pool.execute(task);
-
-        pool.execute(task);
-
-        //断点，队列3个任务+最大线程数2，超过时拒绝策略
-        pool.execute(task);
-
         pool.shutdown();
     }
 
     /**
-     * 最大线程数和队列满了时
+     * 任务数>corePoolSize，任务加入阻塞队列 blockingQueue
      */
-    public void t2() {
-        //任务最大个数：队列大小+线程池最大线程数
-        LinkedBlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>(1);
-        //Executors.defaultThreadFactory(): 实例化一个DefaultThreadFactory
-        ThreadPoolExecutor pool = new ThreadPoolExecutor(
-                2, 3, 1,
-                TimeUnit.HOURS, workQueue,
-                Executors.defaultThreadFactory(),
-                new ThreadPoolExecutor.AbortPolicy());
+    public void poolAddQueueTest() {
+        ThreadPoolExecutor pool = new ThreadPoolExecutor(1, 1,
+                0L, TimeUnit.MILLISECONDS,
+                new LinkedBlockingQueue<>(1));
+
         Runnable task = () -> {
             try {
-                //断点阻塞各个线程执行任务，减少空闲线程
-                System.out.println(String.format("Thread %s start: poolSize=%s, queueSize=%s",
-                        Thread.currentThread().getName(), pool.getPoolSize(), workQueue.size()));
-                TimeUnit.SECONDS.sleep(3);
+                System.out.printf("thread:%s, pool:%s%n",
+                        Thread.currentThread().getName(), pool.toString());
+                TimeUnit.SECONDS.sleep(1);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         };
-        //创建2条核心线程处理
         pool.execute(task);
+        //任务数>corePoolSize，任务加入阻塞队列 blockingQueue
         pool.execute(task);
-        System.out.println(String.format("-> poolSize=%s, queueSize=%s", pool.getPoolSize(), workQueue.size()));
-        //核心线程已满，任务加入队列
-        pool.execute(task);
-        System.out.println(String.format("-> poolSize=%s, queueSize=%s", pool.getPoolSize(), workQueue.size()));
-        //此时，核心线程忙，队列满，创建新线程
-        pool.execute(task);
-        System.out.println(String.format("-> poolSize=%s, queueSize=%s", pool.getPoolSize(), workQueue.size()));
+        System.out.println(pool.toString());
+        pool.shutdown();
+    }
 
+    /**
+     * blockingQueue 满了，并且 任务数<maxPoolSize，新建一个线程执行当前任务
+     */
+    public void poolMaxTest() {
+        ThreadPoolExecutor pool = new ThreadPoolExecutor(1, 2,
+                0L, TimeUnit.MILLISECONDS,
+                new LinkedBlockingQueue<>(1));
+
+        Runnable task = () -> {
+            try {
+                System.out.printf("thread:%s, pool:%s%n",
+                        Thread.currentThread().getName(), pool.toString());
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        };
+        pool.execute(task);
+        pool.execute(task);
+        //blockingQueue 满了，并且 任务数<maxPoolSize，新建一个线程执行当前任务
+        pool.execute(task);
+        System.out.println(pool.toString());
+        pool.shutdown();
+    }
+
+    /**
+     * blockingQueue 满了，并且 任务数>maxPoolSize，采取拒绝策略
+     */
+    public void poolRejectTest() {
+        ThreadPoolExecutor pool = new ThreadPoolExecutor(1, 1,
+                0L, TimeUnit.MILLISECONDS,
+                new LinkedBlockingQueue<>(1),
+                new ThreadPoolExecutor.AbortPolicy());
+
+        Runnable task = () -> {
+            try {
+                System.out.printf("thread:%s, pool:%s%n",
+                        Thread.currentThread().getName(), pool.toString());
+                TimeUnit.SECONDS.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        };
+        pool.execute(task);
+        pool.execute(task);
+        System.out.println(pool.toString());
+        //blockingQueue 满了，并且 任务数>maxPoolSize，采取拒绝策略
+        pool.execute(task);
         pool.shutdown();
     }
 
@@ -98,10 +133,10 @@ public class ThreadPoolExecutorTest {
      */
     @Test
     public void fut() throws ExecutionException, InterruptedException {
-        LinkedBlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>(1);
         ThreadPoolExecutor pool = new ThreadPoolExecutor(
-                2, 3, 1,
-                TimeUnit.HOURS, workQueue,
+                2, 3,
+                1, TimeUnit.HOURS,
+                new LinkedBlockingQueue<>(1),
                 Executors.defaultThreadFactory(),
                 new ThreadPoolExecutor.AbortPolicy());
 
