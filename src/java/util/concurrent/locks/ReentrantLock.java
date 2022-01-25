@@ -206,7 +206,7 @@ public class ReentrantLock implements Lock, java.io.Serializable {
             if (compareAndSetState(0, 1))//CAS update state to 1 if state eq 0
                 setExclusiveOwnerThread(Thread.currentThread());//把当前线程设为独占线程
             else
-                acquire(1);
+                acquire(1);//AQS
         }
 
         protected final boolean tryAcquire(int acquires) {//1.update state from 0 to expect, 当前线程设为独占线程；2.可重入锁，更新state=当前state+expect；3.锁被占用且当前线程不是独占线程，获取锁失败；
@@ -454,7 +454,7 @@ public class ReentrantLock implements Lock, java.io.Serializable {
      *         hold this lock
      */
     public void unlock() {
-        sync.release(1);//尝试释放锁；去除wait queue头节点的状态，唤醒下一结点
+        sync.release(1);//AQS; 尝试释放锁；去除wait queue头节点的状态，唤醒下一结点
     }
 
     /**
