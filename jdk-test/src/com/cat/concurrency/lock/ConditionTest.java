@@ -12,9 +12,8 @@ public class ConditionTest {
      * 1 await 1 signal
      */
     public static void case1() throws InterruptedException {
-        ConditionTest conditionTest = new ConditionTest();
-        Condition condition = conditionTest.condition;
-        ReentrantLock lock = conditionTest.lock;
+        ReentrantLock lock = new ReentrantLock();
+        Condition condition = lock.newCondition();
 
         new Thread(() -> {
             lock.lock();
@@ -157,9 +156,9 @@ public class ConditionTest {
     }
 
     public static void main(String[] args) throws InterruptedException {
-//        case1();
+        case1();
 //        case2();
-        case3();
+//        case3();
     }
 
 }

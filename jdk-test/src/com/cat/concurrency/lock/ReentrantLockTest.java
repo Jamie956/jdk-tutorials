@@ -4,6 +4,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class ReentrantLockTest {
+    public static void main(String[] args) {
+        lockTest();
+//        lockTest2();
+//        reLockWorkTest();
+    }
+
     public static void lockTest() {
         //断点
         ReentrantLock lock = new ReentrantLock();
@@ -175,9 +181,4 @@ public class ReentrantLockTest {
         new Thread(() -> twoLockWork2(a, b)).start();
     }
 
-    public static void main(String[] args) {
-//        lockTest();
-//        lockTest2();
-        reLockWorkTest();
-    }
 }

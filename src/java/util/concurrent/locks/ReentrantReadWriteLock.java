@@ -236,7 +236,7 @@ public class ReentrantReadWriteLock
      *
      * @param fair {@code true} if this lock should use a fair ordering policy
      */
-    public ReentrantReadWriteLock(boolean fair) {
+    public ReentrantReadWriteLock(boolean fair) {//初始化非公平锁、读锁、写锁，都是用同一把锁，只是获取锁等操作有自己的实现
         sync = fair ? new FairSync() : new NonfairSync();
         readerLock = new ReadLock(this);
         writerLock = new WriteLock(this);
@@ -249,7 +249,7 @@ public class ReentrantReadWriteLock
      * Synchronization implementation for ReentrantReadWriteLock.
      * Subclassed into fair and nonfair versions.
      */
-    abstract static class Sync extends AbstractQueuedSynchronizer {
+    abstract static class Sync extends AbstractQueuedSynchronizer {//重写AQS 实现读写锁，核心方法
         private static final long serialVersionUID = 6317671515068378041L;
 
         /*
@@ -260,14 +260,14 @@ public class ReentrantReadWriteLock
          */
 
         static final int SHARED_SHIFT   = 16;
-        static final int SHARED_UNIT    = (1 << SHARED_SHIFT);
-        static final int MAX_COUNT      = (1 << SHARED_SHIFT) - 1;
-        static final int EXCLUSIVE_MASK = (1 << SHARED_SHIFT) - 1;
+        static final int SHARED_UNIT    = (1 << SHARED_SHIFT);//0001 0000 0000 0000 0000
+        static final int MAX_COUNT      = (1 << SHARED_SHIFT) - 1;//1111 1111 1111 1111
+        static final int EXCLUSIVE_MASK = (1 << SHARED_SHIFT) - 1;//1111 1111 1111 1111
 
         /** Returns the number of shared holds represented in count  */
-        static int sharedCount(int c)    { return c >>> SHARED_SHIFT; }
+        static int sharedCount(int c)    { return c >>> SHARED_SHIFT; }//16位之后存储 sharedCount
         /** Returns the number of exclusive holds represented in count  */
-        static int exclusiveCount(int c) { return c & EXCLUSIVE_MASK; }
+        static int exclusiveCount(int c) { return c & EXCLUSIVE_MASK; }//前16位存储 exclusiveCount
 
         /**
          * A counter for per-thread read hold counts.
@@ -377,7 +377,7 @@ public class ReentrantReadWriteLock
             return free;
         }
 
-        protected final boolean tryAcquire(int acquires) {
+        protected final boolean tryAcquire(int acquires) {//Sync 重写AQS 方法
             /*
              * Walkthrough:
              * 1. If read count nonzero or write count nonzero
@@ -394,7 +394,7 @@ public class ReentrantReadWriteLock
             int w = exclusiveCount(c);
             if (c != 0) {
                 // (Note: if c != 0 and w == 0 then shared count != 0)
-                if (w == 0 || current != getExclusiveOwnerThread())
+                if (w == 0 || current != getExclusiveOwnerThread())//非独占线程，返回
                     return false;
                 if (w + exclusiveCount(acquires) > MAX_COUNT)
                     throw new Error("Maximum lock count exceeded");
@@ -403,13 +403,13 @@ public class ReentrantReadWriteLock
                 return true;
             }
             if (writerShouldBlock() ||
-                !compareAndSetState(c, c + acquires))
+                !compareAndSetState(c, c + acquires))//CAS update state
                 return false;
-            setExclusiveOwnerThread(current);
+            setExclusiveOwnerThread(current);//set current thread exclusive
             return true;
         }
 
-        protected final boolean tryReleaseShared(int unused) {
+        protected final boolean tryReleaseShared(int unused) {//Sync 重写AQS 方法
             Thread current = Thread.currentThread();
             if (firstReader == current) {
                 // assert firstReaderHoldCount > 0;
@@ -445,7 +445,7 @@ public class ReentrantReadWriteLock
                 "attempt to unlock read lock, not locked by current thread");
         }
 
-        protected final int tryAcquireShared(int unused) {
+        protected final int tryAcquireShared(int unused) {//Sync 重写AQS 方法，获取共享锁
             /*
              * Walkthrough:
              * 1. If write lock held by another thread, fail.
@@ -466,10 +466,10 @@ public class ReentrantReadWriteLock
             if (exclusiveCount(c) != 0 &&
                 getExclusiveOwnerThread() != current)
                 return -1;
-            int r = sharedCount(c);
+            int r = sharedCount(c);//c >>> 16//高16存储sharedCount
             if (!readerShouldBlock() &&
                 r < MAX_COUNT &&
-                compareAndSetState(c, c + SHARED_UNIT)) {
+                compareAndSetState(c, c + SHARED_UNIT)) {//0001 0000 0000 0000 0000 + c
                 if (r == 0) {
                     firstReader = current;
                     firstReaderHoldCount = 1;
@@ -710,7 +710,7 @@ public class ReentrantReadWriteLock
          * @throws NullPointerException if the lock is null
          */
         protected ReadLock(ReentrantReadWriteLock lock) {
-            sync = lock.sync;
+            sync = lock.sync;//将sync 作为读锁
         }
 
         /**
@@ -724,7 +724,7 @@ public class ReentrantReadWriteLock
          * purposes and lies dormant until the read lock has been acquired.
          */
         public void lock() {
-            sync.acquireShared(1);
+            sync.acquireShared(1);//ReadLock 的上锁，调AQS上锁方法，具体获取锁方法由本类的Sync实现
         }
 
         /**
@@ -878,7 +878,7 @@ public class ReentrantReadWriteLock
          * is made available for write lock attempts.
          */
         public void unlock() {
-            sync.releaseShared(1);
+            sync.releaseShared(1);//释放锁方法由本类Sync实现
         }
 
         /**
@@ -919,7 +919,7 @@ public class ReentrantReadWriteLock
          * @throws NullPointerException if the lock is null
          */
         protected WriteLock(ReentrantReadWriteLock lock) {
-            sync = lock.sync;
+            sync = lock.sync;//将sync作为写锁
         }
 
         /**
@@ -940,7 +940,7 @@ public class ReentrantReadWriteLock
          * time the write lock hold count is set to one.
          */
         public void lock() {
-            sync.acquire(1);
+            sync.acquire(1);//写锁独占锁，AQS方法，由本类Sync实现
         }
 
         /**

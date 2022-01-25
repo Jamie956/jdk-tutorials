@@ -860,7 +860,7 @@ public abstract class AbstractQueuedSynchronizer
             boolean interrupted = false;
             for (;;) {//自旋直到队列轮到node prev 是head
                 final Node p = node.predecessor();//获取当前节点的 prev node
-                if (p == head && tryAcquire(arg)) {//如果当前节点的prev node 是 sync queue head，就CAS update state 获取锁，当前线程设为独占线程;
+                if (p == head && tryAcquire(arg)) {//如果当前节点的prev node 是 wait queue head，就CAS update state 获取锁，当前线程设为独占线程;
                     setHead(node);//wait queue head 指针指向node，清空 thread和prev
                     p.next = null; // help GC, unlink
                     failed = false;
