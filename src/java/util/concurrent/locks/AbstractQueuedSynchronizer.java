@@ -377,7 +377,7 @@ public abstract class AbstractQueuedSynchronizer
      * expert group, for helpful ideas, discussions, and critiques
      * on the design of this class.
      */
-    static final class Node {//等待队列的结点
+    static final class Node {//线程结点
         /** Marker to indicate a node is waiting in shared mode */
         static final Node SHARED = new Node();
         /** Marker to indicate a node is waiting in exclusive mode */
@@ -680,7 +680,7 @@ public abstract class AbstractQueuedSynchronizer
          * fails, if so rechecking.
          */
         for (;;) {
-            Node h = head;
+            Node h = head;//wait queue
             if (h != null && h != tail) {
                 int ws = h.waitStatus;
                 if (ws == Node.SIGNAL) {
@@ -1339,7 +1339,7 @@ public abstract class AbstractQueuedSynchronizer
      */
     public final boolean releaseShared(int arg) {
         if (tryReleaseShared(arg)) {
-            doReleaseShared();
+            doReleaseShared();//全部锁释放，唤醒wait queue 节点
             return true;
         }
         return false;

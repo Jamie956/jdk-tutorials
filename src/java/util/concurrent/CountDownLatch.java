@@ -158,11 +158,11 @@ public class CountDownLatch {
      * Synchronization control For CountDownLatch.
      * Uses AQS state to represent count.
      */
-    private static final class Sync extends AbstractQueuedSynchronizer {
+    private static final class Sync extends AbstractQueuedSynchronizer {//静态内部类AQS 实现类 Sync
         private static final long serialVersionUID = 4982264981922014374L;
 
         Sync(int count) {
-            setState(count);
+            setState(count);//AQS
         }
 
         int getCount() {
@@ -170,17 +170,17 @@ public class CountDownLatch {
         }
 
         protected int tryAcquireShared(int acquires) {
-            return (getState() == 0) ? 1 : -1;
+            return (getState() == 0) ? 1 : -1;//state 没到0 都返回-1，即要等待
         }
 
-        protected boolean tryReleaseShared(int releases) {
+        protected boolean tryReleaseShared(int releases) {//AQS实现
             // Decrement count; signal when transition to zero
             for (;;) {
                 int c = getState();
                 if (c == 0)
                     return false;
                 int nextc = c-1;
-                if (compareAndSetState(c, nextc))
+                if (compareAndSetState(c, nextc))//CAS 减一把锁
                     return nextc == 0;
             }
         }
@@ -197,7 +197,7 @@ public class CountDownLatch {
      */
     public CountDownLatch(int count) {
         if (count < 0) throw new IllegalArgumentException("count < 0");
-        this.sync = new Sync(count);
+        this.sync = new Sync(count);//静态内部类AQS 实现类 Sync
     }
 
     /**
@@ -228,7 +228,7 @@ public class CountDownLatch {
      *         while waiting
      */
     public void await() throws InterruptedException {
-        sync.acquireSharedInterruptibly(1);
+        sync.acquireSharedInterruptibly(1);//AQS ->
     }
 
     /**
@@ -287,7 +287,7 @@ public class CountDownLatch {
      *
      * <p>If the current count equals zero then nothing happens.
      */
-    public void countDown() {
+    public void countDown() {//释放一把锁
         sync.releaseShared(1);
     }
 

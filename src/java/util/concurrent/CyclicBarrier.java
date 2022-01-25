@@ -176,9 +176,9 @@ public class CyclicBarrier {
      */
     private void nextGeneration() {
         // signal completion of last generation
-        trip.signalAll();
+        trip.signalAll();//condition 唤醒
         // set up next generation
-        count = parties;
+        count = parties;//重置count
         generation = new Generation();
     }
 
@@ -199,7 +199,7 @@ public class CyclicBarrier {
         throws InterruptedException, BrokenBarrierException,
                TimeoutException {
         final ReentrantLock lock = this.lock;
-        lock.lock();
+        lock.lock();//上锁
         try {
             final Generation g = generation;
 
@@ -212,10 +212,10 @@ public class CyclicBarrier {
             }
 
             int index = --count;
-            if (index == 0) {  // tripped
+            if (index == 0) {  // tripped//起跑
                 boolean ranAction = false;
                 try {
-                    final Runnable command = barrierCommand;
+                    final Runnable command = barrierCommand;//起跑 回调
                     if (command != null)
                         command.run();
                     ranAction = true;
