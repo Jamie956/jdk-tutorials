@@ -276,7 +276,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      * Basic hash bin node, used for most entries.  (See below for
      * TreeNode subclass, and in LinkedHashMap for its Entry subclass.)
      */
-    static class Node<K,V> implements Map.Entry<K,V> {
+    static class Node<K,V> implements Map.Entry<K,V> {//
         final int hash;
         final K key;
         V value;
@@ -565,19 +565,19 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      * @return the node, or null if none
      */
     final Node<K,V> getNode(int hash, Object key) {
-        Node<K,V>[] tab; Node<K,V> first, e; int n; K k;
-        if ((tab = table) != null && (n = tab.length) > 0 &&
-            (first = tab[(n - 1) & hash]) != null) {
+        Node<K,V>[] tab; Node<K,V> first, e; int n; K k;//tab是节点数组；first是节点链表链头；
+        if ((tab = table) != null && (n = tab.length) > 0 &&//数组不为空
+            (first = tab[(n - 1) & hash]) != null) {//节点数组指定位置的节点元素（链头）
             if (first.hash == hash && // always check first node
                 ((k = first.key) == key || (key != null && key.equals(k))))
-                return first;
+                return first;//要找的k-v就是链头
             if ((e = first.next) != null) {
-                if (first instanceof TreeNode)
-                    return ((TreeNode<K,V>)first).getTreeNode(hash, key);
-                do {
+                if (first instanceof TreeNode)//排序节点
+                    return ((TreeNode<K,V>)first).getTreeNode(hash, key);//按排序节点获取节点
+                do {//遍历链表
                     if (e.hash == hash &&
                         ((k = e.key) == key || (key != null && key.equals(k))))
-                        return e;
+                        return e;//key相同就返回
                 } while ((e = e.next) != null);
             }
         }
@@ -624,43 +624,43 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      */
     final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
                    boolean evict) {
-        Node<K,V>[] tab; Node<K,V> p; int n, i;
+        Node<K,V>[] tab; Node<K,V> p; int n, i;//tab是节点数组；n是tab的长度；i是tab的索引；p是tab的元素；
         if ((tab = table) == null || (n = tab.length) == 0)
             n = (tab = resize()).length;//扩容
-        if ((p = tab[i = (n - 1) & hash]) == null)
-            tab[i] = newNode(hash, key, value, null);
-        else {
-            Node<K,V> e; K k;
-            if (p.hash == hash &&
-                ((k = p.key) == key || (key != null && key.equals(k))))
-                e = p;
-            else if (p instanceof TreeNode)
+        if ((p = tab[i = (n - 1) & hash]) == null)//索引计算：按节点数组长度的位数截取hash//tab[i] 元素为空，直接插入节点
+            tab[i] = newNode(hash, key, value, null);//实例化节点
+        else {//节点数据索引位置不为空
+            Node<K,V> e; K k;//k是节点数组对应节点的key
+            if (p.hash == hash &&//判断key的hash 与 节点数组指定索引位置节点元素的hash 是否一致
+                ((k = p.key) == key || (key != null && key.equals(k))))//key 的==比较或字符串比较相等
+                e = p;//更新指针，下面会更新e节点的值
+            else if (p instanceof TreeNode)//数组原节点是否排序节点
                 e = ((TreeNode<K,V>)p).putTreeVal(this, tab, hash, key, value);
-            else {
-                for (int binCount = 0; ; ++binCount) {
-                    if ((e = p.next) == null) {
-                        p.next = newNode(hash, key, value, null);
+            else {//节点数组索引位置已经存在节点元素，且新key与该节点元素不一致，
+                for (int binCount = 0; ; ++binCount) {//遍历链表
+                    if ((e = p.next) == null) {//遍历到链尾
+                        p.next = newNode(hash, key, value, null);//新节点尾插
                         if (binCount >= TREEIFY_THRESHOLD - 1) // -1 for 1st
-                            treeifyBin(tab, hash);
+                            treeifyBin(tab, hash);//链表元素大于等于8时，转树
                         break;
                     }
-                    if (e.hash == hash &&
+                    if (e.hash == hash &&//链表找到相同key的节点
                         ((k = e.key) == key || (key != null && key.equals(k))))
-                        break;
+                        break;//下面会更新e节点的值
                     p = e;
                 }
             }
             if (e != null) { // existing mapping for key
                 V oldValue = e.value;
                 if (!onlyIfAbsent || oldValue == null)
-                    e.value = value;
+                    e.value = value;//更新节点value
                 afterNodeAccess(e);
                 return oldValue;
             }
         }
         ++modCount;
-        if (++size > threshold)
-            resize();
+        if (++size > threshold)//threshold=capacity * load factor
+            resize();//扩容
         afterNodeInsertion(evict);
         return null;
     }

@@ -8,5 +8,6 @@ public class Main {
 
         HashMap<String, String> m2 = new HashMap<>(3);
         m2.put("k1", "v1");
+        m2.get("k1");
     }
 }
