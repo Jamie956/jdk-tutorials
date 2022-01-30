@@ -118,7 +118,7 @@ public class CopyOnWriteArrayList<E>
      * Creates an empty list.
      */
     public CopyOnWriteArrayList() {
-        setArray(new Object[0]);
+        setArray(new Object[0]);//空数组
     }
 
     /**
@@ -435,11 +435,11 @@ public class CopyOnWriteArrayList<E>
         final ReentrantLock lock = this.lock;
         lock.lock();
         try {
-            Object[] elements = getArray();
-            int len = elements.length;
-            Object[] newElements = Arrays.copyOf(elements, len + 1);
-            newElements[len] = e;
-            setArray(newElements);
+            Object[] elements = getArray();//array
+            int len = elements.length;//数组长度
+            Object[] newElements = Arrays.copyOf(elements, len + 1);//复制数组
+            newElements[len] = e;//写到刚刚复制的数组
+            setArray(newElements);//替换原来的数组
             return true;
         } finally {
             lock.unlock();
@@ -611,7 +611,7 @@ public class CopyOnWriteArrayList<E>
      */
     public boolean addIfAbsent(E e) {
         Object[] snapshot = getArray();
-        return indexOf(e, snapshot, 0, snapshot.length) >= 0 ? false :
+        return indexOf(e, snapshot, 0, snapshot.length) >= 0 ? false ://判断数组是否原来存在元素
             addIfAbsent(e, snapshot);
     }
 
@@ -634,9 +634,9 @@ public class CopyOnWriteArrayList<E>
                 if (indexOf(e, current, common, len) >= 0)
                         return false;
             }
-            Object[] newElements = Arrays.copyOf(current, len + 1);
-            newElements[len] = e;
-            setArray(newElements);
+            Object[] newElements = Arrays.copyOf(current, len + 1);//复制数组
+            newElements[len] = e;//写到新数组
+            setArray(newElements);//更新数组
             return true;
         } finally {
             lock.unlock();

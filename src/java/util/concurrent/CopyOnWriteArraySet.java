@@ -102,7 +102,7 @@ public class CopyOnWriteArraySet<E> extends AbstractSet<E>
     /**
      * Creates an empty set.
      */
-    public CopyOnWriteArraySet() {
+    public CopyOnWriteArraySet() {//实际上是list
         al = new CopyOnWriteArrayList<E>();
     }
 

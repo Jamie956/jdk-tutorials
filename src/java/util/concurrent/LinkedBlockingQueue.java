@@ -198,7 +198,7 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E>
     private void enqueue(Node<E> node) {
         // assert putLock.isHeldByCurrentThread();
         // assert last.next == null;
-        last = last.next = node;
+        last = last.next = node;//尾插
     }
 
     /**
@@ -333,7 +333,7 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E>
         // Note: convention in all put/take/etc is to preset local var
         // holding count negative to indicate failure unless set.
         int c = -1;
-        Node<E> node = new Node<E>(e);
+        Node<E> node = new Node<E>(e);//创建新节点
         final ReentrantLock putLock = this.putLock;
         final AtomicInteger count = this.count;
         putLock.lockInterruptibly();
@@ -347,12 +347,12 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E>
              * for all other uses of count in other wait guards.
              */
             while (count.get() == capacity) {
-                notFull.await();
+                notFull.await();//队列已满，等待
             }
-            enqueue(node);
-            c = count.getAndIncrement();
+            enqueue(node);//尾插
+            c = count.getAndIncrement();//CAS add count
             if (c + 1 < capacity)
-                notFull.signal();
+                notFull.signal();//通知消费
         } finally {
             putLock.unlock();
         }
@@ -438,13 +438,13 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E>
         final ReentrantLock takeLock = this.takeLock;
         takeLock.lockInterruptibly();
         try {
-            while (count.get() == 0) {
+            while (count.get() == 0) {//队列空等待
                 notEmpty.await();
             }
-            x = dequeue();
-            c = count.getAndDecrement();
+            x = dequeue();//取队头元素
+            c = count.getAndDecrement();//CAS update count
             if (c > 1)
-                notEmpty.signal();
+                notEmpty.signal();//通知消费
         } finally {
             takeLock.unlock();
         }

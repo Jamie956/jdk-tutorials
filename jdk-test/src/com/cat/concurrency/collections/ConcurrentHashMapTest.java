@@ -1,20 +1,20 @@
 package com.cat.concurrency.collections;
 
-import com.cat.concurrency.ThreadUtil;
-
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ConcurrentHashMapTest {
-    public static void work(ConcurrentHashMap<String, String> map) {
-        map.put("k1",  "k1");
-
-    }
 
     public static void main(String[] args) {
-        //ConcurrentHashMap()
         ConcurrentHashMap<String, String> map = new ConcurrentHashMap<>();
-
-        ThreadUtil.execute(() -> work(map));
-        ThreadUtil.execute(() -> work(map));
+        Thread t1 = new Thread(() -> {
+            //Suspend Thread
+            map.put("k1", "v1");
+        });
+        Thread t2 = new Thread(() -> {
+            //Suspend Thread
+            map.put("k1", "v1");
+        });
+        t1.start();
+        t2.start();
     }
 }
