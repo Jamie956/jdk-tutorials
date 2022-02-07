@@ -261,7 +261,7 @@ class Thread implements Runnable {
      *
      * @return  the currently executing thread.
      */
-    public static native Thread currentThread();//静态方法，获取当前线程
+    public static native Thread currentThread();//静态本地方法，获取当前线程
 
     /**
      * A hint to the scheduler that the current thread is willing to yield

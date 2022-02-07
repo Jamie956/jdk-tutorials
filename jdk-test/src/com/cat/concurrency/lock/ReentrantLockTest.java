@@ -6,10 +6,11 @@ import java.util.concurrent.locks.ReentrantLock;
 public class ReentrantLockTest {
     public static void main(String[] args) {
 //        lockTest();
+        fairLockTest();
 //        lockTest2();
 //        reLockTest();
 //        twoLockTest();
-        twoLockTest2();
+//        twoLockTest2();
     }
 
     public static void lockTest() {
@@ -22,6 +23,41 @@ public class ReentrantLockTest {
                 for (int i = 0; i < 10; i++) {
                     TimeUnit.SECONDS.sleep(1);
                     System.out.println(Thread.currentThread().getName() + " " + i);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                //Thread Suspend
+                lock.unlock();
+            }
+        }).start();
+        new Thread(() -> {
+            //Thread Suspend
+            lock.lock();
+            try {
+                for (int i = 0; i < 10; i++) {
+                    TimeUnit.SECONDS.sleep(1);
+                    System.out.println(Thread.currentThread().getName() + " " + i);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                //Thread Suspend
+                lock.unlock();
+            }
+        }).start();
+    }
+
+    public static void fairLockTest() {
+        //Thread Suspend
+        ReentrantLock lock = new ReentrantLock(true);
+        new Thread(() -> {
+            //Thread Suspend
+            lock.lock();
+            try {
+                for (int i = 0; i < 10; i++) {
+                    TimeUnit.SECONDS.sleep(1);
+                    System.out.println(lock.toString() + " " + i);
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();

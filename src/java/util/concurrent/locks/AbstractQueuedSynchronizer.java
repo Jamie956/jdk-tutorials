@@ -561,7 +561,7 @@ public abstract class AbstractQueuedSynchronizer
      * @return {@code true} if successful. False return indicates that the actual
      *         value was not equal to the expected value.
      */
-    protected final boolean compareAndSetState(int expect, int update) {
+    protected final boolean compareAndSetState(int expect, int update) {//CAS update value to "update" if value(in memory) eq "expect"
         // See below for intrinsics setup to support this
         return unsafe.compareAndSwapInt(this, stateOffset, expect, update);
     }
@@ -635,15 +635,15 @@ public abstract class AbstractQueuedSynchronizer
      *
      * @param node the node
      */
-    private void unparkSuccessor(Node node) {//去除参数节点的状态，唤醒下一结点
+    private void unparkSuccessor(Node node) {//移除节点状态，唤醒下一结点
         /*
          * If status is negative (i.e., possibly needing signal) try
          * to clear in anticipation of signalling.  It is OK if this
          * fails or if status is changed by waiting thread.
          */
-        int ws = node.waitStatus;
-        if (ws < 0)//如果参数节点状态是SIGNAL、CONDITION、PROPAGATE，去除参数节点的状态
-            compareAndSetWaitStatus(node, ws, 0);//CAS update waitStatus to 0，
+        int ws = node.waitStatus;//CANCELLED=1、SIGNAL=-1、CONDITION=-2、PROPAGATE=-3
+        if (ws < 0)//去除节点 SIGNAL、CONDITION、PROPAGATE 状态
+            compareAndSetWaitStatus(node, ws, 0);
 
         /*
          * Thread to unpark is held in successor, which is normally
@@ -651,15 +651,15 @@ public abstract class AbstractQueuedSynchronizer
          * traverse backwards from tail to find the actual
          * non-cancelled successor.
          */
-        Node s = node.next;
-        if (s == null || s.waitStatus > 0) {
+        Node s = node.next;//一般取下一节点唤醒，但是队列节点可能存在CANCELLED节点或者空节点，这时需要从队尾往前遍历找到最前的一个指定状态的节点去唤醒
+        if (s == null || s.waitStatus > 0) {//节点为空 或者 状态为CANCELLED
             s = null;
-            for (Node t = tail; t != null && t != node; t = t.prev)//从队尾开始，找到最前的一个 waitStatus <=0的结点
-                if (t.waitStatus <= 0)
+            for (Node t = tail; t != null && t != node; t = t.prev)//从队尾开始遍历
+                if (t.waitStatus <= 0)//找到最前的一个 SIGNAL、CONDITION、PROPAGATE 的结点
                     s = t;
         }
         if (s != null)
-            LockSupport.unpark(s.thread);//下一节点不为空，唤醒下一结点
+            LockSupport.unpark(s.thread);//唤醒结点
     }
 
     /**
@@ -1257,11 +1257,11 @@ public abstract class AbstractQueuedSynchronizer
      *        can represent anything you like.
      * @return the value returned from {@link #tryRelease}
      */
-    public final boolean release(int arg) {//尝试释放锁；去除wait queue头节点的状态，唤醒下一结点
-        if (tryRelease(arg)) {//尝试释放锁，只有全部锁释放才返回true
+    public final boolean release(int arg) {//尝试释放锁，如果全部锁都释放了就唤醒下一节点
+        if (tryRelease(arg)) {//由AQS子类实现//ReentrantLock 实现：修改state释放锁，state==0时返回true，否则返回false
             Node h = head;
-            if (h != null && h.waitStatus != 0)//wait queue head node不为空 且 结点有状态
-                unparkSuccessor(h);//去除wait queue头节点的状态，唤醒下一结点
+            if (h != null && h.waitStatus != 0)
+                unparkSuccessor(h);//移除节点状态，唤醒下一结点
             return true;
         }
         return false;
@@ -1516,8 +1516,8 @@ public abstract class AbstractQueuedSynchronizer
         Node t = tail; // Read fields in reverse initialization order
         Node h = head;
         Node s;
-        return h != t &&
-            ((s = h.next) == null || s.thread != Thread.currentThread());
+        return h != t &&//如果 h==t，队列为空，返回 false
+            ((s = h.next) == null || s.thread != Thread.currentThread());//如果 h != t, h.next不为空 且 节点线程为当前线程，返回false
     }
 
 
@@ -1827,7 +1827,7 @@ public abstract class AbstractQueuedSynchronizer
      * <p>This class is Serializable, but all fields are transient,
      * so deserialized conditions have no waiters.
      */
-    public class ConditionObject implements Condition, java.io.Serializable {//AQS内部类实现 Condition
+    public class ConditionObject implements Condition, java.io.Serializable {//内部类
         private static final long serialVersionUID = 1173984872572414699L;
         /** First node of condition queue. */
         private transient Node firstWaiter;
@@ -2194,11 +2194,11 @@ public abstract class AbstractQueuedSynchronizer
          * @throws IllegalMonitorStateException if {@link #isHeldExclusively}
          *         returns {@code false}
          */
-        protected final boolean hasWaiters() {
+        protected final boolean hasWaiters() {//condition queue 是否有condition 状态的节点
             if (!isHeldExclusively())
-                throw new IllegalMonitorStateException();
+                throw new IllegalMonitorStateException();//非独占线程抛出异常
             for (Node w = firstWaiter; w != null; w = w.nextWaiter) {
-                if (w.waitStatus == Node.CONDITION)
+                if (w.waitStatus == Node.CONDITION)//遍历 condition queue，找到第一个condition 状态的节点返回true
                     return true;
             }
             return false;
@@ -2219,7 +2219,7 @@ public abstract class AbstractQueuedSynchronizer
             int n = 0;
             for (Node w = firstWaiter; w != null; w = w.nextWaiter) {
                 if (w.waitStatus == Node.CONDITION)
-                    ++n;
+                    ++n;//统计condition queue 中 condition 状态的节点
             }
             return n;
         }
@@ -2241,7 +2241,7 @@ public abstract class AbstractQueuedSynchronizer
                 if (w.waitStatus == Node.CONDITION) {
                     Thread t = w.thread;
                     if (t != null)
-                        list.add(t);
+                        list.add(t);//获取condition queue中，condition状态节点的线程对象（不为空）
                 }
             }
             return list;
