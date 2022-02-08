@@ -1694,8 +1694,8 @@ public abstract class AbstractQueuedSynchronizer
      * @param node the node
      * @return true if cancelled before the node was signalled
      */
-    final boolean transferAfterCancelledWait(Node node) {
-        if (compareAndSetWaitStatus(node, Node.CONDITION, 0)) {//移除节点状态并入队
+    final boolean transferAfterCancelledWait(Node node) {//移除节点状态，wait queue入队
+        if (compareAndSetWaitStatus(node, Node.CONDITION, 0)) {
             enq(node);
             return true;
         }
@@ -1949,7 +1949,7 @@ public abstract class AbstractQueuedSynchronizer
          * @throws IllegalMonitorStateException if {@link #isHeldExclusively}
          *         returns {@code false}
          */
-        public final void signalAll() {//由 first node 开始 signal 全部结点
+        public final void signalAll() {//由 first node 开始唤醒全部结点
             if (!isHeldExclusively())//当前线程非独占的线程时，抛出异常
                 throw new IllegalMonitorStateException();
             Node first = firstWaiter;
@@ -1968,11 +1968,11 @@ public abstract class AbstractQueuedSynchronizer
          *      {@link #acquire} with saved state as argument.
          * </ol>
          */
-        public final void awaitUninterruptibly() {//新节点入队，并且根据等待状态中断
-            Node node = addConditionWaiter();//新节点入队
-            int savedState = fullyRelease(node);
+        public final void awaitUninterruptibly() {//创建condition节点入队
+            Node node = addConditionWaiter();
+            int savedState = fullyRelease(node);//？
             boolean interrupted = false;
-            while (!isOnSyncQueue(node)) {//如果结点不在sync 队列就挂起线程
+            while (!isOnSyncQueue(node)) {
                 LockSupport.park(this);
                 if (Thread.interrupted())
                     interrupted = true;
@@ -2032,15 +2032,15 @@ public abstract class AbstractQueuedSynchronizer
         public final void await() throws InterruptedException {
             if (Thread.interrupted())//测试当前线程是否已经是中断状态
                 throw new InterruptedException();
-            Node node = addConditionWaiter();//condition queue尾新增一个 condition状态 结点
+            Node node = addConditionWaiter();
             int savedState = fullyRelease(node);//尝试释放锁；去除wait queue头节点的状态，唤醒下一结点
             int interruptMode = 0;
-            while (!isOnSyncQueue(node)) {//判断node is on sync queue；唤醒时node is on sync queue，结束while
-                LockSupport.park(this);//node is not on sync queue -> park AQS实例
-                if ((interruptMode = checkInterruptWhileWaiting(node)) != 0)//被唤醒，继续执行；当前线程没有被中断时，返回0
-                    break;
+            while (!isOnSyncQueue(node)) {//循环直到结点加到wait queue
+                LockSupport.park(this);//node on condition queue
+                if ((interruptMode = checkInterruptWhileWaiting(node)) != 0)//被唤醒，继续执行
+                    break;//线程没有被中断，终止循环
             }
-            if (acquireQueued(node, savedState) && interruptMode != THROW_IE)//1.如果当前节点的prev node 是 sync queue head，就CAS update state 获取锁，当前线程设为独占线程;2.wait queue head 指针指向node，清空 thread和prev
+            if (acquireQueued(node, savedState) && interruptMode != THROW_IE)//中断之后继续获取锁
                 interruptMode = REINTERRUPT;
             if (node.nextWaiter != null) // clean up if cancelled
                 unlinkCancelledWaiters();
@@ -2065,22 +2065,22 @@ public abstract class AbstractQueuedSynchronizer
                 throws InterruptedException {
             if (Thread.interrupted())
                 throw new InterruptedException();
-            Node node = addConditionWaiter();
-            int savedState = fullyRelease(node);
+            Node node = addConditionWaiter();//condition queue 入队，current thread, condition state
+            int savedState = fullyRelease(node);//释放锁
             final long deadline = System.nanoTime() + nanosTimeout;
             int interruptMode = 0;
             while (!isOnSyncQueue(node)) {
                 if (nanosTimeout <= 0L) {
-                    transferAfterCancelledWait(node);
+                    transferAfterCancelledWait(node);//超时，结点 wait queue入队
                     break;
                 }
                 if (nanosTimeout >= spinForTimeoutThreshold)
-                    LockSupport.parkNanos(this, nanosTimeout);
+                    LockSupport.parkNanos(this, nanosTimeout);//没超时，挂起
                 if ((interruptMode = checkInterruptWhileWaiting(node)) != 0)
                     break;
                 nanosTimeout = deadline - System.nanoTime();
             }
-            if (acquireQueued(node, savedState) && interruptMode != THROW_IE)
+            if (acquireQueued(node, savedState) && interruptMode != THROW_IE)//获取锁
                 interruptMode = REINTERRUPT;
             if (node.nextWaiter != null)
                 unlinkCancelledWaiters();
@@ -2113,7 +2113,7 @@ public abstract class AbstractQueuedSynchronizer
             boolean timedout = false;
             int interruptMode = 0;
             while (!isOnSyncQueue(node)) {
-                if (System.currentTimeMillis() > abstime) {
+                if (System.currentTimeMillis() > abstime) {//超时
                     timedout = transferAfterCancelledWait(node);
                     break;
                 }
