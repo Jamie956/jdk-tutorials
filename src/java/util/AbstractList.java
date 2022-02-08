@@ -327,7 +327,7 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
         return new ListItr(index);
     }
 
-    private class Itr implements Iterator<E> {
+    private class Itr implements Iterator<E> {//内部类
         /**
          * Index of element to be returned by subsequent call to next.
          */
@@ -345,22 +345,22 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
          * List should have.  If this expectation is violated, the iterator
          * has detected concurrent modification.
          */
-        int expectedModCount = modCount;
+        int expectedModCount = modCount;//外部类变量
 
         public boolean hasNext() {
-            return cursor != size();
+            return cursor != size();//游标是否读到末尾元素
         }
 
-        public E next() {
-            checkForComodification();
+        public E next() {//获取游标元素，移动游标
+            checkForComodification();//fail-fast
             try {
                 int i = cursor;
-                E next = get(i);
+                E next = get(i);//get 由子类实现
                 lastRet = i;
                 cursor = i + 1;
                 return next;
             } catch (IndexOutOfBoundsException e) {
-                checkForComodification();
+                checkForComodification();//越界时再检查多一次是不是被修改了
                 throw new NoSuchElementException();
             }
         }
@@ -371,7 +371,7 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
             checkForComodification();
 
             try {
-                AbstractList.this.remove(lastRet);
+                AbstractList.this.remove(lastRet);//外部类实例的子类实现方法
                 if (lastRet < cursor)
                     cursor--;
                 lastRet = -1;
@@ -382,7 +382,7 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
         }
 
         final void checkForComodification() {
-            if (modCount != expectedModCount)
+            if (modCount != expectedModCount)//fail-fast 判断list 已经被修改
                 throw new ConcurrentModificationException();
         }
     }
