@@ -156,18 +156,18 @@ import java.util.concurrent.locks.AbstractQueuedSynchronizer;
 public class Semaphore implements java.io.Serializable {
     private static final long serialVersionUID = -3222578661600680210L;
     /** All mechanics via AbstractQueuedSynchronizer subclass */
-    private final Sync sync;
+    private final Sync sync;//AQS子类，构造函数决定实例化公平锁还是非公平锁
 
     /**
      * Synchronization implementation for semaphore.  Uses AQS state
      * to represent permits. Subclassed into fair and nonfair
      * versions.
      */
-    abstract static class Sync extends AbstractQueuedSynchronizer {
+    abstract static class Sync extends AbstractQueuedSynchronizer {//AQS的子类实现
         private static final long serialVersionUID = 1192457210091910933L;
 
         Sync(int permits) {
-            setState(permits);//AQS set state
+            setState(permits);
         }
 
         final int getPermits() {
@@ -175,17 +175,17 @@ public class Semaphore implements java.io.Serializable {
         }
 
         final int nonfairTryAcquireShared(int acquires) {//非公平锁获取锁
-            for (;;) {
+            for (;;) {//自旋直到全部锁被抢完
                 int available = getState();
                 int remaining = available - acquires;
                 if (remaining < 0 ||
-                    compareAndSetState(available, remaining))//CAS state = (available - acquires)
+                    compareAndSetState(available, remaining))
                     return remaining;
             }
         }
 
         protected final boolean tryReleaseShared(int releases) {//释放共享锁
-            for (;;) {
+            for (;;) {//自旋直到释放锁
                 int current = getState();
                 int next = current + releases;
                 if (next < current) // overflow
@@ -195,7 +195,7 @@ public class Semaphore implements java.io.Serializable {
             }
         }
 
-        final void reducePermits(int reductions) {
+        final void reducePermits(int reductions) {//减锁
             for (;;) {
                 int current = getState();
                 int next = current - reductions;
@@ -206,7 +206,7 @@ public class Semaphore implements java.io.Serializable {
             }
         }
 
-        final int drainPermits() {
+        final int drainPermits() {//重置锁
             for (;;) {
                 int current = getState();
                 if (current == 0 || compareAndSetState(current, 0))
@@ -242,7 +242,7 @@ public class Semaphore implements java.io.Serializable {
 
         protected int tryAcquireShared(int acquires) {
             for (;;) {
-                if (hasQueuedPredecessors())
+                if (hasQueuedPredecessors())//?
                     return -1;
                 int available = getState();
                 int remaining = available - acquires;
@@ -261,8 +261,8 @@ public class Semaphore implements java.io.Serializable {
      *        This value may be negative, in which case releases
      *        must occur before any acquires will be granted.
      */
-    public Semaphore(int permits) {//实例化AQS state设为 permits
-        sync = new NonfairSync(permits);//构造函数 NonfairSync -> Sync -> AbstractQueuedSynchronizer
+    public Semaphore(int permits) {
+        sync = new NonfairSync(permits);//NonfairSync -> Sync -> AQS//初始化state
     }
 
     /**
@@ -309,7 +309,7 @@ public class Semaphore implements java.io.Serializable {
      * @throws InterruptedException if the current thread is interrupted
      */
     public void acquire() throws InterruptedException {
-        sync.acquireSharedInterruptibly(1);//Sync -> AQS -> NonfairSync -> Sync
+        sync.acquireSharedInterruptibly(1);
     }
 
     /**

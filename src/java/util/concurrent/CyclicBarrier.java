@@ -176,7 +176,7 @@ public class CyclicBarrier {
      */
     private void nextGeneration() {
         // signal completion of last generation
-        trip.signalAll();//condition 唤醒
+        trip.signalAll();//condition 唤醒全部节点
         // set up next generation
         count = parties;//重置count
         generation = new Generation();
@@ -188,8 +188,8 @@ public class CyclicBarrier {
      */
     private void breakBarrier() {
         generation.broken = true;
-        count = parties;
-        trip.signalAll();
+        count = parties;//重置count
+        trip.signalAll();//condition 唤醒全部节点
     }
 
     /**
@@ -207,22 +207,22 @@ public class CyclicBarrier {
                 throw new BrokenBarrierException();
 
             if (Thread.interrupted()) {
-                breakBarrier();
+                breakBarrier();//唤醒其余节点
                 throw new InterruptedException();
             }
 
-            int index = --count;
-            if (index == 0) {  // tripped//起跑
+            int index = --count;//要等待的个数
+            if (index == 0) {  // tripped//全部等待线程就位
                 boolean ranAction = false;
                 try {
-                    final Runnable command = barrierCommand;//起跑 回调
+                    final Runnable command = barrierCommand;
                     if (command != null)
-                        command.run();
+                        command.run();//回调
                     ranAction = true;
                     nextGeneration();
                     return 0;
                 } finally {
-                    if (!ranAction)
+                    if (!ranAction)//可能回调异常，ranAction == false
                         breakBarrier();
                 }
             }
@@ -231,9 +231,9 @@ public class CyclicBarrier {
             for (;;) {
                 try {
                     if (!timed)
-                        trip.await();
-                    else if (nanos > 0L)
-                        nanos = trip.awaitNanos(nanos);
+                        trip.await();//不需要设置超时，直接等待
+                    else if (nanos > 0L)//判断超时
+                        nanos = trip.awaitNanos(nanos);//挂起一段时间自动唤醒
                 } catch (InterruptedException ie) {
                     if (g == generation && ! g.broken) {
                         breakBarrier();
@@ -252,7 +252,7 @@ public class CyclicBarrier {
                 if (g != generation)
                     return index;
 
-                if (timed && nanos <= 0L) {
+                if (timed && nanos <= 0L) {//超时
                     breakBarrier();
                     throw new TimeoutException();
                 }
@@ -466,8 +466,8 @@ public class CyclicBarrier {
         final ReentrantLock lock = this.lock;
         lock.lock();
         try {
-            breakBarrier();   // break the current generation
-            nextGeneration(); // start a new generation
+            breakBarrier();   // break the current generation//释放当前代
+            nextGeneration(); // start a new generation//开启下一代
         } finally {
             lock.unlock();
         }
@@ -483,7 +483,7 @@ public class CyclicBarrier {
         final ReentrantLock lock = this.lock;
         lock.lock();
         try {
-            return parties - count;
+            return parties - count;//已经在等待的个数
         } finally {
             lock.unlock();
         }

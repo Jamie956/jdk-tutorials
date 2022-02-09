@@ -20,3 +20,5 @@ Debug and comments step
 - ThreadPoolExecutor
 - ReentrantLock
 - AbstractQueuedSynchronizer
+- Semaphore
+- CyclicBarrier
