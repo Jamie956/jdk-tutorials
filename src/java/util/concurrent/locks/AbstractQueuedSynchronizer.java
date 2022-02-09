@@ -1667,7 +1667,7 @@ public abstract class AbstractQueuedSynchronizer
      * @return true if successfully transferred (else the node was
      * cancelled before signal)
      */
-    final boolean transferForSignal(Node node) {//修改节点状态
+    final boolean transferForSignal(Node node) {//修改节点状态，加入wait queue
         /*
          * If cannot change waitStatus, the node has been cancelled.
          */
@@ -1743,7 +1743,7 @@ public abstract class AbstractQueuedSynchronizer
      * @throws NullPointerException if the condition is null
      */
     public final boolean owns(ConditionObject condition) {
-        return condition.isOwnedBy(this);//能判断是不是同一个实例?
+        return condition.isOwnedBy(this);//判断 实例化condition的AQS 和 AQS实例 是不是同一个实例
     }
 
     /**
@@ -1845,14 +1845,14 @@ public abstract class AbstractQueuedSynchronizer
          * Adds a new waiter to wait queue.
          * @return its new wait node
          */
-        private Node addConditionWaiter() {//condition queue 尾插 condition状态结点
+        private Node addConditionWaiter() {//condition queue 入队
             Node t = lastWaiter;
             // If lastWaiter is cancelled, clean out.
-            if (t != null && t.waitStatus != Node.CONDITION) {//队尾结点状态 非condition
-                unlinkCancelledWaiters();
+            if (t != null && t.waitStatus != Node.CONDITION) {
+                unlinkCancelledWaiters();//移除非condition状态结点
                 t = lastWaiter;
             }
-            Node node = new Node(Thread.currentThread(), Node.CONDITION);//实例化一个 CONDITION 状态的节点
+            Node node = new Node(Thread.currentThread(), Node.CONDITION);//实例化节点，CONDITION 状态，当前线程
             if (t == null)
                 firstWaiter = node;
             else
@@ -1873,14 +1873,14 @@ public abstract class AbstractQueuedSynchronizer
                     lastWaiter = null;
                 first.nextWaiter = null;
             } while (!transferForSignal(first) &&
-                     (first = firstWaiter) != null);
+                     (first = firstWaiter) != null);//循环直到成功唤醒节点
         }
 
         /**
          * Removes and transfers all nodes.
          * @param first (non-null) the first node on condition queue
          */
-        private void doSignalAll(Node first) {//condition queue 的每个节点加到 wait queue
+        private void doSignalAll(Node first) {//condition queue 的每个节点加到 wait queue tail
             lastWaiter = firstWaiter = null;//由于唤醒condition queue全部节点，指针没必要存储了
             do {
                 Node next = first.nextWaiter;
@@ -1904,21 +1904,21 @@ public abstract class AbstractQueuedSynchronizer
          * without requiring many re-traversals during cancellation
          * storms.
          */
-        private void unlinkCancelledWaiters() {//移除非condition结点
+        private void unlinkCancelledWaiters() {//移除非condition状态结点
             Node t = firstWaiter;
             Node trail = null;
-            while (t != null) {//从头结点开始，直到结点为空
+            while (t != null) {//遍历condition queue
                 Node next = t.nextWaiter;
-                if (t.waitStatus != Node.CONDITION) {//头结点状态为 非condition
-                    t.nextWaiter = null;//取消头结点的next 结点指向
-                    if (trail == null)//如果trail 为空，firstWaiter指向next，否则trail的下一结点指向next
-                        firstWaiter = next;
+                if (t.waitStatus != Node.CONDITION) {
+                    t.nextWaiter = null;//unlink 非 condition 状态节点
+                    if (trail == null)
+                        firstWaiter = next;//unlink 非 condition 状态节点，前驱没有 非condition 节点，next直接做头节点
                     else
-                        trail.nextWaiter = next;//此处trail 相当于 t 的prev结点，删除结点t，结果 trail -> next
+                        trail.nextWaiter = next;//非 condition 状态节点trail 指向 next，相当于unlink t节点
                     if (next == null)
-                        lastWaiter = trail;//下结点为空，可能是处理到队尾了，终止循环
+                        lastWaiter = trail;//最后一个非condition状态节点trail 作为队尾
                 }
-                else//头结点状态为 condition
+                else//结点状态为 condition
                     trail = t;
                 t = next;
             }
@@ -2198,7 +2198,7 @@ public abstract class AbstractQueuedSynchronizer
             if (!isHeldExclusively())
                 throw new IllegalMonitorStateException();//非独占线程抛出异常
             for (Node w = firstWaiter; w != null; w = w.nextWaiter) {
-                if (w.waitStatus == Node.CONDITION)//遍历 condition queue，找到第一个condition 状态的节点返回true
+                if (w.waitStatus == Node.CONDITION)//查找condition queue 第一个condition 状态的节点
                     return true;
             }
             return false;
