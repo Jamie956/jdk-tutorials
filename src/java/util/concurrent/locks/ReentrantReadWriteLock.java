@@ -369,11 +369,11 @@ public class ReentrantReadWriteLock
         protected final boolean tryRelease(int releases) {//重写AQS方法
             if (!isHeldExclusively())
                 throw new IllegalMonitorStateException();
-            int nextc = getState() - releases;
+            int nextc = getState() - releases;//独占锁直接使用低16位减releases
             boolean free = exclusiveCount(nextc) == 0;
             if (free)
                 setExclusiveOwnerThread(null);//独占锁全部释放时，移除独占线程
-            setState(nextc);//减持state
+            setState(nextc);//减持锁
             return free;
         }
 
@@ -392,18 +392,18 @@ public class ReentrantReadWriteLock
             Thread current = Thread.currentThread();
             int c = getState();
             int w = exclusiveCount(c);
-            if (c != 0) {//state 不为0 一定有独占锁或者共享锁？
+            if (c != 0) {//state !=0 读锁或者写锁持有锁//写锁重入
                 // (Note: if c != 0 and w == 0 then shared count != 0)
                 if (w == 0 || current != getExclusiveOwnerThread())//锁已经都释放了 或者 非独占线程
-                    return false;
+                    return false;//读锁持有锁，而写锁没有持有锁
                 if (w + exclusiveCount(acquires) > MAX_COUNT)//原来的锁加上需要获取的锁已经超过最大值（16位全1）
                     throw new Error("Maximum lock count exceeded");
                 // Reentrant acquire
-                setState(c + acquires);//state+
+                setState(c + acquires);//写锁重入加持
                 return true;
             }
-            if (writerShouldBlock() ||
-                !compareAndSetState(c, c + acquires))//state==0时，加锁
+            if (writerShouldBlock() ||//非公平锁 false
+                !compareAndSetState(c, c + acquires))//state==0时，抢锁
                 return false;
             setExclusiveOwnerThread(current);//设置独占线程
             return true;
@@ -555,16 +555,16 @@ public class ReentrantReadWriteLock
         final boolean tryWriteLock() {
             Thread current = Thread.currentThread();
             int c = getState();
-            if (c != 0) {
+            if (c != 0) {//写锁或者读锁持有锁
                 int w = exclusiveCount(c);
                 if (w == 0 || current != getExclusiveOwnerThread())
-                    return false;
+                    return false;//读锁占用着锁 或者非重入 fail
                 if (w == MAX_COUNT)
                     throw new Error("Maximum lock count exceeded");
             }
-            if (!compareAndSetState(c, c + 1))
+            if (!compareAndSetState(c, c + 1))//一次CAS
                 return false;
-            setExclusiveOwnerThread(current);
+            setExclusiveOwnerThread(current);//独占线程
             return true;
         }
 

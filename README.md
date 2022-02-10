@@ -22,7 +22,7 @@ Debug and comments step
 4. 细看一遍源码
 
 # 正在注释的类
-- ReentrantReadWriteLock
+- ThreadLocal
 
 # 已做注释的类
 - ThreadPoolExecutor
@@ -31,3 +31,4 @@ Debug and comments step
 - Semaphore
 - CyclicBarrier
 - CountDownLatch
+- ReentrantReadWriteLock 完成测试方法

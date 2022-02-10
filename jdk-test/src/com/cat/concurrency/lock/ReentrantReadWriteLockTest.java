@@ -14,12 +14,15 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * static class WriteLock implements Lock{}
  * }
  */
-public class ReadWriteLockTest {
+public class ReentrantReadWriteLockTest {
     public static void main(String[] args) {
-        ReadWriteLockTest t = new ReadWriteLockTest();
-        t.readLockTryLockTimeout();
+        ReentrantReadWriteLockTest t = new ReentrantReadWriteLockTest();
+        t.testReadWriteLock();
     }
 
+    /**
+     * 测试 读写锁，每把写锁可以同时进行，读锁只能一把把进行
+     */
     public void testReadWriteLock() {
         //Suspend Thread
         ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
@@ -247,5 +250,92 @@ public class ReadWriteLockTest {
 
         new Thread(r).start();
         new Thread(w).start();
+    }
+
+    /**
+     * 测试：写锁单线程lock方法
+     */
+    public void writeLockFirstLock() {
+        ReentrantReadWriteLock rwLock = new ReentrantReadWriteLock();
+        ReentrantReadWriteLock.WriteLock lock = rwLock.writeLock();
+        Runnable r = () -> {
+            try {
+                //Suspend
+                lock.lock();
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                //Suspend
+                lock.unlock();
+            }
+        };
+        new Thread(r).start();
+    }
+
+    /**
+     * 测试：写锁单线程lock方法
+     */
+    public void writeLockReenter() {
+        ReentrantReadWriteLock rwLock = new ReentrantReadWriteLock();
+        ReentrantReadWriteLock.WriteLock lock = rwLock.writeLock();
+        Runnable r = () -> {
+            try {
+                lock.lock();
+                //Suspend
+                lock.lock();
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                //Suspend
+                lock.unlock();
+                lock.unlock();
+            }
+        };
+        new Thread(r).start();
+    }
+
+    /**
+     * 测试：单线程 读锁持锁时，写锁lock方法获取锁
+     */
+    public void writeLockWRLock() {
+        ReentrantReadWriteLock rwLock = new ReentrantReadWriteLock();
+        ReentrantReadWriteLock.WriteLock wLock = rwLock.writeLock();
+        ReentrantReadWriteLock.ReadLock rLock = rwLock.readLock();
+        Runnable r = () -> {
+            try {
+                rLock.lock();
+                //Suspend
+                wLock.lock();
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                wLock.unlock();
+                rLock.unlock();
+            }
+        };
+        new Thread(r).start();
+    }
+
+    /**
+     * 测试：写锁单线程 tryLock 方法
+     */
+    public void writeLockTryLock() {
+        ReentrantReadWriteLock rwLock = new ReentrantReadWriteLock();
+        ReentrantReadWriteLock.WriteLock lock = rwLock.writeLock();
+        Runnable r = () -> {
+            try {
+                //Suspend
+                lock.tryLock();
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                lock.unlock();
+            }
+        };
+        new Thread(r).start();
     }
 }
