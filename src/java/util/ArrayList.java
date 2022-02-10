@@ -278,7 +278,7 @@ public class ArrayList<E> extends AbstractList<E>
      *
      * @return the number of elements in this list
      */
-    public int size() {
+    public int size() {//数组元素个数
         return size;
     }
 
@@ -287,7 +287,7 @@ public class ArrayList<E> extends AbstractList<E>
      *
      * @return <tt>true</tt> if this list contains no elements
      */
-    public boolean isEmpty() {
+    public boolean isEmpty() {//数组元素个数是否为0
         return size == 0;
     }
 
@@ -315,11 +315,11 @@ public class ArrayList<E> extends AbstractList<E>
         if (o == null) {
             for (int i = 0; i < size; i++)
                 if (elementData[i]==null)
-                    return i;
+                    return i;//查找第一个空元素
         } else {
             for (int i = 0; i < size; i++)
                 if (o.equals(elementData[i]))
-                    return i;
+                    return i;//遍历查找
         }
         return -1;
     }
@@ -339,7 +339,7 @@ public class ArrayList<E> extends AbstractList<E>
         } else {
             for (int i = size-1; i >= 0; i--)
                 if (o.equals(elementData[i]))
-                    return i;
+                    return i;//末尾开始遍历，返回第一个元素（同一个实例）
         }
         return -1;
     }
@@ -352,8 +352,8 @@ public class ArrayList<E> extends AbstractList<E>
      */
     public Object clone() {
         try {
-            ArrayList<?> v = (ArrayList<?>) super.clone();
-            v.elementData = Arrays.copyOf(elementData, size);
+            ArrayList<?> v = (ArrayList<?>) super.clone();//对象复制
+            v.elementData = Arrays.copyOf(elementData, size);//数组复制赋值
             v.modCount = 0;
             return v;
         } catch (CloneNotSupportedException e) {
@@ -406,10 +406,10 @@ public class ArrayList<E> extends AbstractList<E>
      */
     @SuppressWarnings("unchecked")
     public <T> T[] toArray(T[] a) {
-        if (a.length < size)
+        if (a.length < size)//数组a太小放不下，新建一个复制
             // Make a new array of a's runtime type, but my contents:
             return (T[]) Arrays.copyOf(elementData, size, a.getClass());
-        System.arraycopy(elementData, 0, a, 0, size);
+        System.arraycopy(elementData, 0, a, 0, size);//将ArrayList 元素复制到数组
         if (a.length > size)
             a[size] = null;
         return a;
@@ -432,7 +432,7 @@ public class ArrayList<E> extends AbstractList<E>
     public E get(int index) {
         rangeCheck(index);//数组越界检查
 
-        return elementData(index);//根据索引从数组获取值，并向下转型
+        return elementData(index);
     }
 
     /**
@@ -448,7 +448,7 @@ public class ArrayList<E> extends AbstractList<E>
         rangeCheck(index);
 
         E oldValue = elementData(index);
-        elementData[index] = element;
+        elementData[index] = element;//指定索引位置赋值
         return oldValue;
     }
 
@@ -460,7 +460,7 @@ public class ArrayList<E> extends AbstractList<E>
      */
     public boolean add(E e) {
         ensureCapacityInternal(size + 1);  // Increments modCount!!//calculateCapacity：计算初始容量，容量至少为10；ensureExplicitCapacity：0.计算新容量；1.分配内存，创建数组；2.将原数组复制到刚刚创建的扩容数组
-        elementData[size++] = e;//数组移动指针，添加元素
+        elementData[size++] = e;//数组末尾添加元素
         return true;
     }
 
@@ -478,7 +478,7 @@ public class ArrayList<E> extends AbstractList<E>
 
         ensureCapacityInternal(size + 1);  // Increments modCount!!
         System.arraycopy(elementData, index, elementData, index + 1,
-                         size - index);
+                         size - index);//移动index之后的元素
         elementData[index] = element;
         size++;
     }
