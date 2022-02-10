@@ -22,7 +22,7 @@ Debug and comments step
 4. 细看一遍源码
 
 # 正在注释的类
-- ThreadLocal
+- ArrayList
 
 # 已做注释的类
 - ThreadPoolExecutor

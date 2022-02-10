@@ -3207,11 +3207,11 @@ public class Arrays {
      */
     public static <T,U> T[] copyOf(U[] original, int newLength, Class<? extends T[]> newType) {//1.分配内存，创建数组；2.将原数组复制到刚刚创建的扩容数组
         @SuppressWarnings("unchecked")
-        T[] copy = ((Object)newType == (Object)Object[].class)//判断是否是 Object[].class
+        T[] copy = ((Object)newType == (Object)Object[].class)//类型判断
             ? (T[]) new Object[newLength]//分配内存，创建数组
             : (T[]) Array.newInstance(newType.getComponentType(), newLength);
         System.arraycopy(original, 0, copy, 0,
-                         Math.min(original.length, newLength));//native方法复制数组，将原数组复制到刚刚创建的扩容数组
+                         Math.min(original.length, newLength));//native方法//复制数组，将原数组original复制到刚刚创建的数组copy
         return copy;
     }
 

@@ -11,7 +11,6 @@ public class Main {
      */
     @Test
     public void arrayListInitTest() {
-        //无参构造
         ArrayList<String> arrayList = new ArrayList<>();
         //扩容机制
         arrayList.add("1");
