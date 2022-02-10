@@ -559,7 +559,7 @@ public class ArrayList<E> extends AbstractList<E>
 
         // clear to let GC do its work
         for (int i = 0; i < size; i++)
-            elementData[i] = null;
+            elementData[i] = null;//将全部元素设为空
 
         size = 0;
     }
@@ -578,10 +578,10 @@ public class ArrayList<E> extends AbstractList<E>
      * @throws NullPointerException if the specified collection is null
      */
     public boolean addAll(Collection<? extends E> c) {
-        Object[] a = c.toArray();
+        Object[] a = c.toArray();//参数集合转数组
         int numNew = a.length;
         ensureCapacityInternal(size + numNew);  // Increments modCount
-        System.arraycopy(a, 0, elementData, size, numNew);
+        System.arraycopy(a, 0, elementData, size, numNew);//将数组加到ArrayList末尾
         size += numNew;
         return numNew != 0;
     }
@@ -611,9 +611,9 @@ public class ArrayList<E> extends AbstractList<E>
         int numMoved = size - index;
         if (numMoved > 0)
             System.arraycopy(elementData, index, elementData, index + numNew,
-                             numMoved);
+                             numMoved);//ArrayList先腾些空位出来
 
-        System.arraycopy(a, 0, elementData, index, numNew);
+        System.arraycopy(a, 0, elementData, index, numNew);//复制到空位
         size += numNew;
         return numNew != 0;
     }
@@ -717,12 +717,12 @@ public class ArrayList<E> extends AbstractList<E>
 
     private boolean batchRemove(Collection<?> c, boolean complement) {
         final Object[] elementData = this.elementData;
-        int r = 0, w = 0;
+        int r = 0, w = 0;//w 表示后续元素需要移动的位数
         boolean modified = false;
         try {
             for (; r < size; r++)
                 if (c.contains(elementData[r]) == complement)
-                    elementData[w++] = elementData[r];
+                    elementData[w++] = elementData[r];//移动元素
         } finally {
             // Preserve behavioral compatibility with AbstractCollection,
             // even if c.contains() throws.
@@ -735,8 +735,8 @@ public class ArrayList<E> extends AbstractList<E>
             if (w != size) {
                 // clear to let GC do its work
                 for (int i = w; i < size; i++)
-                    elementData[i] = null;
-                modCount += size - w;
+                    elementData[i] = null;//移除末尾没用的元素
+                modCount += size - w;//变更元素的个数
                 size = w;
                 modified = true;
             }

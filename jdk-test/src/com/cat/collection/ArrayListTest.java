@@ -128,7 +128,6 @@ public class ArrayListTest {
         list.add(0, 2);
     }
 
-    //
     @Test
     public void removeTest() {
         ArrayList<Integer> list = new ArrayList<>();
