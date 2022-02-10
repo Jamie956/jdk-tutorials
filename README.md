@@ -15,6 +15,14 @@ Debug and comments step
 1. Import project jdk-test
 2. Modify IDEA SDKs settings, Sourcepath set as /path/to/jdk-src/src
 
+# 策略
+1. 粗看一遍源码大体结构
+2. 写API 测试方法
+3. 调试API 方法，注释
+4. 细看一遍源码
+
+# 正在注释的类
+- ReentrantReadWriteLock
 
 # 已做注释的类
 - ThreadPoolExecutor
