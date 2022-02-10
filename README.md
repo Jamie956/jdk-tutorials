@@ -22,3 +22,4 @@ Debug and comments step
 - AbstractQueuedSynchronizer
 - Semaphore
 - CyclicBarrier
+- CountDownLatch
