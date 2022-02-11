@@ -218,7 +218,7 @@ class TimSort<T> {
         // If array is small, do a "mini-TimSort" with no merges
         if (nRemaining < MIN_MERGE) {
             int initRunLen = countRunAndMakeAscending(a, lo, hi, c);
-            binarySort(a, lo, hi, lo + initRunLen, c);
+            binarySort(a, lo, hi, lo + initRunLen, c);//插入排序
             return;
         }
 
@@ -275,28 +275,28 @@ class TimSort<T> {
      */
     @SuppressWarnings("fallthrough")
     private static <T> void binarySort(T[] a, int lo, int hi, int start,
-                                       Comparator<? super T> c) {
+                                       Comparator<? super T> c) {//插入排序
         assert lo <= start && start <= hi;
         if (start == lo)
             start++;
         for ( ; start < hi; start++) {
-            T pivot = a[start];
+            T pivot = a[start];//数组a [0, start)位置的元素是升序，支点取升序最后一个元素
 
             // Set left (and right) to the index where a[start] (pivot) belongs
-            int left = lo;
-            int right = start;
+            int left = lo;//升序序列的最左边缘
+            int right = start;//升序序列的最右边缘
             assert left <= right;
             /*
              * Invariants:
              *   pivot >= all in [lo, left).
              *   pivot <  all in [right, start).
              */
-            while (left < right) {
-                int mid = (left + right) >>> 1;
-                if (c.compare(pivot, a[mid]) < 0)
-                    right = mid;
-                else
-                    left = mid + 1;
+            while (left < right) {//收窄支点插入范围
+                int mid = (left + right) >>> 1;//中点
+                if (c.compare(pivot, a[mid]) < 0)//中点大
+                    right = mid;//支点插入范围 left-新中点
+                else//中点小
+                    left = mid + 1;//支点插入范围 新中点-right
             }
             assert left == right;
 
@@ -309,13 +309,13 @@ class TimSort<T> {
              */
             int n = start - left;  // The number of elements to move
             // Switch is just an optimization for arraycopy in default case
-            switch (n) {
+            switch (n) {//牛
                 case 2:  a[left + 2] = a[left + 1];
-                case 1:  a[left + 1] = a[left];
+                case 1:  a[left + 1] = a[left];//插入位置元素后移
                          break;
                 default: System.arraycopy(a, left, a, left + 1, n);
             }
-            a[left] = pivot;
+            a[left] = pivot;//插入
         }
     }
 
@@ -352,11 +352,11 @@ class TimSort<T> {
             return 1;
 
         // Find end of run, and reverse range if descending
-        if (c.compare(a[runHi++], a[lo]) < 0) { // Descending
+        if (c.compare(a[runHi++], a[lo]) < 0) { // Descending//Comparator.compare
             while (runHi < hi && c.compare(a[runHi], a[runHi - 1]) < 0)
                 runHi++;
-            reverseRange(a, lo, runHi);
-        } else {                              // Ascending
+            reverseRange(a, lo, runHi);//对降序部分元素进行反转
+        } else {                              // Ascending//升序不用处理
             while (runHi < hi && c.compare(a[runHi], a[runHi - 1]) >= 0)
                 runHi++;
         }

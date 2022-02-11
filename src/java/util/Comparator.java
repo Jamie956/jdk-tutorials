@@ -147,7 +147,7 @@ public interface Comparator<T> {
      * @throws ClassCastException if the arguments' types prevent them from
      *         being compared by this comparator.
      */
-    int compare(T o1, T o2);
+    int compare(T o1, T o2);//
 
     /**
      * Indicates whether some other object is &quot;equal to&quot; this
@@ -484,7 +484,7 @@ public interface Comparator<T> {
      * @throws NullPointerException if the argument is null
      * @since 1.8
      */
-    public static <T> Comparator<T> comparingInt(ToIntFunction<? super T> keyExtractor) {
+    public static <T> Comparator<T> comparingInt(ToIntFunction<? super T> keyExtractor) {//比较器静态方法
         Objects.requireNonNull(keyExtractor);
         return (Comparator<T> & Serializable)
             (c1, c2) -> Integer.compare(keyExtractor.applyAsInt(c1), keyExtractor.applyAsInt(c2));

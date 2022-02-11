@@ -1459,7 +1459,7 @@ public class ArrayList<E> extends AbstractList<E>
     @SuppressWarnings("unchecked")
     public void sort(Comparator<? super E> c) {
         final int expectedModCount = modCount;
-        Arrays.sort((E[]) elementData, 0, size, c);
+        Arrays.sort((E[]) elementData, 0, size, c);//数组排序 (arr, from, to, comparator)
         if (modCount != expectedModCount) {
             throw new ConcurrentModificationException();
         }

@@ -305,4 +305,42 @@ public class ArrayListTest {
 
         list.replaceAll(e -> e * 2);
     }
+
+    @Test
+    public void sortTest() {
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(3);
+        list.add(4);
+        list.add(2);
+        list.add(7);
+        list.add(3);
+
+        list.sort(Comparator.comparingInt(e -> e));
+    }
+
+    @Test
+    public void sortNoComparatorTest() {
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(3);
+        list.add(4);
+        list.add(2);
+        list.add(7);
+        list.add(3);
+
+        list.sort(null);
+    }
+
+    @Test
+    public void sortNoComparator32Test() {
+        ArrayList<Integer> list = new ArrayList<>();
+        Random random = new Random();
+        for (int j = 0; j < 33; j++) {
+            int i = random.nextInt(100);
+            list.add(i);
+        }
+        list.sort(null);
+    }
+
 }

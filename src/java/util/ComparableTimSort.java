@@ -179,13 +179,13 @@ class ComparableTimSort {
     static void sort(Object[] a, int lo, int hi, Object[] work, int workBase, int workLen) {
         assert a != null && lo >= 0 && lo <= hi && hi <= a.length;
 
-        int nRemaining  = hi - lo;
+        int nRemaining  = hi - lo;//需要排序的元素个数
         if (nRemaining < 2)
             return;  // Arrays of size 0 and 1 are always sorted
 
         // If array is small, do a "mini-TimSort" with no merges
-        if (nRemaining < MIN_MERGE) {
-            int initRunLen = countRunAndMakeAscending(a, lo, hi);
+        if (nRemaining < MIN_MERGE) {//<32 小数组的排序
+            int initRunLen = countRunAndMakeAscending(a, lo, hi);//由 lo 到 lo + initRunLen 范围升序排序
             binarySort(a, lo, hi, lo + initRunLen);
             return;
         }
@@ -215,11 +215,11 @@ class ComparableTimSort {
             // Advance to find next run
             lo += runLen;
             nRemaining -= runLen;
-        } while (nRemaining != 0);
+        } while (nRemaining != 0);//每个分段排序
 
         // Merge all remaining runs to complete sort
         assert lo == hi;
-        ts.mergeForceCollapse();
+        ts.mergeForceCollapse();//对所有分段排序，有空细看
         assert ts.stackSize == 1;
     }
 
@@ -241,12 +241,12 @@ class ComparableTimSort {
      *        not already known to be sorted ({@code lo <= start <= hi})
      */
     @SuppressWarnings({"fallthrough", "rawtypes", "unchecked"})
-    private static void binarySort(Object[] a, int lo, int hi, int start) {
+    private static void binarySort(Object[] a, int lo, int hi, int start) {//插入排序
         assert lo <= start && start <= hi;
         if (start == lo)
             start++;
         for ( ; start < hi; start++) {
-            Comparable pivot = (Comparable) a[start];
+            Comparable pivot = (Comparable) a[start];//支点
 
             // Set left (and right) to the index where a[start] (pivot) belongs
             int left = lo;
@@ -257,11 +257,11 @@ class ComparableTimSort {
              *   pivot >= all in [lo, left).
              *   pivot <  all in [right, start).
              */
-            while (left < right) {
-                int mid = (left + right) >>> 1;
-                if (pivot.compareTo(a[mid]) < 0)
+            while (left < right) {//收窄支点插入范围，定位插入位置
+                int mid = (left + right) >>> 1;//中点位置
+                if (pivot.compareTo(a[mid]) < 0)//中点大
                     right = mid;
-                else
+                else//中点小
                     left = mid + 1;
             }
             assert left == right;
@@ -281,7 +281,7 @@ class ComparableTimSort {
                          break;
                 default: System.arraycopy(a, left, a, left + 1, n);
             }
-            a[left] = pivot;
+            a[left] = pivot;//支点插入到比较得到的位置
         }
     }
 
@@ -314,13 +314,13 @@ class ComparableTimSort {
         assert lo < hi;
         int runHi = lo + 1;
         if (runHi == hi)
-            return 1;
+            return 1;//只有一个元素不需要排序
 
         // Find end of run, and reverse range if descending
         if (((Comparable) a[runHi++]).compareTo(a[lo]) < 0) { // Descending
             while (runHi < hi && ((Comparable) a[runHi]).compareTo(a[runHi - 1]) < 0)
                 runHi++;
-            reverseRange(a, lo, runHi);
+            reverseRange(a, lo, runHi);//一段有序序列
         } else {                              // Ascending
             while (runHi < hi && ((Comparable) a[runHi]).compareTo(a[runHi - 1]) >= 0)
                 runHi++;
@@ -338,7 +338,7 @@ class ComparableTimSort {
      */
     private static void reverseRange(Object[] a, int lo, int hi) {
         hi--;
-        while (lo < hi) {
+        while (lo < hi) {//高位和地位交换
             Object t = a[lo];
             a[lo++] = a[hi];
             a[hi--] = t;
@@ -362,7 +362,7 @@ class ComparableTimSort {
      * @param n the length of the array to be sorted
      * @return the length of the minimum run to be merged
      */
-    private static int minRunLength(int n) {
+    private static int minRunLength(int n) {//计算小于32的数
         assert n >= 0;
         int r = 0;      // Becomes 1 if any 1 bits are shifted off
         while (n >= MIN_MERGE) {
