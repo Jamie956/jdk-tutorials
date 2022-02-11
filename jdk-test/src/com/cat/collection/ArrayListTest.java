@@ -3,7 +3,7 @@ package com.cat.collection;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
+import java.util.*;
 
 public class ArrayListTest {
 
@@ -199,4 +199,110 @@ public class ArrayListTest {
         list.removeAll(list2);
     }
 
+    @Test
+    public void retainAllTest() {
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        list.add(4);
+        list.add(5);
+
+        ArrayList<Integer> list2 = new ArrayList<>();
+        list2.add(1);
+        list2.add(2);
+
+        list.retainAll(list2);
+    }
+
+    @Test
+    public void listIteratorTest() {
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+
+        ListIterator<Integer> integerListIterator = list.listIterator(1);
+    }
+
+    @Test
+    public void listIteratorByIndexTest() {
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+
+        ListIterator<Integer> itr = list.listIterator();
+        itr.add(9);
+        itr.add(10);
+        Integer previous = itr.previous();
+        itr.set(5);
+    }
+
+    @Test
+    public void iteratorTest() {
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+
+        Iterator<Integer> iterator = list.iterator();
+
+        iterator.hasNext();
+        iterator.next();
+        iterator.remove();
+        iterator.forEachRemaining((Integer e) -> System.out.println(e));
+    }
+
+    @Test
+    public void subListTest() {
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        List<Integer> integers = list.subList(0, 1);
+    }
+
+    @Test
+    public void forEachTest() {
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        list.forEach(e -> System.out.println(e));
+    }
+
+    @Test
+    public void spliteratorTest() {
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+
+        Spliterator<Integer> spliterator = list.spliterator();
+        Spliterator<Integer> integerSpliterator = spliterator.trySplit();
+        spliterator.tryAdvance(e -> System.out.println(e));
+    }
+
+    @Test
+    public void removeIfTest() {
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        list.add(4);
+
+        boolean b = list.removeIf(e -> e % 2 == 0);
+    }
+
+    @Test
+    public void replaceAllTest() {
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        list.add(4);
+
+        list.replaceAll(e -> e * 2);
+    }
 }

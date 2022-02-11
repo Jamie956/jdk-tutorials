@@ -712,7 +712,7 @@ public class ArrayList<E> extends AbstractList<E>
      */
     public boolean retainAll(Collection<?> c) {
         Objects.requireNonNull(c);
-        return batchRemove(c, true);
+        return batchRemove(c, true);//elementData 元素存在于集合c的才保留
     }
 
     private boolean batchRemove(Collection<?> c, boolean complement) {
@@ -863,8 +863,8 @@ public class ArrayList<E> extends AbstractList<E>
             Object[] elementData = ArrayList.this.elementData;
             if (i >= elementData.length)
                 throw new ConcurrentModificationException();
-            cursor = i + 1;
-            return (E) elementData[lastRet = i];
+            cursor = i + 1;//下一次读取的游标
+            return (E) elementData[lastRet = i];//更新最后一个元素的游标
         }
 
         public void remove() {
@@ -896,7 +896,7 @@ public class ArrayList<E> extends AbstractList<E>
                 throw new ConcurrentModificationException();
             }
             while (i != size && modCount == expectedModCount) {
-                consumer.accept((E) elementData[i++]);
+                consumer.accept((E) elementData[i++]);//数组每一个元素执行consumer
             }
             // update once at end of iteration to reduce heap write traffic
             cursor = i;
@@ -941,7 +941,7 @@ public class ArrayList<E> extends AbstractList<E>
             if (i >= elementData.length)
                 throw new ConcurrentModificationException();
             cursor = i;
-            return (E) elementData[lastRet = i];
+            return (E) elementData[lastRet = i];//迭代最后加入的一个元素
         }
 
         public void set(E e) {
@@ -950,19 +950,19 @@ public class ArrayList<E> extends AbstractList<E>
             checkForComodification();
 
             try {
-                ArrayList.this.set(lastRet, e);
+                ArrayList.this.set(lastRet, e);//外部类set，修改ArrayList元素，位置是迭代器末尾元素位置 lastRet
             } catch (IndexOutOfBoundsException ex) {
                 throw new ConcurrentModificationException();
             }
         }
 
-        public void add(E e) {
+        public void add(E e) {//元素添加到外部类
             checkForComodification();
 
             try {
                 int i = cursor;
-                ArrayList.this.add(i, e);
-                cursor = i + 1;
+                ArrayList.this.add(i, e);//外部类方法
+                cursor = i + 1;//游标
                 lastRet = -1;
                 expectedModCount = modCount;
             } catch (IndexOutOfBoundsException ex) {
@@ -1254,7 +1254,7 @@ public class ArrayList<E> extends AbstractList<E>
         final E[] elementData = (E[]) this.elementData;
         final int size = this.size;
         for (int i=0; modCount == expectedModCount && i < size; i++) {
-            action.accept(elementData[i]);
+            action.accept(elementData[i]);//每个元素执行consumer
         }
         if (modCount != expectedModCount) {
             throw new ConcurrentModificationException();
@@ -1411,7 +1411,7 @@ public class ArrayList<E> extends AbstractList<E>
             @SuppressWarnings("unchecked")
             final E element = (E) elementData[i];
             if (filter.test(element)) {
-                removeSet.set(i);
+                removeSet.set(i);//过滤元素
                 removeCount++;
             }
         }
@@ -1447,7 +1447,7 @@ public class ArrayList<E> extends AbstractList<E>
         final int expectedModCount = modCount;
         final int size = this.size;
         for (int i=0; modCount == expectedModCount && i < size; i++) {
-            elementData[i] = operator.apply((E) elementData[i]);
+            elementData[i] = operator.apply((E) elementData[i]);//每个元素执行函数
         }
         if (modCount != expectedModCount) {
             throw new ConcurrentModificationException();
