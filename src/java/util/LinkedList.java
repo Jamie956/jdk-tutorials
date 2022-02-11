@@ -168,17 +168,17 @@ public class LinkedList<E>
     /**
      * Unlinks non-null first node f.
      */
-    private E unlinkFirst(Node<E> f) {
+    private E unlinkFirst(Node<E> f) {//unlink f 节点 包括它的前驱节点
         // assert f == first && f != null;
         final E element = f.item;
         final Node<E> next = f.next;
-        f.item = null;
-        f.next = null; // help GC
+        f.item = null;//clear item
+        f.next = null; // help GC//f unlink next
         first = next;
         if (next == null)
             last = null;
         else
-            next.prev = null;
+            next.prev = null;//next unlink prev
         size--;
         modCount++;
         return element;
@@ -191,7 +191,7 @@ public class LinkedList<E>
         // assert l == last && l != null;
         final E element = l.item;
         final Node<E> prev = l.prev;
-        l.item = null;
+        l.item = null;//clear item
         l.prev = null; // help GC
         last = prev;
         if (prev == null)
@@ -242,7 +242,7 @@ public class LinkedList<E>
         final Node<E> f = first;
         if (f == null)
             throw new NoSuchElementException();
-        return f.item;
+        return f.item;//链头的值
     }
 
     /**
@@ -255,7 +255,7 @@ public class LinkedList<E>
         final Node<E> l = last;
         if (l == null)
             throw new NoSuchElementException();
-        return l.item;
+        return l.item;//链尾的值
     }
 
     /**
@@ -405,33 +405,33 @@ public class LinkedList<E>
     public boolean addAll(int index, Collection<? extends E> c) {
         checkPositionIndex(index);
 
-        Object[] a = c.toArray();
+        Object[] a = c.toArray();//集合实现的toArray//集合转数组
         int numNew = a.length;
         if (numNew == 0)
             return false;
 
         Node<E> pred, succ;
-        if (index == size) {
+        if (index == size) {//从 LinkedList 末尾插入时
             succ = null;
             pred = last;
-        } else {
-            succ = node(index);
-            pred = succ.prev;
+        } else {//从 LinkedList 中间插入时
+            succ = node(index);//子链
+            pred = succ.prev;//与新数组链接的前驱节点
         }
 
         for (Object o : a) {
             @SuppressWarnings("unchecked") E e = (E) o;
-            Node<E> newNode = new Node<>(pred, e, null);
+            Node<E> newNode = new Node<>(pred, e, null);//新节点实例
             if (pred == null)
-                first = newNode;
+                first = newNode;//无前驱
             else
-                pred.next = newNode;
+                pred.next = newNode;//前驱关联新节点
             pred = newNode;
         }
 
         if (succ == null) {
             last = pred;
-        } else {
+        } else {//有子链，链接到新数组形成的链的末尾
             pred.next = succ;
             succ.prev = pred;
         }
@@ -563,15 +563,15 @@ public class LinkedList<E>
     /**
      * Returns the (non-null) Node at the specified element index.
      */
-    Node<E> node(int index) {//一次二分 查找，返回查找到的节点
+    Node<E> node(int index) {//根据索引查找节点
         // assert isElementIndex(index);
 
-        if (index < (size >> 1)) {//index < size*(1/2)，从开头开始查找，极端情况最多查找size*(1/2) 次
+        if (index < (size >> 1)) {//index 小于中点，从开头开始查找，极端情况最多查找 size/2 次
             Node<E> x = first;
             for (int i = 0; i < index; i++)
                 x = x.next;
             return x;
-        } else {//index >= size*(1/2)，从结尾开始查找
+        } else {//index 大于中点，从结尾开始查找
             Node<E> x = last;
             for (int i = size - 1; i > index; i--)
                 x = x.prev;
