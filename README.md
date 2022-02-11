@@ -22,7 +22,11 @@ Debug and comments step
 4. 细看一遍源码
 
 # 正在注释的类
-- ArrayList
+- LinkedList
+- HashMap
+- TreeSet
+- ArrayDeque
+- HashSet
 
 # 已做注释的类
 - ThreadPoolExecutor
@@ -32,3 +36,5 @@ Debug and comments step
 - CyclicBarrier
 - CountDownLatch
 - ReentrantReadWriteLock 完成测试方法
+- ArrayList 完成测试方法
+
