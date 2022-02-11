@@ -138,13 +138,13 @@ public class LinkedList<E>
      * Links e as last element.
      */
     void linkLast(E e) {//链尾新增节点
-        final Node<E> l = last;//尾节点指针
-        final Node<E> newNode = new Node<>(l, e, null);//实例化链表节点，前驱节点是尾节点
-        last = newNode;//更新尾节点指针
-        if (l == null)//原尾指针为空，说明链表原来是空的
-            first = newNode;//链表为空，头指针指向新节点
+        final Node<E> l = last;
+        final Node<E> newNode = new Node<>(l, e, null);
+        last = newNode;
+        if (l == null)
+            first = newNode;
         else
-            l.next = newNode;//原尾节点next指针关联新节点
+            l.next = newNode;
         size++;
         modCount++;
     }
@@ -156,11 +156,11 @@ public class LinkedList<E>
         // assert succ != null;
         final Node<E> pred = succ.prev;
         final Node<E> newNode = new Node<>(pred, e, succ);
-        succ.prev = newNode;
+        succ.prev = newNode;//后驱节点关联新节点
         if (pred == null)
             first = newNode;
         else
-            pred.next = newNode;
+            pred.next = newNode;//前驱节点关联新节点
         size++;
         modCount++;
     }
@@ -206,7 +206,7 @@ public class LinkedList<E>
     /**
      * Unlinks non-null node x.
      */
-    E unlink(Node<E> x) {
+    E unlink(Node<E> x) {//unlink x
         // assert x != null;
         final E element = x.item;
         final Node<E> next = x.next;
@@ -214,14 +214,14 @@ public class LinkedList<E>
 
         if (prev == null) {
             first = next;
-        } else {
+        } else {//unlink prev
             prev.next = next;
             x.prev = null;//help GC
         }
 
         if (next == null) {
             last = prev;
-        } else {
+        } else {//unlink next
             next.prev = prev;
             x.next = null;//help GC
         }
@@ -238,11 +238,11 @@ public class LinkedList<E>
      * @return the first element in this list
      * @throws NoSuchElementException if this list is empty
      */
-    public E getFirst() {
+    public E getFirst() {//第一个元素的值
         final Node<E> f = first;
         if (f == null)
             throw new NoSuchElementException();
-        return f.item;//链头的值
+        return f.item;
     }
 
     /**
@@ -264,7 +264,7 @@ public class LinkedList<E>
      * @return the first element from this list
      * @throws NoSuchElementException if this list is empty
      */
-    public E removeFirst() {
+    public E removeFirst() {//移除第一个节点
         final Node<E> f = first;
         if (f == null)
             throw new NoSuchElementException();
@@ -356,14 +356,14 @@ public class LinkedList<E>
         if (o == null) {
             for (Node<E> x = first; x != null; x = x.next) {
                 if (x.item == null) {
-                    unlink(x);
+                    unlink(x);//第一次找到null就 unlink 并返回
                     return true;
                 }
             }
         } else {
             for (Node<E> x = first; x != null; x = x.next) {
                 if (o.equals(x.item)) {
-                    unlink(x);
+                    unlink(x);//第一次找到元素就 unlink 并返回
                     return true;
                 }
             }
@@ -450,7 +450,7 @@ public class LinkedList<E>
         // - helps a generational GC if the discarded nodes inhabit
         //   more than one generation
         // - is sure to free memory even if there is a reachable Iterator
-        for (Node<E> x = first; x != null; ) {
+        for (Node<E> x = first; x != null; ) {//遍历，节点属性设空
             Node<E> next = x.next;
             x.item = null;
             x.next = null;
@@ -474,7 +474,7 @@ public class LinkedList<E>
      */
     public E get(int index) {
         checkElementIndex(index);
-        return node(index).item;//一次二分 查找
+        return node(index).item;
     }
 
     /**
@@ -486,11 +486,11 @@ public class LinkedList<E>
      * @return the element previously at the specified position
      * @throws IndexOutOfBoundsException {@inheritDoc}
      */
-    public E set(int index, E element) {
+    public E set(int index, E element) {//仅仅替换值
         checkElementIndex(index);
-        Node<E> x = node(index);
+        Node<E> x = node(index);//查找节点
         E oldVal = x.item;
-        x.item = element;
+        x.item = element;//替换原节点的值
         return oldVal;
     }
 
@@ -503,13 +503,13 @@ public class LinkedList<E>
      * @param element element to be inserted
      * @throws IndexOutOfBoundsException {@inheritDoc}
      */
-    public void add(int index, E element) {
+    public void add(int index, E element) {//新增节点
         checkPositionIndex(index);
 
         if (index == size)
             linkLast(element);
         else
-            linkBefore(element, node(index));
+            linkBefore(element, node(index));//node(index) 后驱节点链
     }
 
     /**
@@ -592,17 +592,17 @@ public class LinkedList<E>
      * @return the index of the first occurrence of the specified element in
      *         this list, or -1 if this list does not contain the element
      */
-    public int indexOf(Object o) {
+    public int indexOf(Object o) {//元素所在位置索引
         int index = 0;
         if (o == null) {
             for (Node<E> x = first; x != null; x = x.next) {
                 if (x.item == null)
-                    return index;
+                    return index;//第一个null的位置
                 index++;
             }
         } else {
             for (Node<E> x = first; x != null; x = x.next) {
-                if (o.equals(x.item))
+                if (o.equals(x.item))//与元素地址相等，返回索引位置
                     return index;
                 index++;
             }
@@ -630,7 +630,7 @@ public class LinkedList<E>
                     return index;
             }
         } else {
-            for (Node<E> x = last; x != null; x = x.prev) {
+            for (Node<E> x = last; x != null; x = x.prev) {//从后往前
                 index--;
                 if (o.equals(x.item))
                     return index;
@@ -647,7 +647,7 @@ public class LinkedList<E>
      * @return the head of this list, or {@code null} if this list is empty
      * @since 1.5
      */
-    public E peek() {
+    public E peek() {//获取第一个元素
         final Node<E> f = first;
         return (f == null) ? null : f.item;
     }
@@ -669,7 +669,7 @@ public class LinkedList<E>
      * @return the head of this list, or {@code null} if this list is empty
      * @since 1.5
      */
-    public E poll() {
+    public E poll() {//弹出第一个元素
         final Node<E> f = first;
         return (f == null) ? null : unlinkFirst(f);
     }
@@ -825,7 +825,7 @@ public class LinkedList<E>
      */
     public boolean removeLastOccurrence(Object o) {
         if (o == null) {
-            for (Node<E> x = last; x != null; x = x.prev) {
+            for (Node<E> x = last; x != null; x = x.prev) {//从后往前
                 if (x.item == null) {
                     unlink(x);
                     return true;
@@ -869,14 +869,14 @@ public class LinkedList<E>
     }
 
     private class ListItr implements ListIterator<E> {
-        private Node<E> lastReturned;
-        private Node<E> next;
+        private Node<E> lastReturned;//上一个读取的节点
+        private Node<E> next;//下一个读取的节点
         private int nextIndex;
         private int expectedModCount = modCount;
 
         ListItr(int index) {
             // assert isPositionIndex(index);
-            next = (index == size) ? null : node(index);
+            next = (index == size) ? null : node(index);//从index 位置开始迭代
             nextIndex = index;
         }
 
@@ -1005,7 +1005,7 @@ public class LinkedList<E>
     @SuppressWarnings("unchecked")
     private LinkedList<E> superClone() {
         try {
-            return (LinkedList<E>) super.clone();
+            return (LinkedList<E>) super.clone();//对象克隆
         } catch (CloneNotSupportedException e) {
             throw new InternalError(e);
         }
@@ -1027,7 +1027,7 @@ public class LinkedList<E>
 
         // Initialize clone with our elements
         for (Node<E> x = first; x != null; x = x.next)
-            clone.add(x.item);
+            clone.add(x.item);//引用的应该还是同一个实例
 
         return clone;
     }
@@ -1050,7 +1050,7 @@ public class LinkedList<E>
         Object[] result = new Object[size];
         int i = 0;
         for (Node<E> x = first; x != null; x = x.next)
-            result[i++] = x.item;
+            result[i++] = x.item;//遍历链表写到数组
         return result;
     }
 
@@ -1100,7 +1100,7 @@ public class LinkedList<E>
         int i = 0;
         Object[] result = a;
         for (Node<E> x = first; x != null; x = x.next)
-            result[i++] = x.item;
+            result[i++] = x.item;//遍历复制到数组
 
         if (a.length > size)
             a[size] = null;

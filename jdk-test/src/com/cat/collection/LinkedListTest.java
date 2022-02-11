@@ -50,7 +50,7 @@ public class LinkedListTest {
         l.add(2);
         l.removeLast();
     }
-//
+
     @Test
     public void addFirstTest() {
         LinkedList<Integer> l = new LinkedList<>();
@@ -354,7 +354,7 @@ public class LinkedListTest {
         l.add(2);
         l.add(2);
 
-        l.clone();
+        Object clone = l.clone();
     }
 
     @Test
@@ -374,7 +374,7 @@ public class LinkedListTest {
         l.add(2);
         l.add(2);
 
-        l.toArray(new Integer[]{6,7});
+        Integer[] integers = l.toArray(new Integer[]{6, 7, 9});
     }
 
 }
