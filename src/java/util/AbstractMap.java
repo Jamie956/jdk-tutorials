@@ -114,13 +114,13 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
             while (i.hasNext()) {
                 Entry<K,V> e = i.next();
                 if (e.getValue()==null)
-                    return true;
+                    return true;//找到第一个空返回
             }
         } else {
             while (i.hasNext()) {
                 Entry<K,V> e = i.next();
                 if (value.equals(e.getValue()))
-                    return true;
+                    return true;//找到第一个相等返回
             }
         }
         return false;
