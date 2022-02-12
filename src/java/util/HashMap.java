@@ -1013,13 +1013,13 @@ public class HashMap<K,V> extends AbstractMap<K,V>
         public final Iterator<Map.Entry<K,V>> iterator() {
             return new EntryIterator();
         }
-        public final boolean contains(Object o) {
-            if (!(o instanceof Map.Entry))
+        public final boolean contains(Object o) {//是否包含该节点
+            if (!(o instanceof Map.Entry))//Entry：节点实现的接口
                 return false;
             Map.Entry<?,?> e = (Map.Entry<?,?>) o;
             Object key = e.getKey();
             Node<K,V> candidate = getNode(hash(key), key);
-            return candidate != null && candidate.equals(e);
+            return candidate != null && candidate.equals(e);//根据key获取map节点再与参数节点比较
         }
         public final boolean remove(Object o) {
             if (o instanceof Map.Entry) {
@@ -1059,7 +1059,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
 
     @Override
     public V putIfAbsent(K key, V value) {
-        return putVal(hash(key), key, value, true, true);
+        return putVal(hash(key), key, value, true, true);//onlyIfAbsent true: 如果找到节点，是否不要更新节点值
     }
 
     @Override
@@ -1070,8 +1070,8 @@ public class HashMap<K,V> extends AbstractMap<K,V>
     @Override
     public boolean replace(K key, V oldValue, V newValue) {
         Node<K,V> e; V v;
-        if ((e = getNode(hash(key), key)) != null &&
-            ((v = e.value) == oldValue || (v != null && v.equals(oldValue)))) {
+        if ((e = getNode(hash(key), key)) != null &&//节点不为空
+            ((v = e.value) == oldValue || (v != null && v.equals(oldValue)))) {//节点值地址对象比较，节点值比较
             e.value = newValue;
             afterNodeAccess(e);
             return true;
@@ -1084,7 +1084,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
         Node<K,V> e;
         if ((e = getNode(hash(key), key)) != null) {
             V oldValue = e.value;
-            e.value = value;
+            e.value = value;//替换旧值
             afterNodeAccess(e);
             return oldValue;
         }
@@ -1093,7 +1093,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
 
     @Override
     public V computeIfAbsent(K key,
-                             Function<? super K, ? extends V> mappingFunction) {
+                             Function<? super K, ? extends V> mappingFunction) {//找到的节点返回，没找到的执行function，function返回值设为节点value
         if (mappingFunction == null)
             throw new NullPointerException();
         int hash = hash(key);
@@ -1102,7 +1102,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
         TreeNode<K,V> t = null;
         Node<K,V> old = null;
         if (size > threshold || (tab = table) == null ||
-            (n = tab.length) == 0)
+            (n = tab.length) == 0)//超过临界值、数组为空、数组长度为0的情况，都要扩容
             n = (tab = resize()).length;
         if ((first = tab[i = (n - 1) & hash]) != null) {
             if (first instanceof TreeNode)
@@ -1121,10 +1121,10 @@ public class HashMap<K,V> extends AbstractMap<K,V>
             V oldValue;
             if (old != null && (oldValue = old.value) != null) {
                 afterNodeAccess(old);
-                return oldValue;
+                return oldValue;//找到的节点返回
             }
         }
-        V v = mappingFunction.apply(key);
+        V v = mappingFunction.apply(key);//执行function
         if (v == null) {
             return null;
         } else if (old != null) {
@@ -1133,9 +1133,9 @@ public class HashMap<K,V> extends AbstractMap<K,V>
             return v;
         }
         else if (t != null)
-            t.putTreeVal(this, tab, hash, key, v);
+            t.putTreeVal(this, tab, hash, key, v);//如果是树节点加到树
         else {
-            tab[i] = newNode(hash, key, v, first);
+            tab[i] = newNode(hash, key, v, first);//头插
             if (binCount >= TREEIFY_THRESHOLD - 1)
                 treeifyBin(tab, hash);
         }
@@ -1146,7 +1146,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
     }
 
     public V computeIfPresent(K key,
-                              BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+                              BiFunction<? super K, ? super V, ? extends V> remappingFunction) {//找到节点，执行函数，将返回值设到节点值
         if (remappingFunction == null)
             throw new NullPointerException();
         Node<K,V> e; V oldValue;
@@ -1167,7 +1167,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
 
     @Override
     public V compute(K key,
-                     BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+                     BiFunction<? super K, ? super V, ? extends V> remappingFunction) {//找到节点，执行函数，返回值设到插入节点value
         if (remappingFunction == null)
             throw new NullPointerException();
         int hash = hash(key);
@@ -1203,7 +1203,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
             else
                 removeNode(hash, key, null, false, true);
         }
-        else if (v != null) {
+        else if (v != null) {//加到树节点或者链表
             if (t != null)
                 t.putTreeVal(this, tab, hash, key, v);
             else {
@@ -1220,7 +1220,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
 
     @Override
     public V merge(K key, V value,
-                   BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
+                   BiFunction<? super V, ? super V, ? extends V> remappingFunction) {//旧值和新值入参函数，函数返回值设到节点value，新值插入map
         if (value == null)
             throw new NullPointerException();
         if (remappingFunction == null)
@@ -1233,7 +1233,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
         if (size > threshold || (tab = table) == null ||
             (n = tab.length) == 0)
             n = (tab = resize()).length;
-        if ((first = tab[i = (n - 1) & hash]) != null) {
+        if ((first = tab[i = (n - 1) & hash]) != null) {//查找节点
             if (first instanceof TreeNode)
                 old = (t = (TreeNode<K,V>)first).getTreeNode(hash, key);
             else {
@@ -1248,21 +1248,21 @@ public class HashMap<K,V> extends AbstractMap<K,V>
                 } while ((e = e.next) != null);
             }
         }
-        if (old != null) {
+        if (old != null) {//节点值入参函数
             V v;
             if (old.value != null)
-                v = remappingFunction.apply(old.value, value);
+                v = remappingFunction.apply(old.value, value);//旧值和新值入参函数
             else
                 v = value;
             if (v != null) {
-                old.value = v;
+                old.value = v;//函数返回值设到节点value
                 afterNodeAccess(old);
             }
             else
                 removeNode(hash, key, null, false, true);
             return v;
         }
-        if (value != null) {
+        if (value != null) {//新值插入map
             if (t != null)
                 t.putTreeVal(this, tab, hash, key, value);
             else {
@@ -1286,7 +1286,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
             int mc = modCount;
             for (int i = 0; i < tab.length; ++i) {
                 for (Node<K,V> e = tab[i]; e != null; e = e.next)
-                    action.accept(e.key, e.value);
+                    action.accept(e.key, e.value);//执行函数
             }
             if (modCount != mc)
                 throw new ConcurrentModificationException();
@@ -1302,7 +1302,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
             int mc = modCount;
             for (int i = 0; i < tab.length; ++i) {
                 for (Node<K,V> e = tab[i]; e != null; e = e.next) {
-                    e.value = function.apply(e.key, e.value);
+                    e.value = function.apply(e.key, e.value);//遍历每个节点执行参数函数
                 }
             }
             if (modCount != mc)
@@ -1330,7 +1330,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
             throw new InternalError(e);
         }
         result.reinitialize();
-        result.putMapEntries(this, false);
+        result.putMapEntries(this, false);//
         return result;
     }
 

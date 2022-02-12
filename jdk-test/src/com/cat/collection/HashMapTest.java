@@ -106,7 +106,7 @@ public class HashMapTest {
         HashMap<Object, Object> map = new HashMap<>();
         map.put("k1", "v1");
         map.put("k2", "v2");
-//
+
         map.entrySet();
     }
 
@@ -124,6 +124,8 @@ public class HashMapTest {
     public void putIfAbsent() {
         HashMap<Object, Object> map = new HashMap<>();
         map.putIfAbsent("k1", "v1");
+        map.putIfAbsent("k1", "update");
+        map.putIfAbsent("k2", "v2");
     }
 
     @Test
@@ -151,8 +153,8 @@ public class HashMapTest {
     public void computeIfAbsent() {
         HashMap<Object, Object> map = new HashMap<>();
         map.put("k1", "v1");
-        map.computeIfAbsent("k1", e -> e + "1");
-        map.computeIfAbsent("k2", e -> e + "1");
+        Object k1 = map.computeIfAbsent("k1", e -> e + "1");
+        Object k2 = map.computeIfAbsent("k2", e -> e + "1");
     }
 
     @Test
@@ -178,7 +180,7 @@ public class HashMapTest {
         HashMap<Object, Object> map = new HashMap<>();
         map.put("k1", "v1");
 
-        BiFunction<Object, Object, Object> bf = (k, v) -> String.format("k=%s, v=%s", k, v);
+        BiFunction<Object, Object, Object> bf = (oldValue, newValue) -> String.format("k=%s, v=%s", oldValue, newValue);
         map.merge("k1","v1", bf);
     }
 
