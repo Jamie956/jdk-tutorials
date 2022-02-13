@@ -206,11 +206,11 @@ class FileOutputStream extends OutputStream
             throw new FileNotFoundException("Invalid file path");
         }
         this.fd = new FileDescriptor();
-        fd.attach(this);
+        fd.attach(this);//绑定文件描述符
         this.append = append;
         this.path = name;
 
-        open(name, append);
+        open(name, append);//打开文件
     }
 
     /**
