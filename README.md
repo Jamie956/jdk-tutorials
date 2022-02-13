@@ -26,7 +26,6 @@ Debug and comments step
 
 
 # 正在注释的类
-- HashMap
 - ThreadPoolExecutor
 - ReentrantLock
 - AbstractQueuedSynchronizer
@@ -43,4 +42,4 @@ Debug and comments step
 - ReentrantReadWriteLock
 - ArrayList
 - LinkedList
-
+- HashMap
