@@ -45,3 +45,4 @@ Debug and comments step
 - HashMap
 - FileInputStream
 - FileOutputStream
+- ByteArrayInputStream
