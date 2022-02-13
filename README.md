@@ -26,8 +26,8 @@ Debug and comments step
 
 
 # 正在注释的类
-- ThreadPoolExecutor
 - ReentrantLock
+- ThreadPoolExecutor
 - AbstractQueuedSynchronizer
 - Semaphore
 - CyclicBarrier
@@ -43,3 +43,4 @@ Debug and comments step
 - ArrayList
 - LinkedList
 - HashMap
+- FileInputStream
