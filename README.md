@@ -26,7 +26,7 @@ Debug and comments step
 
 
 # 正在注释的类
-- ReentrantLock
+
 - ThreadPoolExecutor
 - AbstractQueuedSynchronizer
 - Semaphore
@@ -49,3 +49,7 @@ Debug and comments step
 - ByteArrayOutputStream
 - InputStreamReader
 - OutputStreamWriter
+- ReentrantLock
+
+
+

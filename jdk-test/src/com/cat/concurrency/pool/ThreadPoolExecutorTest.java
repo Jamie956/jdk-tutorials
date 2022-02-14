@@ -13,9 +13,6 @@ import java.util.concurrent.*;
 public class ThreadPoolExecutorTest {
     public static void main(String[] args) {
         ThreadPoolExecutorTest t = new ThreadPoolExecutorTest();
-//        t.poolInitTest();
-//        t.poolAddQueueTest();
-//        t.poolMaxTest();
         t.poolRejectTest();
     }
 

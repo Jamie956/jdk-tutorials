@@ -881,11 +881,11 @@ public abstract class AbstractQueuedSynchronizer
      * @param arg the acquire argument
      */
     private void doAcquireInterruptibly(int arg)
-        throws InterruptedException {
+        throws InterruptedException {//自旋抢锁，还没轮到或者失败时就park
         final Node node = addWaiter(Node.EXCLUSIVE);//添加节点到wait queue
         boolean failed = true;
         try {
-            for (;;) {//自选直到轮到head节点 并且获取锁
+            for (;;) {//自旋直到轮到head节点 并且抢到锁
                 final Node p = node.predecessor();
                 if (p == head && tryAcquire(arg)) {//tryAcquire 由子类实现
                     setHead(node);
@@ -1214,12 +1214,12 @@ public abstract class AbstractQueuedSynchronizer
      *        can represent anything you like.
      * @throws InterruptedException if the current thread is interrupted
      */
-    public final void acquireInterruptibly(int arg)
+    public final void acquireInterruptibly(int arg)//抢占锁，可中断
             throws InterruptedException {
         if (Thread.interrupted())
             throw new InterruptedException();
         if (!tryAcquire(arg))
-            doAcquireInterruptibly(arg);
+            doAcquireInterruptibly(arg);//自旋抢锁，还没轮到或者失败时就park
     }
 
     /**

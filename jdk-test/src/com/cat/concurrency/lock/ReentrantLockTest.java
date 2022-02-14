@@ -1,16 +1,120 @@
 package com.cat.concurrency.lock;
 
+import org.junit.Test;
+
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class ReentrantLockTest {
     public static void main(String[] args) {
-//        lockTest();
-        fairLockTest();
-//        lockTest2();
-//        reLockTest();
-//        twoLockTest();
-//        twoLockTest2();
+        lockTest2();
+    }
+
+    @Test
+    public void cons() {
+        ReentrantLock lock = new ReentrantLock();
+    }
+
+    @Test
+    public void cons2() {
+        ReentrantLock lock = new ReentrantLock(true);
+    }
+
+    @Test
+    public void lock() {
+        ReentrantLock lock = new ReentrantLock();
+        lock.lock();
+    }
+
+    @Test
+    public void lockInterruptibly() throws InterruptedException {
+        ReentrantLock lock = new ReentrantLock();
+        lock.lockInterruptibly();
+    }
+
+    @Test
+    public void tryLock() {
+        ReentrantLock lock = new ReentrantLock();
+        boolean b = lock.tryLock();
+    }
+
+    @Test
+    public void tryLockTime() throws InterruptedException {
+        ReentrantLock lock = new ReentrantLock();
+        boolean b = lock.tryLock(10, TimeUnit.SECONDS);
+    }
+
+    @Test
+    public void unlock() {
+        ReentrantLock lock = new ReentrantLock();
+        lock.unlock();
+    }
+
+    @Test
+    public void newCondition() {
+        ReentrantLock lock = new ReentrantLock();
+        Condition c = lock.newCondition();
+    }
+
+    @Test
+    public void getHoldCount() {
+        ReentrantLock lock = new ReentrantLock();
+        int hc = lock.getHoldCount();
+    }
+
+    @Test
+    public void isHeldByCurrentThread() {
+        ReentrantLock lock = new ReentrantLock();
+        boolean b = lock.isHeldByCurrentThread();
+    }
+
+    @Test
+    public void isLocked() {
+        ReentrantLock lock = new ReentrantLock();
+        boolean b = lock.isLocked();
+    }
+
+    @Test
+    public void isFair() {
+        ReentrantLock lock = new ReentrantLock();
+        boolean b = lock.isFair();
+    }
+
+    @Test
+    public void hasQueuedThreads() {
+        ReentrantLock lock = new ReentrantLock();
+        boolean b = lock.hasQueuedThreads();
+    }
+
+    @Test
+    public void hasQueuedThread() {
+        ReentrantLock lock = new ReentrantLock();
+        boolean b = lock.hasQueuedThread(new Thread());
+    }
+
+    @Test
+    public void getQueueLength() {
+        ReentrantLock lock = new ReentrantLock();
+        int b = lock.getQueueLength();
+    }
+
+    @Test
+    public void getQueuedThreads() {
+        ReentrantLock lock = new ReentrantLock();
+        boolean b = lock.hasWaiters(lock.newCondition());
+    }
+
+    @Test
+    public void getWaitQueueLength() {
+        ReentrantLock lock = new ReentrantLock();
+        int a = lock.getWaitQueueLength(lock.newCondition());
+    }
+
+    @Test
+    public void toString1() {
+        ReentrantLock lock = new ReentrantLock();
+        String s = lock.toString();
     }
 
     public static void lockTest() {
