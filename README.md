@@ -47,3 +47,5 @@ Debug and comments step
 - FileOutputStream
 - ByteArrayInputStream
 - ByteArrayOutputStream
+- InputStreamReader
+- OutputStreamWriter
