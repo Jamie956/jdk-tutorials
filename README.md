@@ -46,3 +46,4 @@ Debug and comments step
 - FileInputStream
 - FileOutputStream
 - ByteArrayInputStream
+- ByteArrayOutputStream

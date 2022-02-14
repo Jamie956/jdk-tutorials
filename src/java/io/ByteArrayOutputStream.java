@@ -110,12 +110,12 @@ public class ByteArrayOutputStream extends OutputStream {
     private void grow(int minCapacity) {
         // overflow-conscious code
         int oldCapacity = buf.length;
-        int newCapacity = oldCapacity << 1;
+        int newCapacity = oldCapacity << 1;//2倍
         if (newCapacity - minCapacity < 0)
             newCapacity = minCapacity;
         if (newCapacity - MAX_ARRAY_SIZE > 0)
             newCapacity = hugeCapacity(minCapacity);
-        buf = Arrays.copyOf(buf, newCapacity);
+        buf = Arrays.copyOf(buf, newCapacity);//复制扩容
     }
 
     private static int hugeCapacity(int minCapacity) {
@@ -132,8 +132,8 @@ public class ByteArrayOutputStream extends OutputStream {
      * @param   b   the byte to be written.
      */
     public synchronized void write(int b) {
-        ensureCapacity(count + 1);
-        buf[count] = (byte) b;
+        ensureCapacity(count + 1);//扩容
+        buf[count] = (byte) b;//写到buf
         count += 1;
     }
 
@@ -150,8 +150,8 @@ public class ByteArrayOutputStream extends OutputStream {
             ((off + len) - b.length > 0)) {
             throw new IndexOutOfBoundsException();
         }
-        ensureCapacity(count + len);
-        System.arraycopy(b, off, buf, count, len);
+        ensureCapacity(count + len);//先扩容数组再写入
+        System.arraycopy(b, off, buf, count, len);//将参数数组off的元素写入buf
         count += len;
     }
 
