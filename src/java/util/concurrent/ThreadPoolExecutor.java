@@ -1680,7 +1680,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
             throw new IllegalArgumentException();
         this.maximumPoolSize = maximumPoolSize;
         if (workerCountOf(ctl.get()) > maximumPoolSize)
-            interruptIdleWorkers();
+            interruptIdleWorkers();//任务比最大线程数还大时，中断线程
     }
 
     /**
@@ -1715,7 +1715,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
         long keepAliveTime = unit.toNanos(time);
         long delta = keepAliveTime - this.keepAliveTime;
         this.keepAliveTime = keepAliveTime;
-        if (delta < 0)
+        if (delta < 0)//减少超时时间
             interruptIdleWorkers();
     }
 
@@ -1785,7 +1785,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
             while (it.hasNext()) {
                 Runnable r = it.next();
                 if (r instanceof Future<?> && ((Future<?>)r).isCancelled())
-                    it.remove();
+                    it.remove();//移除队列里 删除状态的Runnable
             }
         } catch (ConcurrentModificationException fallThrough) {
             // Take slow path if we encounter interference during traversal.
@@ -1812,7 +1812,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
         try {
             // Remove rare and surprising possibility of
             // isTerminated() && getPoolSize() > 0
-            return runStateAtLeast(ctl.get(), TIDYING) ? 0
+            return runStateAtLeast(ctl.get(), TIDYING) ? 0//如果状态时 TIDYING 或者 TERMINATED
                 : workers.size();
         } finally {
             mainLock.unlock();
@@ -1825,13 +1825,13 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
      *
      * @return the number of threads
      */
-    public int getActiveCount() {
+    public int getActiveCount() {//统计持有锁的线程
         final ReentrantLock mainLock = this.mainLock;
         mainLock.lock();
         try {
             int n = 0;
             for (Worker w : workers)
-                if (w.isLocked())
+                if (w.isLocked())//线程是否持有锁
                     ++n;
             return n;
         } finally {
@@ -1869,11 +1869,11 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
         try {
             long n = completedTaskCount;
             for (Worker w : workers) {
-                n += w.completedTasks;
+                n += w.completedTasks;//每条线程的完成任务数
                 if (w.isLocked())
-                    ++n;
+                    ++n;//线程持有锁正在执行任务
             }
-            return n + workQueue.size();
+            return n + workQueue.size();//加上队列任务数
         } finally {
             mainLock.unlock();
         }
@@ -1888,7 +1888,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
      *
      * @return the number of tasks
      */
-    public long getCompletedTaskCount() {
+    public long getCompletedTaskCount() {//完成任务数
         final ReentrantLock mainLock = this.mainLock;
         mainLock.lock();
         try {
@@ -2035,7 +2035,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
          */
         public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
             if (!e.isShutdown()) {
-                r.run();//直接执行拒绝的任务
+                r.run();//直接执行任务
             }
         }
     }

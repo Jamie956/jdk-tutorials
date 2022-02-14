@@ -27,7 +27,6 @@ Debug and comments step
 
 # 正在注释的类
 
-- ThreadPoolExecutor
 - AbstractQueuedSynchronizer
 - Semaphore
 - CyclicBarrier
@@ -50,6 +49,7 @@ Debug and comments step
 - InputStreamReader
 - OutputStreamWriter
 - ReentrantLock
+- ThreadPoolExecutor
 
 
 
