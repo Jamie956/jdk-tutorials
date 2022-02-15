@@ -158,7 +158,8 @@ public class ThreadPoolExecutorTest {
                 new LinkedBlockingQueue<>());
         boolean c = pool.allowsCoreThreadTimeOut();
     }
-//
+
+    //
     @Test
     public void allowCoreThreadTimeOut() {
         ThreadPoolExecutor pool = new ThreadPoolExecutor(2, 2,
@@ -220,7 +221,7 @@ public class ThreadPoolExecutorTest {
         ThreadPoolExecutor pool = new ThreadPoolExecutor(2, 2,
                 0L, TimeUnit.MILLISECONDS,
                 new LinkedBlockingQueue<>());
-         pool.purge();
+        pool.purge();
     }
 
     @Test
