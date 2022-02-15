@@ -26,7 +26,6 @@ Debug and comments step
 
 
 # 正在注释的类
-- CyclicBarrier
 - CountDownLatch
 - TreeSet
 - ArrayDeque
@@ -48,5 +47,5 @@ Debug and comments step
 - ReentrantLock
 - ThreadPoolExecutor
 - Semaphore
-
+- CyclicBarrier
 

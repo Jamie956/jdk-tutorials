@@ -157,7 +157,7 @@ public class CyclicBarrier {
     /** Condition to wait on until tripped */
     private final Condition trip = lock.newCondition();
     /** The number of parties */
-    private final int parties;
+    private final int parties;//每批的个数
     /* The command to run when tripped */
     private final Runnable barrierCommand;
     /** The current generation */
@@ -168,13 +168,13 @@ public class CyclicBarrier {
      * on each generation.  It is reset to parties on each new
      * generation or when broken.
      */
-    private int count;
+    private int count;//还没到达栅栏的个数
 
     /**
      * Updates state on barrier trip and wakes up everyone.
      * Called only while holding lock.
      */
-    private void nextGeneration() {
+    private void nextGeneration() {//下一批
         // signal completion of last generation
         trip.signalAll();//condition 唤醒全部节点
         // set up next generation
@@ -186,8 +186,8 @@ public class CyclicBarrier {
      * Sets current barrier generation as broken and wakes up everyone.
      * Called only while holding lock.
      */
-    private void breakBarrier() {
-        generation.broken = true;
+    private void breakBarrier() {//打破栅栏
+        generation.broken = true;//栅栏状态
         count = parties;//重置count
         trip.signalAll();//condition 唤醒全部节点
     }
@@ -197,9 +197,9 @@ public class CyclicBarrier {
      */
     private int dowait(boolean timed, long nanos)
         throws InterruptedException, BrokenBarrierException,
-               TimeoutException {
+               TimeoutException {//线程就位时执行action并返回，否则等待其他线程
         final ReentrantLock lock = this.lock;
-        lock.lock();//上锁
+        lock.lock();
         try {
             final Generation g = generation;
 
@@ -217,9 +217,9 @@ public class CyclicBarrier {
                 try {
                     final Runnable command = barrierCommand;
                     if (command != null)
-                        command.run();//回调
+                        command.run();//执行action
                     ranAction = true;
-                    nextGeneration();
+                    nextGeneration();//唤醒全部节点
                     return 0;
                 } finally {
                     if (!ranAction)//可能回调异常，ranAction == false
@@ -228,7 +228,7 @@ public class CyclicBarrier {
             }
 
             // loop until tripped, broken, interrupted, or timed out
-            for (;;) {
+            for (;;) {//等待线程就位
                 try {
                     if (!timed)
                         trip.await();//不需要设置超时，直接等待
@@ -466,8 +466,8 @@ public class CyclicBarrier {
         final ReentrantLock lock = this.lock;
         lock.lock();
         try {
-            breakBarrier();   // break the current generation//释放当前代
-            nextGeneration(); // start a new generation//开启下一代
+            breakBarrier();   // break the current generation//打破栅栏
+            nextGeneration(); // start a new generation//下一批
         } finally {
             lock.unlock();
         }
