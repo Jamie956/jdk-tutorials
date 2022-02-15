@@ -120,7 +120,7 @@ public class TreeMap<K,V>
      */
     private final Comparator<? super K> comparator;
 
-    private transient Entry<K,V> root;
+    private transient Entry<K,V> root;//树的根节点
 
     /**
      * The number of entries in the tree
@@ -534,7 +534,7 @@ public class TreeMap<K,V>
      */
     public V put(K key, V value) {
         Entry<K,V> t = root;
-        if (t == null) {
+        if (t == null) {//根节点为空，创建根节点
             compare(key, key); // type (and possibly null) check
 
             root = new Entry<>(key, value, null);
@@ -546,7 +546,7 @@ public class TreeMap<K,V>
         Entry<K,V> parent;
         // split comparator and comparable paths
         Comparator<? super K> cpr = comparator;
-        if (cpr != null) {
+        if (cpr != null) {//有设置比较器
             do {
                 parent = t;
                 cmp = cpr.compare(key, t.key);
@@ -558,27 +558,27 @@ public class TreeMap<K,V>
                     return t.setValue(value);
             } while (t != null);
         }
-        else {
+        else {//没有设置比较器
             if (key == null)
                 throw new NullPointerException();
             @SuppressWarnings("unchecked")
                 Comparable<? super K> k = (Comparable<? super K>) key;
             do {
                 parent = t;
-                cmp = k.compareTo(t.key);
-                if (cmp < 0)
+                cmp = k.compareTo(t.key);//使用key 实现的比较器
+                if (cmp < 0)//搜索左节点
                     t = t.left;
-                else if (cmp > 0)
+                else if (cmp > 0)//搜索右节点
                     t = t.right;
-                else
+                else//key与树节点相等
                     return t.setValue(value);
-            } while (t != null);
+            } while (t != null);//找父节点
         }
-        Entry<K,V> e = new Entry<>(key, value, parent);
+        Entry<K,V> e = new Entry<>(key, value, parent);//创建参数k-v的节点，关联父节点
         if (cmp < 0)
-            parent.left = e;
+            parent.left = e;//新节点左树关联新节点
         else
-            parent.right = e;
+            parent.right = e;//新节点右树关联新节点
         fixAfterInsertion(e);
         size++;
         modCount++;
@@ -1290,8 +1290,8 @@ public class TreeMap<K,V>
      * Compares two keys using the correct comparison method for this TreeMap.
      */
     @SuppressWarnings("unchecked")
-    final int compare(Object k1, Object k2) {
-        return comparator==null ? ((Comparable<? super K>)k1).compareTo((K)k2)
+    final int compare(Object k1, Object k2) {//比较两个key
+        return comparator==null ? ((Comparable<? super K>)k1).compareTo((K)k2)//没有设置比较器。默认使用key的类型实现的比较器方法
             : comparator.compare((K)k1, (K)k2);
     }
 
@@ -2053,9 +2053,9 @@ public class TreeMap<K,V>
     static final class Entry<K,V> implements Map.Entry<K,V> {
         K key;
         V value;
-        Entry<K,V> left;
-        Entry<K,V> right;
-        Entry<K,V> parent;
+        Entry<K,V> left;//左节点
+        Entry<K,V> right;//右节点
+        Entry<K,V> parent;//父节点
         boolean color = BLACK;
 
         /**
@@ -2099,7 +2099,7 @@ public class TreeMap<K,V>
             return oldValue;
         }
 
-        public boolean equals(Object o) {
+        public boolean equals(Object o) {//Entry 比较，k-v相同时 true
             if (!(o instanceof Map.Entry))
                 return false;
             Map.Entry<?,?> e = (Map.Entry<?,?>)o;

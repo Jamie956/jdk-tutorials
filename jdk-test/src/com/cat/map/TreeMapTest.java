@@ -29,6 +29,7 @@ public class TreeMapTest {
     @Test
     public void cons4() {
         TreeMap<Object, Object> tm = new TreeMap<>();
+        tm.put("k3", "v3");
         tm.put("k1", "v1");
         tm.put("k2", "v2");
         TreeMap<Object, Object> m = new TreeMap<>(tm);
@@ -38,6 +39,7 @@ public class TreeMapTest {
     public void containsKey() {
         TreeMap<String, String> m = new TreeMap<>();
         m.put("k1", "v1");
+        //111111
         m.put("k2", "v2");
         boolean b = m.containsKey("k1");
     }
