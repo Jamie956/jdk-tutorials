@@ -29,8 +29,20 @@ Debug and comments step
 - TreeSet
 - ArrayDeque
 - HashSet
-
-
+- ByteBuffer
+- Future
+- Thread
+- AtomicInteger
+- ConcurrentHashMap
+- LinkedBlockingQueue
+- CopyOnWriteArraySet
+- CopyOnWriteArrayList
+- ArrayBlockingQueue
+- HttpURLConnection
+- ServerSocket
+- Socket
+- FileChannel
+- SocketChannel
 
 # 已做注释的类
 - ReentrantReadWriteLock

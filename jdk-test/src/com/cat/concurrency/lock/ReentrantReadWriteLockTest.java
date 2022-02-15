@@ -4,16 +4,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-/**
- * ReentrantReadWriteLock
- * {
- * abstract static class Sync extends AQS{}
- * static final class NonfairSync extends Sync {}
- * static final class FairSync extends Sync {}
- * static class ReadLock implements Lock{}
- * static class WriteLock implements Lock{}
- * }
- */
 public class ReentrantReadWriteLockTest {
     public static void main(String[] args) {
         ReentrantReadWriteLockTest t = new ReentrantReadWriteLockTest();

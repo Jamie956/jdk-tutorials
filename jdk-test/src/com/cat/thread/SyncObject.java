@@ -1,4 +1,4 @@
-package com.cat.concurrency;
+package com.cat.thread;
 
 public class SyncObject {
 

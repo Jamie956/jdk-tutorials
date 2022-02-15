@@ -1,4 +1,4 @@
-package com.cat.concurrency.pool;
+package com.cat.concurrency;
 
 import org.junit.Test;
 
