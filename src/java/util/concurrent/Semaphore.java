@@ -175,7 +175,7 @@ public class Semaphore implements java.io.Serializable {
         }
 
         final int nonfairTryAcquireShared(int acquires) {//非公平锁获取锁
-            for (;;) {//自旋直到全部锁被抢完
+            for (;;) {//自旋
                 int available = getState();
                 int remaining = available - acquires;
                 if (remaining < 0 ||
@@ -206,7 +206,7 @@ public class Semaphore implements java.io.Serializable {
             }
         }
 
-        final int drainPermits() {//重置锁
+        final int drainPermits() {//重置state
             for (;;) {
                 int current = getState();
                 if (current == 0 || compareAndSetState(current, 0))
@@ -222,7 +222,7 @@ public class Semaphore implements java.io.Serializable {
         private static final long serialVersionUID = -2694183684443567898L;
 
         NonfairSync(int permits) {
-            super(permits);
+            super(permits);//初始化state
         }
 
         protected int tryAcquireShared(int acquires) {
@@ -237,7 +237,7 @@ public class Semaphore implements java.io.Serializable {
         private static final long serialVersionUID = 2014338818796000944L;
 
         FairSync(int permits) {
-            super(permits);
+            super(permits);//初始化state
         }
 
         protected int tryAcquireShared(int acquires) {
@@ -262,7 +262,7 @@ public class Semaphore implements java.io.Serializable {
      *        must occur before any acquires will be granted.
      */
     public Semaphore(int permits) {
-        sync = new NonfairSync(permits);//NonfairSync -> Sync -> AQS//初始化state
+        sync = new NonfairSync(permits);//NonfairSync -> Sync -> AQS
     }
 
     /**

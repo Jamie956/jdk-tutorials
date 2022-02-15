@@ -581,14 +581,14 @@ public abstract class AbstractQueuedSynchronizer
      * @return node's predecessor
      */
     private Node enq(final Node node) {//add the node to wait queue tail
-        for (;;) {//CAS可能失败，自旋可以重试
-            Node t = tail;//wait queue tail
+        for (;;) {//CAS可能失败，自旋重试
+            Node t = tail;
             if (t == null) { // Must initialize
-                if (compareAndSetHead(new Node()))//尾指针为空时，初始化头结点
-                    tail = head;
+                if (compareAndSetHead(new Node()))//尾指针为空时，初始化头指针
+                    tail = head;//初始化指针，节点为空
             } else {
                 node.prev = t;
-                if (compareAndSetTail(t, node)) {//将node结点设为 wait queue tail
+                if (compareAndSetTail(t, node)) {
                     t.next = node;
                     return t;//中止自旋
                 }
@@ -602,18 +602,18 @@ public abstract class AbstractQueuedSynchronizer
      * @param mode Node.EXCLUSIVE for exclusive, Node.SHARED for shared
      * @return the new node
      */
-    private Node addWaiter(Node mode) {
-        Node node = new Node(Thread.currentThread(), mode);//结点实例化
+    private Node addWaiter(Node mode) {//wait queue 尾插新节点
+        Node node = new Node(Thread.currentThread(), mode);
         // Try the fast path of enq; backup to full enq on failure
-        Node pred = tail;//wait queue tail node
+        Node pred = tail;
         if (pred != null) {
             node.prev = pred;
-            if (compareAndSetTail(pred, node)) {//新节点添加到 wait queue tail
+            if (compareAndSetTail(pred, node)) {//update tail 指针
                 pred.next = node;
                 return node;
             }
         }
-        enq(node);//tail节点为空，add not to wait queue tail
+        enq(node);//tail节点为空，节点入队
         return node;
     }
 
@@ -680,10 +680,10 @@ public abstract class AbstractQueuedSynchronizer
          * fails, if so rechecking.
          */
         for (;;) {
-            Node h = head;//wait queue 节点
+            Node h = head;
             if (h != null && h != tail) {
                 int ws = h.waitStatus;
-                if (ws == Node.SIGNAL) {//移除节点SIGNAL状态
+                if (ws == Node.SIGNAL) {//移除 SIGNAL 状态节点 SIGNAL 的状态
                     if (!compareAndSetWaitStatus(h, Node.SIGNAL, 0))
                         continue;            // loop to recheck cases
                     unparkSuccessor(h);
@@ -995,7 +995,7 @@ public abstract class AbstractQueuedSynchronizer
                 }
                 if (shouldParkAfterFailedAcquire(p, node) &&
                     parkAndCheckInterrupt())
-                    throw new InterruptedException();
+                    throw new InterruptedException();//Interruptibly
             }
         } finally {
             if (failed)
@@ -1298,7 +1298,7 @@ public abstract class AbstractQueuedSynchronizer
      */
     public final void acquireSharedInterruptibly(int arg)
             throws InterruptedException {
-        if (Thread.interrupted())
+        if (Thread.interrupted())//Interruptibly
             throw new InterruptedException();
         if (tryAcquireShared(arg) < 0)
             doAcquireSharedInterruptibly(arg);
@@ -1325,7 +1325,7 @@ public abstract class AbstractQueuedSynchronizer
         if (Thread.interrupted())
             throw new InterruptedException();
         return tryAcquireShared(arg) >= 0 ||
-            doAcquireSharedNanos(arg, nanosTimeout);
+            doAcquireSharedNanos(arg, nanosTimeout);//尝试入队等待，轮到就抢锁，直到超时返回
     }
 
     /**
@@ -1339,7 +1339,7 @@ public abstract class AbstractQueuedSynchronizer
      */
     public final boolean releaseShared(int arg) {
         if (tryReleaseShared(arg)) {
-            doReleaseShared();
+            doReleaseShared();//唤醒节点
             return true;
         }
         return false;
@@ -2290,7 +2290,7 @@ public abstract class AbstractQueuedSynchronizer
     /**
      * CAS tail field. Used only by enq.
      */
-    private final boolean compareAndSetTail(Node expect, Node update) {
+    private final boolean compareAndSetTail(Node expect, Node update) {//将 update node设为 wait queue tail
         return unsafe.compareAndSwapObject(this, tailOffset, expect, update);
     }
 

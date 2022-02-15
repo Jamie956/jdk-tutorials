@@ -26,9 +26,6 @@ Debug and comments step
 
 
 # 正在注释的类
-
-- AbstractQueuedSynchronizer
-- Semaphore
 - CyclicBarrier
 - CountDownLatch
 - TreeSet
@@ -50,6 +47,6 @@ Debug and comments step
 - OutputStreamWriter
 - ReentrantLock
 - ThreadPoolExecutor
-
+- Semaphore
 
 
