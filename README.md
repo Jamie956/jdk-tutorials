@@ -26,7 +26,6 @@ Debug and comments step
 
 
 # 正在注释的类
-- CountDownLatch
 - TreeSet
 - ArrayDeque
 - HashSet
@@ -48,4 +47,4 @@ Debug and comments step
 - ThreadPoolExecutor
 - Semaphore
 - CyclicBarrier
-
+- CountDownLatch

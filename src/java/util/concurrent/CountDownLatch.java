@@ -170,7 +170,7 @@ public class CountDownLatch {
         }
 
         protected int tryAcquireShared(int acquires) {
-            return (getState() == 0) ? 1 : -1;//state 非0时 继续等待
+            return (getState() == 0) ? 1 : -1;//state ==0, 锁已经分配完, 否则自旋重试 park
         }
 
         protected boolean tryReleaseShared(int releases) {
@@ -179,8 +179,8 @@ public class CountDownLatch {
                 int c = getState();
                 if (c == 0)
                     return false;
-                int nextc = c-1;
-                if (compareAndSetState(c, nextc))//CAS 减一把锁
+                int nextc = c-1;//每次只会减持1把锁
+                if (compareAndSetState(c, nextc))
                     return nextc == 0;
             }
         }
@@ -299,7 +299,7 @@ public class CountDownLatch {
      * @return the current count
      */
     public long getCount() {
-        return sync.getCount();//返回state
+        return sync.getCount();//state
     }
 
     /**

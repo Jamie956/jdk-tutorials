@@ -1,8 +1,39 @@
 package com.cat.concurrency.lock;
 
+import org.junit.Test;
+
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 public class CountDownLatchTest {
+
+    @Test
+    public void cons() {
+        CountDownLatch c = new CountDownLatch(2);
+    }
+
+    @Test
+    public void await() throws InterruptedException {
+        CountDownLatch c = new CountDownLatch(2);
+        c.await();
+    }
+
+    @Test
+    public void awaitTime() throws InterruptedException {
+        CountDownLatch c = new CountDownLatch(2);
+        c.await(3, TimeUnit.SECONDS);
+        c.await(3, TimeUnit.SECONDS);
+        c.await(3, TimeUnit.SECONDS);
+    }
+
+    @Test
+    public void countDown() {
+        CountDownLatch c = new CountDownLatch(2);
+        c.countDown();
+        c.countDown();
+        c.countDown();
+    }
+
     /**
      * 部分锁释放，部分没有释放，await 会一直等待全部锁释放
      */
