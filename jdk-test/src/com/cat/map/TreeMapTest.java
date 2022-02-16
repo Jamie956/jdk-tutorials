@@ -39,7 +39,6 @@ public class TreeMapTest {
     public void containsKey() {
         TreeMap<String, String> m = new TreeMap<>();
         m.put("k1", "v1");
-        //111111
         m.put("k2", "v2");
         boolean b = m.containsKey("k1");
     }
@@ -87,6 +86,16 @@ public class TreeMapTest {
     }
 
     @Test
+    public void putAll2() {
+        HashMap<String, String> m0 = new HashMap<>();
+        m0.put("k1", "v1");
+        m0.put("k2", "v2");
+
+        TreeMap<String, String> m = new TreeMap<>();
+        m.putAll(m0);
+    }
+
+    @Test
     public void put() {
         TreeMap<String, String> m = new TreeMap<>();
         m.put("k1", "v1");
@@ -98,6 +107,7 @@ public class TreeMapTest {
         TreeMap<String, String> m = new TreeMap<>();
         m.put("k1", "v1");
         m.put("k2", "v2");
+        m.put("k3", "v3");
 
         m.remove("k2");
     }
@@ -117,7 +127,7 @@ public class TreeMapTest {
         m.put("k1", "v1");
         m.put("k2", "v2");
 
-        m.clone();
+        Object clone = m.clone();
     }
 
     @Test
@@ -127,6 +137,7 @@ public class TreeMapTest {
         m.put("k2", "v2");
 
         Map.Entry<String, String> a = m.firstEntry();
+//        a.setValue("update");
     }
 
     @Test
@@ -161,8 +172,10 @@ public class TreeMapTest {
         TreeMap<String, String> m = new TreeMap<>();
         m.put("k1", "v1");
         m.put("k2", "v2");
+        m.put("k3", "v3");
+        m.put("k4", "v3");
 
-        Map.Entry<String, String> a = m.lowerEntry("k1");
+        Map.Entry<String, String> a = m.lowerEntry("k3");
     }
 
     @Test
@@ -179,7 +192,7 @@ public class TreeMapTest {
         TreeMap<String, String> m = new TreeMap<>();
         m.put("k1", "v1");
         m.put("k2", "v2");
-
+//
         Map.Entry<String, String> a = m.floorEntry("k1");
     }
 

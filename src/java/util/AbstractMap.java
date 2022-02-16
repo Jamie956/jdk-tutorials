@@ -793,7 +793,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
          * @return (Does not return)
          * @throws UnsupportedOperationException always
          */
-        public V setValue(V value) {
+        public V setValue(V value) { //不可改
             throw new UnsupportedOperationException();
         }
 

@@ -247,7 +247,7 @@ public class TreeMap<K,V>
      */
     public boolean containsValue(Object value) {
         for (Entry<K,V> e = getFirstEntry(); e != null; e = successor(e))
-            if (valEquals(value, e.value))
+            if (valEquals(value, e.value)) //遍历树查找相等的value
                 return true;
         return false;
     }
@@ -287,14 +287,14 @@ public class TreeMap<K,V>
      * @throws NoSuchElementException {@inheritDoc}
      */
     public K firstKey() {
-        return key(getFirstEntry());
+        return key(getFirstEntry()); //最左节点的key
     }
 
     /**
      * @throws NoSuchElementException {@inheritDoc}
      */
     public K lastKey() {
-        return key(getLastEntry());
+        return key(getLastEntry()); //最右节点的key
     }
 
     /**
@@ -315,8 +315,8 @@ public class TreeMap<K,V>
             Comparator<?> c = ((SortedMap<?,?>)map).comparator();
             if (c == comparator || (c != null && c.equals(comparator))) {
                 ++modCount;
-                try {
-                    buildFromSorted(mapSize, map.entrySet().iterator(),
+                try { //treeMap空树，源map不为空 且属于排序map 且使用相同的比较器
+                    buildFromSorted(mapSize, map.entrySet().iterator(),//构建一棵新树
                                     null, null);
                 } catch (java.io.IOException cannotHappen) {
                 } catch (ClassNotFoundException cannotHappen) {
@@ -324,7 +324,7 @@ public class TreeMap<K,V>
                 return;
             }
         }
-        super.putAll(map);
+        super.putAll(map); //父类的子类参数map遍历节点，由TreeMap实现方法put 插入节点到树上
     }
 
     /**
@@ -339,7 +339,7 @@ public class TreeMap<K,V>
      *         and this map uses natural ordering, or its comparator
      *         does not permit null keys
      */
-    final Entry<K,V> getEntry(Object key) {
+    final Entry<K,V> getEntry(Object key) { //根据key查找 Entry 节点
         // Offload comparator-based version for sake of performance
         if (comparator != null)
             return getEntryUsingComparator(key);
@@ -348,14 +348,14 @@ public class TreeMap<K,V>
         @SuppressWarnings("unchecked")
             Comparable<? super K> k = (Comparable<? super K>) key;
         Entry<K,V> p = root;
-        while (p != null) {
+        while (p != null) { //树查找
             int cmp = k.compareTo(p.key);
             if (cmp < 0)
                 p = p.left;
             else if (cmp > 0)
                 p = p.right;
             else
-                return p;
+                return p; //k == p.key
         }
         return null;
     }
@@ -423,7 +423,7 @@ public class TreeMap<K,V>
      * exists, returns the entry for the greatest key less than the specified
      * key; if no such entry exists, returns {@code null}.
      */
-    final Entry<K,V> getFloorEntry(K key) {
+    final Entry<K,V> getFloorEntry(K key) { //
         Entry<K,V> p = root;
         while (p != null) {
             int cmp = compare(key, p.key);
@@ -488,22 +488,22 @@ public class TreeMap<K,V>
      * no such entry exists (i.e., the least key in the Tree is greater than
      * the specified key), returns {@code null}.
      */
-    final Entry<K,V> getLowerEntry(K key) {
+    final Entry<K,V> getLowerEntry(K key) { //查找比Key小的最大值
         Entry<K,V> p = root;
         while (p != null) {
             int cmp = compare(key, p.key);
-            if (cmp > 0) {
+            if (cmp > 0) { //p.key大
                 if (p.right != null)
-                    p = p.right;
+                    p = p.right; //往下查右树
                 else
                     return p;
-            } else {
+            } else { //p.key小
                 if (p.left != null) {
-                    p = p.left;
-                } else {
+                    p = p.left; //往左树找
+                } else { //没有左树
                     Entry<K,V> parent = p.parent;
                     Entry<K,V> ch = p;
-                    while (parent != null && ch == parent.left) {
+                    while (parent != null && ch == parent.left) { //沿着父节点往上找
                         ch = parent;
                         parent = parent.parent;
                     }
@@ -579,7 +579,7 @@ public class TreeMap<K,V>
             parent.left = e;//新节点左树关联新节点
         else
             parent.right = e;//新节点右树关联新节点
-        fixAfterInsertion(e);
+        fixAfterInsertion(e); //左选右旋调整树，更新红黑颜色
         size++;
         modCount++;
         return null;
@@ -643,7 +643,7 @@ public class TreeMap<K,V>
 
         // Initialize clone with our mappings
         try {
-            clone.buildFromSorted(size, entrySet().iterator(), null, null);
+            clone.buildFromSorted(size, entrySet().iterator(), null, null); //重新构建一棵树
         } catch (java.io.IOException cannotHappen) {
         } catch (ClassNotFoundException cannotHappen) {
         }
@@ -674,7 +674,7 @@ public class TreeMap<K,V>
         Entry<K,V> p = getFirstEntry();
         Map.Entry<K,V> result = exportEntry(p);
         if (p != null)
-            deleteEntry(p);
+            deleteEntry(p); //删除最左节点
         return result;
     }
 
@@ -685,7 +685,7 @@ public class TreeMap<K,V>
         Entry<K,V> p = getLastEntry();
         Map.Entry<K,V> result = exportEntry(p);
         if (p != null)
-            deleteEntry(p);
+            deleteEntry(p); //删除最右节点
         return result;
     }
 
@@ -1308,7 +1308,7 @@ public class TreeMap<K,V>
      */
     static <K,V> Map.Entry<K,V> exportEntry(TreeMap.Entry<K,V> e) {
         return (e == null) ? null :
-            new AbstractMap.SimpleImmutableEntry<>(e);
+            new AbstractMap.SimpleImmutableEntry<>(e); //静态内部类
     }
 
     /**
@@ -2125,7 +2125,7 @@ public class TreeMap<K,V>
     final Entry<K,V> getFirstEntry() {
         Entry<K,V> p = root;
         if (p != null)
-            while (p.left != null)
+            while (p.left != null) //找最左的节点
                 p = p.left;
         return p;
     }
@@ -2134,7 +2134,7 @@ public class TreeMap<K,V>
      * Returns the last Entry in the TreeMap (according to the TreeMap's
      * key-sort function).  Returns null if the TreeMap is empty.
      */
-    final Entry<K,V> getLastEntry() {
+    final Entry<K,V> getLastEntry() { //查找最右节点
         Entry<K,V> p = root;
         if (p != null)
             while (p.right != null)
@@ -2145,18 +2145,18 @@ public class TreeMap<K,V>
     /**
      * Returns the successor of the specified Entry, or null if no such.
      */
-    static <K,V> TreeMap.Entry<K,V> successor(Entry<K,V> t) {
+    static <K,V> TreeMap.Entry<K,V> successor(Entry<K,V> t) { //遍历下一个节点
         if (t == null)
             return null;
         else if (t.right != null) {
             Entry<K,V> p = t.right;
-            while (p.left != null)
+            while (p.left != null) //查找右树的最左节点
                 p = p.left;
             return p;
-        } else {
-            Entry<K,V> p = t.parent;
+        } else { //没有右树
+            Entry<K,V> p = t.parent; //t的父节点
             Entry<K,V> ch = t;
-            while (p != null && ch == p.right) {
+            while (p != null && ch == p.right) { //如果父节点不为空，子树是右树；直到找到父节点为空或者子树是左树
                 ch = p;
                 p = p.parent;
             }
@@ -2196,11 +2196,11 @@ public class TreeMap<K,V>
      * algorithms.
      */
 
-    private static <K,V> boolean colorOf(Entry<K,V> p) {
+    private static <K,V> boolean colorOf(Entry<K,V> p) { //红黑树节点状态
         return (p == null ? BLACK : p.color);
     }
 
-    private static <K,V> Entry<K,V> parentOf(Entry<K,V> p) {
+    private static <K,V> Entry<K,V> parentOf(Entry<K,V> p) { //获取父节点
         return (p == null ? null: p.parent);
     }
 
@@ -2209,7 +2209,7 @@ public class TreeMap<K,V>
             p.color = c;
     }
 
-    private static <K,V> Entry<K,V> leftOf(Entry<K,V> p) {
+    private static <K,V> Entry<K,V> leftOf(Entry<K,V> p) { //获取左节点
         return (p == null) ? null: p.left;
     }
 
@@ -2218,7 +2218,7 @@ public class TreeMap<K,V>
     }
 
     /** From CLR */
-    private void rotateLeft(Entry<K,V> p) {
+    private void rotateLeft(Entry<K,V> p) { //左旋
         if (p != null) {
             Entry<K,V> r = p.right;
             p.right = r.left;
@@ -2254,27 +2254,27 @@ public class TreeMap<K,V>
     }
 
     /** From CLR */
-    private void fixAfterInsertion(Entry<K,V> x) {
+    private void fixAfterInsertion(Entry<K,V> x) { //左选右旋调整树，更新红黑颜色
         x.color = RED;
 
         while (x != null && x != root && x.parent.color == RED) {
-            if (parentOf(x) == leftOf(parentOf(parentOf(x)))) {
-                Entry<K,V> y = rightOf(parentOf(parentOf(x)));
-                if (colorOf(y) == RED) {
+            if (parentOf(x) == leftOf(parentOf(parentOf(x)))) { //x的父节点是左树
+                Entry<K,V> y = rightOf(parentOf(parentOf(x))); //父父右
+                if (colorOf(y) == RED) { //父父右是红
                     setColor(parentOf(x), BLACK);
                     setColor(y, BLACK);
                     setColor(parentOf(parentOf(x)), RED);
-                    x = parentOf(parentOf(x));
-                } else {
-                    if (x == rightOf(parentOf(x))) {
+                    x = parentOf(parentOf(x));//自下往上
+                } else { //父父右是黑
+                    if (x == rightOf(parentOf(x))) { //x是右树
                         x = parentOf(x);
-                        rotateLeft(x);
+                        rotateLeft(x); //左旋
                     }
                     setColor(parentOf(x), BLACK);
                     setColor(parentOf(parentOf(x)), RED);
                     rotateRight(parentOf(parentOf(x)));
                 }
-            } else {
+            } else { //父节点是右树，对称那个操作
                 Entry<K,V> y = leftOf(parentOf(parentOf(x)));
                 if (colorOf(y) == RED) {
                     setColor(parentOf(x), BLACK);
@@ -2298,14 +2298,14 @@ public class TreeMap<K,V>
     /**
      * Delete node p, and then rebalance the tree.
      */
-    private void deleteEntry(Entry<K,V> p) {
+    private void deleteEntry(Entry<K,V> p) {//
         modCount++;
         size--;
 
         // If strictly internal, copy successor's element to p and then make p
         // point to successor.
-        if (p.left != null && p.right != null) {
-            Entry<K,V> s = successor(p);
+        if (p.left != null && p.right != null) { //有左树和右树
+            Entry<K,V> s = successor(p); //查找右树的最左节点
             p.key = s.key;
             p.value = s.value;
             p = s;
@@ -2319,9 +2319,9 @@ public class TreeMap<K,V>
             replacement.parent = p.parent;
             if (p.parent == null)
                 root = replacement;
-            else if (p == p.parent.left)
+            else if (p == p.parent.left) //p是左树
                 p.parent.left  = replacement;
-            else
+            else //p是右树
                 p.parent.right = replacement;
 
             // Null out links so they are OK to use by fixAfterDeletion.
@@ -2338,10 +2338,10 @@ public class TreeMap<K,V>
 
             if (p.parent != null) {
                 if (p == p.parent.left)
-                    p.parent.left = null;
+                    p.parent.left = null; //父节点移除left
                 else if (p == p.parent.right)
-                    p.parent.right = null;
-                p.parent = null;
+                    p.parent.right = null; //父节点移除right
+                p.parent = null; //移除父节点
             }
         }
     }
@@ -2349,8 +2349,8 @@ public class TreeMap<K,V>
     /** From CLR */
     private void fixAfterDeletion(Entry<K,V> x) {
         while (x != root && colorOf(x) == BLACK) {
-            if (x == leftOf(parentOf(x))) {
-                Entry<K,V> sib = rightOf(parentOf(x));
+            if (x == leftOf(parentOf(x))) { //左树
+                Entry<K,V> sib = rightOf(parentOf(x));//右树
 
                 if (colorOf(sib) == RED) {
                     setColor(sib, BLACK);
@@ -2376,7 +2376,7 @@ public class TreeMap<K,V>
                     rotateLeft(parentOf(x));
                     x = root;
                 }
-            } else { // symmetric
+            } else { // symmetric //右树
                 Entry<K,V> sib = leftOf(parentOf(x));
 
                 if (colorOf(sib) == RED) {
@@ -2598,7 +2598,7 @@ public class TreeMap<K,V>
      * node.  (The answer is ~lg(N), but in any case must be computed by same
      * quick O(lg(N)) loop.)
      */
-    private static int computeRedLevel(int sz) {
+    private static int computeRedLevel(int sz) { //计算红节点的层数
         int level = 0;
         for (int m = sz - 1; m >= 0; m = m / 2 - 1)
             level++;
