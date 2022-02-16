@@ -26,7 +26,6 @@ Debug and comments step
 
 
 # 正在注释的类
-- TreeSet
 - ArrayDeque
 - HashSet
 - ByteBuffer
@@ -61,3 +60,4 @@ Debug and comments step
 - CyclicBarrier
 - CountDownLatch
 - TreeMap
+- TreeSet
