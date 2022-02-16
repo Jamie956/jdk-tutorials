@@ -395,12 +395,12 @@ public class TreeMap<K,V>
         Entry<K,V> p = root;
         while (p != null) {
             int cmp = compare(key, p.key);
-            if (cmp < 0) {
+            if (cmp < 0) { //key < p.key
                 if (p.left != null)
                     p = p.left;
                 else
-                    return p;
-            } else if (cmp > 0) {
+                    return p; //大于key 且无左树
+            } else if (cmp > 0) { //key > p.key
                 if (p.right != null) {
                     p = p.right;
                 } else {
@@ -410,7 +410,7 @@ public class TreeMap<K,V>
                         ch = parent;
                         parent = parent.parent;
                     }
-                    return parent;
+                    return parent; //小于key
                 }
             } else
                 return p;
@@ -423,28 +423,28 @@ public class TreeMap<K,V>
      * exists, returns the entry for the greatest key less than the specified
      * key; if no such entry exists, returns {@code null}.
      */
-    final Entry<K,V> getFloorEntry(K key) { //
+    final Entry<K,V> getFloorEntry(K key) { //查找树上比key小的最大值
         Entry<K,V> p = root;
         while (p != null) {
             int cmp = compare(key, p.key);
-            if (cmp > 0) {
+            if (cmp > 0) { //key > p.key
                 if (p.right != null)
                     p = p.right;
                 else
                     return p;
-            } else if (cmp < 0) {
+            } else if (cmp < 0) { //key < p.key
                 if (p.left != null) {
                     p = p.left;
                 } else {
                     Entry<K,V> parent = p.parent;
                     Entry<K,V> ch = p;
-                    while (parent != null && ch == parent.left) {
+                    while (parent != null && ch == parent.left) { //ch 是左树
                         ch = parent;
                         parent = parent.parent;
                     }
                     return parent;
                 }
-            } else
+            } else //key == p.key
                 return p;
 
         }
@@ -829,7 +829,7 @@ public class TreeMap<K,V>
      * @since 1.6
      */
     public NavigableSet<K> descendingKeySet() {
-        return descendingMap().navigableKeySet();
+        return descendingMap().navigableKeySet();//降序key set
     }
 
     /**
@@ -1002,7 +1002,7 @@ public class TreeMap<K,V>
         Objects.requireNonNull(action);
         int expectedModCount = modCount;
         for (Entry<K, V> e = getFirstEntry(); e != null; e = successor(e)) {
-            action.accept(e.key, e.value);
+            action.accept(e.key, e.value); //遍历执行
 
             if (expectedModCount != modCount) {
                 throw new ConcurrentModificationException();
@@ -1016,7 +1016,7 @@ public class TreeMap<K,V>
         int expectedModCount = modCount;
 
         for (Entry<K, V> e = getFirstEntry(); e != null; e = successor(e)) {
-            e.value = function.apply(e.key, e.value);
+            e.value = function.apply(e.key, e.value); //函数执行返回值 设为value
 
             if (expectedModCount != modCount) {
                 throw new ConcurrentModificationException();

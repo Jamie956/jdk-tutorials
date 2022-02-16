@@ -173,7 +173,7 @@ public class TreeMapTest {
         m.put("k1", "v1");
         m.put("k2", "v2");
         m.put("k3", "v3");
-        m.put("k4", "v3");
+        m.put("k4", "v4");
 
         Map.Entry<String, String> a = m.lowerEntry("k3");
     }
@@ -189,11 +189,14 @@ public class TreeMapTest {
 
     @Test
     public void floorEntry() {
-        TreeMap<String, String> m = new TreeMap<>();
-        m.put("k1", "v1");
-        m.put("k2", "v2");
-//
-        Map.Entry<String, String> a = m.floorEntry("k1");
+        TreeMap<Integer, String> m = new TreeMap<>();
+        m.put(1, "v1");
+        m.put(2, "v2");
+        m.put(3, "v3");
+        m.put(4, "v4");
+        m.put(6, "v6");
+
+        Map.Entry<Integer, String> a = m.floorEntry(5);
     }
 
     @Test
@@ -207,11 +210,17 @@ public class TreeMapTest {
 
     @Test
     public void ceilingEntry() {
-        TreeMap<String, String> m = new TreeMap<>();
-        m.put("k1", "v1");
-        m.put("k2", "v2");
+        TreeMap<Integer, String> m = new TreeMap<>();
+        m.put(1, "v1");
+        m.put(2, "v2");
+        m.put(3, "v3");
+        m.put(4, "v4");
+        m.put(6, "v6");
 
-        Map.Entry<String, String> a = m.ceilingEntry("k1");
+        Map.Entry<Integer, String> a = m.ceilingEntry(5);
+        Map.Entry<Integer, String> b = m.ceilingEntry(0);
+        Map.Entry<Integer, String> c = m.ceilingEntry(1);
+        Map.Entry<Integer, String> d = m.ceilingEntry(7);
     }
 
     @Test
@@ -406,18 +415,4 @@ public class TreeMapTest {
         BiFunction<String, String, String> f = (k, v) -> k + v;
         m.replaceAll(f);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
