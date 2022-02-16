@@ -26,11 +26,11 @@ Debug and comments step
 
 
 # 正在注释的类
-- ArrayDeque
-- HashSet
+- Thread
+- //ArrayDeque
+- //HashSet
 - ByteBuffer
 - Future
-- Thread
 - AtomicInteger
 - ConcurrentHashMap
 - LinkedBlockingQueue
@@ -42,6 +42,8 @@ Debug and comments step
 - Socket
 - FileChannel
 - SocketChannel
+
+
 
 # 已做注释的类
 - ReentrantReadWriteLock

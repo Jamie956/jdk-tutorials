@@ -69,11 +69,11 @@ public class ThreadApiTest {
         Thread.currentThread().interrupt();
     }
 
-    public void yieldTest() {
+    public static void yieldTest() {
         Runnable task = () -> {
             for (int i = 0; i < 100; i++) {
                 System.out.println(Thread.currentThread().getName() + ":" + i);
-                if (i % 2 == 0) {
+                if (i == 50) {
                     System.out.println(Thread.currentThread().getName() + ":" + i + "  yield");
                     Thread.yield();
                 }
@@ -82,25 +82,28 @@ public class ThreadApiTest {
         new Thread(task).start();
         new Thread(task).start();
         new Thread(task).start();
+        new Thread(task).start();
+        new Thread(task).start();
+        new Thread(task).start();
     }
 
-    public void yieldTest2() {
+    public static void yieldTest2() {
         Object lock = new Object();
         Runnable task = () -> {
             //yield不会释放锁
             synchronized (lock) {
                 for (int i = 0; i < 10; i++) {
                     System.out.println(Thread.currentThread().getName() + ":  " + i);
-                    if (i % 2 == 0) {
-                        System.out.println(Thread.currentThread().getName() + ":  " + i + "  yield");
+//                    if (i % 2 == 0) {
+//                        System.out.println(Thread.currentThread().getName() + ":  " + i + "  yield");
                         Thread.yield();
-                    }
+//                    }
                 }
             }
         };
         new Thread(task).start();
         new Thread(task).start();
-        new Thread(task).start();
+//        new Thread(task).start();
     }
 
     public void curThread() {
@@ -110,13 +113,7 @@ public class ThreadApiTest {
     }
 
     public static void main(String[] args) throws InterruptedException {
-//        noJoin();
-//        joinTest1();
-//        joinTest2();
-//        joinTest3();
-//        new ThreadApiTest().yieldTest();
-//        new ThreadApiTest().yieldTest2();
-        new ThreadApiTest().curThread();
+        yieldTest();
     }
 
 }
