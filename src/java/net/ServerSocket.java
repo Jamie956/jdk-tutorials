@@ -232,7 +232,7 @@ class ServerSocket implements java.io.Closeable {
             throw new IllegalArgumentException(
                        "Port value out of range: " + port);
         if (backlog < 1)
-          backlog = 50;
+          backlog = 50;//客户端连接请求队列长度
         try {
             bind(new InetSocketAddress(bindAddr, port), backlog);
         } catch(SecurityException e) {
@@ -504,7 +504,7 @@ class ServerSocket implements java.io.Closeable {
      * @revised 1.4
      * @spec JSR-51
      */
-    public Socket accept() throws IOException {
+    public Socket accept() throws IOException { //从请求队列取一个连接
         if (isClosed())
             throw new SocketException("Socket is closed");
         if (!isBound())
@@ -577,7 +577,7 @@ class ServerSocket implements java.io.Closeable {
      * @revised 1.4
      * @spec JSR-51
      */
-    public void close() throws IOException {
+    public void close() throws IOException { //服务器释放占用的端口，并且断开与所有客户的连接
         synchronized(closeLock) {
             if (isClosed())
                 return;
@@ -646,7 +646,7 @@ class ServerSocket implements java.io.Closeable {
      * @since   JDK1.1
      * @see #getSoTimeout()
      */
-    public synchronized void setSoTimeout(int timeout) throws SocketException {
+    public synchronized void setSoTimeout(int timeout) throws SocketException { //设置连接超时
         if (isClosed())
             throw new SocketException("Socket is closed");
         getImpl().setOption(SocketOptions.SO_TIMEOUT, new Integer(timeout));
