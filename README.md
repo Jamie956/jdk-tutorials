@@ -26,7 +26,6 @@ Debug and comments step
 
 
 # 正在注释的类
-- Thread
 - //ArrayDeque
 - //HashSet
 - ByteBuffer
@@ -63,3 +62,4 @@ Debug and comments step
 - CountDownLatch
 - TreeMap
 - TreeSet
+- Thread

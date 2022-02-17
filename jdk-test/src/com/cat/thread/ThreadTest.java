@@ -3,10 +3,11 @@ package com.cat.thread;
 import org.junit.Test;
 
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class ThreadTest {
     public static void main(String[] args) throws Exception {
-        sleep();
+        join();
     }
 
     @Test
@@ -65,18 +66,49 @@ public class ThreadTest {
     public void cons() {
         Thread thread = new Thread(new ThreadGroup("my-group"),
                 () -> System.out.println("hi"), "my-thread", 0);
+        thread.start();
     }
 
-    public static void start() {
-        new Thread().start();
+    @Test
+    public void start() {
+        new Thread(() -> System.out.println("hh")).start();
     }
 
-    public static void run() {
-        new Thread().run();
+    @Test
+    public void run() {
+        new Thread(() -> System.out.println("hh")).run();
     }
 
     public static void interrupt() {
-        new Thread().interrupt();
+        Thread t = new Thread();
+        t.interrupt();
+    }
+
+    public static void interrupt2() {
+        Thread testThread = new Thread(() -> {
+            //第一种情况
+//            while (!Thread.interrupted()) {
+//            }
+//            System.out.println("中断状态：" + Thread.currentThread().isInterrupted()); //false
+
+            //第二种情况
+            while (!Thread.currentThread().isInterrupted()) {
+            }
+            System.out.println("中断状态：" + Thread.currentThread().isInterrupted()); //true
+        });
+        testThread.start();
+        try {
+            Thread.sleep(5000);
+            System.out.println("设置线程中断标志");
+            testThread.interrupt();
+            Thread.sleep(1000);
+            for (int i = 0; i < 10; i++) {
+                System.out.println("检测线程的中断信号：" + testThread.isInterrupted());
+                Thread.sleep(1000);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void interrupted() {
@@ -87,41 +119,100 @@ public class ThreadTest {
         new Thread().isInterrupted();
     }
 
-    public static void isAlive() {
-        new Thread().isAlive();
+    public static void isAlive() throws InterruptedException {
+        Thread t = new Thread(() -> {
+            while (!Thread.interrupted()) {
+            }
+        });
+        t.start();
+        System.out.println(t.isAlive());
+        t.interrupt();
+
+        Thread.sleep(5000);
+        //线程被中断，不再循环，走向死亡
+        System.out.println(t.isAlive());
     }
 
     public static void setPriority() {
         new Thread().setPriority(5);
     }
 
-    public static void setName() {
-        new Thread().setName("asas");
+    @Test
+    public void setName() {
+        Thread t = new Thread();
+//        t.start();
+        t.setName("asas");
     }
 
-    public static void activeCount() {
+    @Test
+    public void activeCount() {
+        new Thread().start();
+        new Thread().start();
+        new Thread().start();
         int i = Thread.activeCount();
     }
 
-    public static void enumerate() {
-        Thread[] ts = new Thread[]{new Thread(), new Thread()};
+    @Test
+    public void enumerate() {
+        Thread[] ts = new Thread[]{new Thread(), new Thread(), new Thread(), new Thread()};
         int i = Thread.enumerate(ts);
     }
 
     public static void join() throws InterruptedException {
-        new Thread().join(100);
+        Thread t = new Thread(() -> {
+            while (!Thread.interrupted()) {
+            }
+        });
+        t.start();
+        t.join(3000);
+    }
+
+    public static void join1() throws InterruptedException {
+        System.out.println("start");
+        Runnable run = () -> {
+            try {
+                TimeUnit.SECONDS.sleep(3);
+                System.out.println(Thread.currentThread().getName());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        };
+        Thread t = new Thread(run);
+        t.start();
+        //main线程等待，直到t执行完任务
+        t.join();
+        System.out.println("end");
     }
 
     public static void join2() throws InterruptedException {
-        new Thread().join(100, 100);
+        System.out.println("start");
+        Runnable run = () -> {
+            try {
+                TimeUnit.SECONDS.sleep(2);
+                System.out.println(Thread.currentThread().getName());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        };
+        Thread t = new Thread(run);
+        t.start();
+
+        //main线程等待1000毫秒
+        t.join(1000);
+        System.out.println("end");
     }
 
-    public static void dumpStack() {
+    @Test
+    public void dumpStack() {
         Thread.dumpStack();
     }
 
-    public static void setDaemon() {
-        new Thread().setDaemon(true);
+    @Test
+    public void setDaemon() {
+        Thread t = new Thread();
+//        t.start();//存活线程不能修改 daemon
+        t.setDaemon(true);
+        t.start();
     }
 
     public static void checkAccess() {
@@ -132,22 +223,35 @@ public class ThreadTest {
         new Thread().toString();
     }
 
-    public static void getContextClassLoader() {
-        new Thread().getContextClassLoader();
+    @Test
+    public void getContextClassLoader() {
+        ClassLoader contextClassLoader = new Thread().getContextClassLoader();
     }
 
-    public static void setContextClassLoader() {
+    @Test
+    public void setContextClassLoader() {
         new Thread().setContextClassLoader(ClassLoader.getSystemClassLoader());
     }
-    public static void holdsLock() {
-        Thread.holdsLock(new Object());
+
+    @Test
+    public void holdsLock() {
+        Object o = new Object();
+        synchronized (o) {
+            System.out.println(1);
+            boolean b = Thread.holdsLock(o);
+            System.out.println(b);
+        }
     }
 
-    public static void getStackTrace() {
-        StackTraceElement[] stackTrace = new Thread().getStackTrace();
+    @Test
+    public void getStackTrace() {
+        Thread t = new Thread();
+        t.start();
+        StackTraceElement[] stackTrace = t.getStackTrace();
     }
 
-    public static void getAllStackTraces() {
+    @Test
+    public void getAllStackTraces() {
         Map<Thread, StackTraceElement[]> allStackTraces = Thread.getAllStackTraces();
     }
 
