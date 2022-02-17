@@ -69,42 +69,6 @@ public class ThreadApiTest {
         Thread.currentThread().interrupt();
     }
 
-    public static void yieldTest() {
-        Runnable task = () -> {
-            for (int i = 0; i < 100; i++) {
-                System.out.println(Thread.currentThread().getName() + ":" + i);
-                if (i == 50) {
-                    System.out.println(Thread.currentThread().getName() + ":" + i + "  yield");
-                    Thread.yield();
-                }
-            }
-        };
-        new Thread(task).start();
-        new Thread(task).start();
-        new Thread(task).start();
-        new Thread(task).start();
-        new Thread(task).start();
-        new Thread(task).start();
-    }
-
-    public static void yieldTest2() {
-        Object lock = new Object();
-        Runnable task = () -> {
-            //yield不会释放锁
-            synchronized (lock) {
-                for (int i = 0; i < 10; i++) {
-                    System.out.println(Thread.currentThread().getName() + ":  " + i);
-//                    if (i % 2 == 0) {
-//                        System.out.println(Thread.currentThread().getName() + ":  " + i + "  yield");
-                        Thread.yield();
-//                    }
-                }
-            }
-        };
-        new Thread(task).start();
-        new Thread(task).start();
-//        new Thread(task).start();
-    }
 
     public void curThread() {
         Thread thread = Thread.currentThread();
@@ -113,7 +77,7 @@ public class ThreadApiTest {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        yieldTest();
+//        yieldLock();
     }
 
 }

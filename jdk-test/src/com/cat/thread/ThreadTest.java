@@ -5,19 +5,54 @@ import org.junit.Test;
 import java.util.Map;
 
 public class ThreadTest {
+    public static void main(String[] args) throws Exception {
+        sleep();
+    }
+
     @Test
     public void currentThread() {
         Thread t = Thread.currentThread();
     }
 
-    @Test
-    public void yield() {
-        //
-        Thread.yield();
+    public static void yield() {
+        Runnable task = () -> {
+            for (int i = 0; i < 5; i++) {
+                System.out.println(Thread.currentThread().getName() + ":" + i);
+                Thread.yield();
+            }
+        };
+        Thread t1 = new Thread(task, "低-优先度线程");
+        Thread t2 = new Thread(task, "高-优先度线程");
+
+        t1.setPriority(Thread.MIN_PRIORITY);
+        t2.setPriority(Thread.MAX_PRIORITY);
+
+        t1.start();
+        t2.start();
     }
 
-    @Test
-    public void sleep() throws InterruptedException {
+    public static void yieldLock() {
+        Object lock = new Object();
+        Runnable task = () -> {
+            //yield不会释放锁
+            synchronized (lock) {
+                for (int i = 0; i < 10; i++) {
+                    System.out.println(Thread.currentThread().getName() + ":  " + i);
+                    Thread.yield();
+                }
+            }
+        };
+        Thread t1 = new Thread(task, "低-优先度线程");
+        Thread t2 = new Thread(task, "高-优先度线程");
+
+        t1.setPriority(Thread.MIN_PRIORITY);
+        t2.setPriority(Thread.MAX_PRIORITY);
+
+        t1.start();
+        t2.start();
+    }
+
+    public static void sleep() throws InterruptedException {
         Thread.sleep(100);
     }
 
@@ -26,7 +61,8 @@ public class ThreadTest {
         Thread.sleep(100, 100);
     }
 
-    public static void cons() {
+    @Test
+    public void cons() {
         Thread thread = new Thread(new ThreadGroup("my-group"),
                 () -> System.out.println("hi"), "my-thread", 0);
     }

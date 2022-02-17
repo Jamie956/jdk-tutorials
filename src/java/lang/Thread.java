@@ -279,7 +279,7 @@ class Thread implements Runnable {
      * concurrency control constructs such as the ones in the
      * {@link java.util.concurrent.locks} package.
      */
-    public static native void yield();//当前线程交出CPU资源 回到就绪状态 不释放锁，让同优先级的线程有机会获取CPU
+    public static native void yield();//当前线程交出CPU资源，线程从运行状态变成就绪状态，如果有锁不释放锁
 
     /**
      * Causes the currently executing thread to sleep (temporarily cease
@@ -298,7 +298,7 @@ class Thread implements Runnable {
      *          <i>interrupted status</i> of the current thread is
      *          cleared when this exception is thrown.
      */
-    public static native void sleep(long millis) throws InterruptedException;
+    public static native void sleep(long millis) throws InterruptedException;//不释放锁
 
     /**
      * Causes the currently executing thread to sleep (temporarily cease
