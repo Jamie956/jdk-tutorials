@@ -26,6 +26,7 @@ Debug and comments step
 
 
 # 正在注释的类
+- ServerSocket
 - //ArrayDeque
 - //HashSet
 - ByteBuffer
@@ -37,7 +38,6 @@ Debug and comments step
 - CopyOnWriteArrayList
 - ArrayBlockingQueue
 - HttpURLConnection
-- ServerSocket
 - Socket
 - FileChannel
 - SocketChannel
