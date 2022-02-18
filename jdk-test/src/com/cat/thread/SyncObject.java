@@ -154,6 +154,6 @@ public class SyncObject {
 //        new SyncObject().twoThisSync();
 //        new SyncObject().staticSyncTest();
 //        new SyncObject().thisSyncStaticSyncTest();
-        new SyncObject().syncClassTest();
+        new SyncObject().twoThisSync();
     }
 }

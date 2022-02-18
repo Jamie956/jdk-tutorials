@@ -594,7 +594,7 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
     static final int MOVED     = -1; // hash for forwarding nodes
     static final int TREEBIN   = -2; // hash for roots of trees
     static final int RESERVED  = -3; // hash for transient reservations
-    static final int HASH_BITS = 0x7fffffff; // usable bits of normal node hash //  1111 11111111 11111111 11111111?
+    static final int HASH_BITS = 0x7fffffff; // usable bits of normal node hash // 111 1111 11111111 11111111 11111111
 
     /** Number of CPUS, to place bounds on some sizings */
     static final int NCPU = Runtime.getRuntime().availableProcessors();
@@ -682,7 +682,7 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
      * never be used in index calculations because of table bounds.
      */
     static final int spread(int h) { //分散 hashcode
-        return (h ^ (h >>> 16)) & HASH_BITS;//hash 与 hash自己的高16位 异或，
+        return (h ^ (h >>> 16)) & HASH_BITS;//hash 与 hash自己的高16位 异或，& HASH_BITS 保留前31位
     }
 
     /**
@@ -756,7 +756,7 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
     }
 
     static final <K,V> boolean casTabAt(Node<K,V>[] tab, int i,
-                                        Node<K,V> c, Node<K,V> v) {
+                                        Node<K,V> c, Node<K,V> v) { //数组赋值
         return U.compareAndSwapObject(tab, ((long)i << ASHIFT) + ABASE, c, v);
     }
 
@@ -1009,38 +1009,38 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
     /** Implementation for put and putIfAbsent */
     final V putVal(K key, V value, boolean onlyIfAbsent) {
         if (key == null || value == null) throw new NullPointerException();
-        int hash = spread(key.hashCode());
+        int hash = spread(key.hashCode()); //分散hash
         int binCount = 0;
         for (Node<K,V>[] tab = table;;) {//自旋//tab是节点数组
-            Node<K,V> f; int n, i, fh;//n是数组长度，f是节点，i是数组索引
+            Node<K,V> f; int n, i, fh;//n是数组长度，f是节点，i是数组索引，fn是结点hash
             if (tab == null || (n = tab.length) == 0) //空数组
-                tab = initTable(); //创建节点数组
-            else if ((f = tabAt(tab, i = (n - 1) & hash)) == null) { //
+                tab = initTable(); //创建节点数组，将会继续自选
+            else if ((f = tabAt(tab, i = (n - 1) & hash)) == null) { //table[i]为空
                 if (casTabAt(tab, i, null,
-                             new Node<K,V>(hash, key, value, null)))//tab[i]为空，CAS新增节点
+                             new Node<K,V>(hash, key, value, null)))//tab[i]为空，新增节点
                     break;                   // no lock when adding to empty bin
             }
             else if ((fh = f.hash) == MOVED)
                 tab = helpTransfer(tab, f);
-            else {
+            else { //table[i]不为空
                 V oldVal = null;
-                synchronized (f) {
-                    if (tabAt(tab, i) == f) {
+                synchronized (f) { //其他线程不能读写f结点对象
+                    if (tabAt(tab, i) == f) { //double check
                         if (fh >= 0) {
                             binCount = 1;
-                            for (Node<K,V> e = f;; ++binCount) {//自旋
+                            for (Node<K,V> e = f;; ++binCount) { //自旋
                                 K ek;
                                 if (e.hash == hash &&
                                     ((ek = e.key) == key ||
-                                     (ek != null && key.equals(ek)))) {
+                                     (ek != null && key.equals(ek)))) { //hash未被修改，结点key不为空且与参数key相等
                                     oldVal = e.val;
                                     if (!onlyIfAbsent)
-                                        e.val = value;//原来已存在key，update value
+                                        e.val = value;
                                     break;
                                 }
                                 Node<K,V> pred = e;
-                                if ((e = e.next) == null) {//加入链表
-                                    pred.next = new Node<K,V>(hash, key,
+                                if ((e = e.next) == null) { //key 不相同，加入链表
+                                    pred.next = new Node<K,V>(hash, key, //尾插
                                                               value, null);
                                     break;
                                 }
@@ -1052,7 +1052,7 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
                             if ((p = ((TreeBin<K,V>)f).putTreeVal(hash, key,
                                                            value)) != null) {//节点加到树
                                 oldVal = p.val;
-                                if (!onlyIfAbsent)
+                                if (!onlyIfAbsent) //key相同时，是否要设值
                                     p.val = value;
                             }
                         }
@@ -1060,7 +1060,7 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
                 }
                 if (binCount != 0) {
                     if (binCount >= TREEIFY_THRESHOLD)
-                        treeifyBin(tab, i);
+                        treeifyBin(tab, i); //树化
                     if (oldVal != null)
                         return oldVal;
                     break;
