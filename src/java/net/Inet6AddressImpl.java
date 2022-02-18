@@ -77,7 +77,7 @@ class Inet6AddressImpl implements InetAddressImpl {
         return isReachable0(addr.getAddress(), scope, timeout, ifaddr, ttl, netif_scope);
     }
 
-    public synchronized InetAddress anyLocalAddress() {
+    public synchronized InetAddress anyLocalAddress() { //生成地址
         if (anyLocalAddress == null) {
             if (InetAddress.preferIPv6Address) {
                 anyLocalAddress = new Inet6Address();

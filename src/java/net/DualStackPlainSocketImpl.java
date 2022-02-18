@@ -59,10 +59,10 @@ class DualStackPlainSocketImpl extends AbstractPlainSocketImpl
     }
 
     void socketCreate(boolean stream) throws IOException {
-        if (fd == null)
+        if (fd == null) //需要先创建文件描述符
             throw new SocketException("Socket closed");
 
-        int newfd = socket0(stream, false /*v6 Only*/);
+        int newfd = socket0(stream, false /*v6 Only*/); //native 创建文件描述符
 
         fdAccess.set(fd, newfd);
     }
@@ -114,9 +114,9 @@ class DualStackPlainSocketImpl extends AbstractPlainSocketImpl
     }
 
     void socketListen(int backlog) throws IOException {
-        int nativefd = checkAndReturnNativeFD();
+        int nativefd = checkAndReturnNativeFD(); //获取文件描述符
 
-        listen0(nativefd, backlog);
+        listen0(nativefd, backlog); //监听
     }
 
     void socketAccept(SocketImpl s) throws IOException {
@@ -246,7 +246,7 @@ class DualStackPlainSocketImpl extends AbstractPlainSocketImpl
         sendOOB(nativefd, data);
     }
 
-    private int checkAndReturnNativeFD() throws SocketException {
+    private int checkAndReturnNativeFD() throws SocketException { //获取文件描述符
         if (fd == null || !fd.valid())
             throw new SocketException("Socket closed");
 

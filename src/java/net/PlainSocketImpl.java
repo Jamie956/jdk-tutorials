@@ -152,7 +152,7 @@ class PlainSocketImpl extends AbstractPlainSocketImpl
     // Override methods in AbstractPlainSocketImpl that access impl's fields.
 
     protected synchronized void create(boolean stream) throws IOException {
-        impl.create(stream);
+        impl.create(stream); //AbstractPlainSocketImpl //创建Socket 更新状态
 
         // set fd to delegate's fd to be compatible with older releases
         this.fd = impl.fd;

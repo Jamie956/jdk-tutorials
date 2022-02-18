@@ -375,7 +375,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
     /**
      * Returns a power of two size for the given target capacity.
      */
-    static final int tableSizeFor(int cap) {//返回一个2的倍数的整数
+    static final int tableSizeFor(int cap) {//返回一个2的倍数的整数//根据传入的初始化容量，利用无符号右移和按位或运算计算一个大于参数的2的幂
         int n = cap - 1;//1011-1=1010
         n |= n >>> 1;// n = n | (n>>>1)//1010 | 101=1111
         n |= n >>> 2;

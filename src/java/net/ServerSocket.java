@@ -53,15 +53,15 @@ class ServerSocket implements java.io.Closeable {
     /**
      * Various states of this socket.
      */
-    private boolean created = false;
-    private boolean bound = false;
-    private boolean closed = false;
+    private boolean created = false; //socket 是否创建
+    private boolean bound = false; //socket 是否已绑定
+    private boolean closed = false; //socket 是否关闭
     private Object closeLock = new Object();
 
     /**
      * The implementation of this Socket.
      */
-    private SocketImpl impl;
+    private SocketImpl impl; //Socket 实现
 
     /**
      * Are we using an older SocketImpl?
@@ -227,12 +227,12 @@ class ServerSocket implements java.io.Closeable {
      * @since   JDK1.1
      */
     public ServerSocket(int port, int backlog, InetAddress bindAddr) throws IOException {
-        setImpl();
+        setImpl(); //实例化 SocketImpl
         if (port < 0 || port > 0xFFFF)
             throw new IllegalArgumentException(
                        "Port value out of range: " + port);
         if (backlog < 1)
-          backlog = 50;//客户端连接请求队列长度
+          backlog = 50;//连接队列默认的最大长度
         try {
             bind(new InetSocketAddress(bindAddr, port), backlog);
         } catch(SecurityException e) {
@@ -254,7 +254,7 @@ class ServerSocket implements java.io.Closeable {
      */
     SocketImpl getImpl() throws SocketException {
         if (!created)
-            createImpl();
+            createImpl(); //socket 还没创建时，createImpl
         return impl;
     }
 
@@ -278,7 +278,7 @@ class ServerSocket implements java.io.Closeable {
         }
     }
 
-    private void setImpl() {
+    private void setImpl() { //实例化 SocketImpl
         if (factory != null) {
             impl = factory.createSocketImpl();
             checkOldImpl();
@@ -288,7 +288,7 @@ class ServerSocket implements java.io.Closeable {
             impl = new SocksSocketImpl();
         }
         if (impl != null)
-            impl.setServerSocket(this);
+            impl.setServerSocket(this); //SocksSocketImpl 父类PlainSocketImpl 方法
     }
 
     /**
@@ -301,8 +301,8 @@ class ServerSocket implements java.io.Closeable {
         if (impl == null)
             setImpl();
         try {
-            impl.create(true);
-            created = true;
+            impl.create(true); //创建socket
+            created = true; //更新状态
         } catch (IOException e) {
             throw new SocketException(e.getMessage());
         }
@@ -325,7 +325,7 @@ class ServerSocket implements java.io.Closeable {
      *          SocketAddress subclass not supported by this socket
      * @since 1.4
      */
-    public void bind(SocketAddress endpoint) throws IOException {
+    public void bind(SocketAddress endpoint) throws IOException { //
         bind(endpoint, 50);
     }
 
@@ -355,28 +355,28 @@ class ServerSocket implements java.io.Closeable {
      * @since 1.4
      */
     public void bind(SocketAddress endpoint, int backlog) throws IOException {
-        if (isClosed())
+        if (isClosed()) //socket要求未关闭
             throw new SocketException("Socket is closed");
-        if (!oldImpl && isBound())
+        if (!oldImpl && isBound()) //socket要求未绑定
             throw new SocketException("Already bound");
         if (endpoint == null)
-            endpoint = new InetSocketAddress(0);
-        if (!(endpoint instanceof InetSocketAddress))
+            endpoint = new InetSocketAddress(0); //默认使用随机端口
+        if (!(endpoint instanceof InetSocketAddress)) //不能使用SocketAddress的其他子类
             throw new IllegalArgumentException("Unsupported address type");
         InetSocketAddress epoint = (InetSocketAddress) endpoint;
-        if (epoint.isUnresolved())
+        if (epoint.isUnresolved()) //addr 是否未空
             throw new SocketException("Unresolved address");
         if (backlog < 1)
-          backlog = 50;
+          backlog = 50; //连接队列默认50
         try {
             SecurityManager security = System.getSecurityManager();
             if (security != null)
                 security.checkListen(epoint.getPort());
-            getImpl().bind(epoint.getAddress(), epoint.getPort());
-            getImpl().listen(backlog);
-            bound = true;
+            getImpl().bind(epoint.getAddress(), epoint.getPort()); //绑定地址和端口
+            getImpl().listen(backlog); //设置连接队列长度
+            bound = true; //更新状态，已绑定
         } catch(SecurityException e) {
-            bound = false;
+            bound = false; //发生异常，绑定失败
             throw e;
         } catch(IOException e) {
             bound = false;
@@ -760,7 +760,7 @@ class ServerSocket implements java.io.Closeable {
     }
 
     void setCreated() {
-        created = true;
+        created = true; //更新socket已创建状态
     }
 
     /**
