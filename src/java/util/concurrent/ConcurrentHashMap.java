@@ -508,19 +508,19 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
      * because the top two bits of 32bit hash fields are used for
      * control purposes.
      */
-    private static final int MAXIMUM_CAPACITY = 1 << 30;
+    private static final int MAXIMUM_CAPACITY = 1 << 30; //最大容量，高31位
 
     /**
      * The default initial table capacity.  Must be a power of 2
      * (i.e., at least 1) and at most MAXIMUM_CAPACITY.
      */
-    private static final int DEFAULT_CAPACITY = 16;
+    private static final int DEFAULT_CAPACITY = 16; //默认容量16
 
     /**
      * The largest possible (non-power of two) array size.
      * Needed by toArray and related methods.
      */
-    static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
+    static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8; //数组最大长度
 
     /**
      * The default concurrency level for this table. Unused but
@@ -535,7 +535,7 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
      * simpler to use expressions such as {@code n - (n >>> 2)} for
      * the associated resizing threshold.
      */
-    private static final float LOAD_FACTOR = 0.75f;
+    private static final float LOAD_FACTOR = 0.75f; //扩容加载因子
 
     /**
      * The bin count threshold for using a tree rather than list for a
@@ -545,14 +545,14 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
      * tree removal about conversion back to plain bins upon
      * shrinkage.
      */
-    static final int TREEIFY_THRESHOLD = 8;
+    static final int TREEIFY_THRESHOLD = 8; //链表转树所需要的长度
 
     /**
      * The bin count threshold for untreeifying a (split) bin during a
      * resize operation. Should be less than TREEIFY_THRESHOLD, and at
      * most 6 to mesh with shrinkage detection under removal.
      */
-    static final int UNTREEIFY_THRESHOLD = 6;
+    static final int UNTREEIFY_THRESHOLD = 6; //树转链表所需要的长度
 
     /**
      * The smallest table capacity for which bins may be treeified.
@@ -560,7 +560,7 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
      * The value should be at least 4 * TREEIFY_THRESHOLD to avoid
      * conflicts between resizing and treeification thresholds.
      */
-    static final int MIN_TREEIFY_CAPACITY = 64;
+    static final int MIN_TREEIFY_CAPACITY = 64; //转树的最小容量
 
     /**
      * Minimum number of rebinnings per transfer step. Ranges are
@@ -594,7 +594,7 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
     static final int MOVED     = -1; // hash for forwarding nodes
     static final int TREEBIN   = -2; // hash for roots of trees
     static final int RESERVED  = -3; // hash for transient reservations
-    static final int HASH_BITS = 0x7fffffff; // usable bits of normal node hash
+    static final int HASH_BITS = 0x7fffffff; // usable bits of normal node hash //  1111 11111111 11111111 11111111?
 
     /** Number of CPUS, to place bounds on some sizings */
     static final int NCPU = Runtime.getRuntime().availableProcessors();
@@ -681,8 +681,8 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
      * to incorporate impact of the highest bits that would otherwise
      * never be used in index calculations because of table bounds.
      */
-    static final int spread(int h) {
-        return (h ^ (h >>> 16)) & HASH_BITS;//hash 异或 高16，再与
+    static final int spread(int h) { //分散 hashcode
+        return (h ^ (h >>> 16)) & HASH_BITS;//hash 与 hash自己的高16位 异或，
     }
 
     /**
@@ -751,7 +751,7 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
      */
 
     @SuppressWarnings("unchecked")
-    static final <K,V> Node<K,V> tabAt(Node<K,V>[] tab, int i) {
+    static final <K,V> Node<K,V> tabAt(Node<K,V>[] tab, int i) { //获取 tab[i] 的值
         return (Node<K,V>)U.getObjectVolatile(tab, ((long)i << ASHIFT) + ABASE);
     }
 
@@ -1012,10 +1012,10 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
         int hash = spread(key.hashCode());
         int binCount = 0;
         for (Node<K,V>[] tab = table;;) {//自旋//tab是节点数组
-            Node<K,V> f; int n, i, fh;//n是tab的长度，f是索引位置的节点，i是保留长度-1位数的hash（tab存储索引）
-            if (tab == null || (n = tab.length) == 0)//table为空，初始化table
-                tab = initTable();
-            else if ((f = tabAt(tab, i = (n - 1) & hash)) == null) {//
+            Node<K,V> f; int n, i, fh;//n是数组长度，f是节点，i是数组索引
+            if (tab == null || (n = tab.length) == 0) //空数组
+                tab = initTable(); //创建节点数组
+            else if ((f = tabAt(tab, i = (n - 1) & hash)) == null) { //
                 if (casTabAt(tab, i, null,
                              new Node<K,V>(hash, key, value, null)))//tab[i]为空，CAS新增节点
                     break;                   // no lock when adding to empty bin
@@ -2220,19 +2220,19 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
     /**
      * Initializes table, using the size recorded in sizeCtl.
      */
-    private final Node<K,V>[] initTable() {
-        Node<K,V>[] tab; int sc;
+    private final Node<K,V>[] initTable() { //创建节点数组
+        Node<K,V>[] tab; int sc; //tab 是节点数组，
         while ((tab = table) == null || tab.length == 0) {
-            if ((sc = sizeCtl) < 0)
+            if ((sc = sizeCtl) < 0) //
                 Thread.yield(); // lost initialization race; just spin
-            else if (U.compareAndSwapInt(this, SIZECTL, sc, -1)) {
+            else if (U.compareAndSwapInt(this, SIZECTL, sc, -1)) { //SIZECTL = -1
                 try {
-                    if ((tab = table) == null || tab.length == 0) {
-                        int n = (sc > 0) ? sc : DEFAULT_CAPACITY;
+                    if ((tab = table) == null || tab.length == 0) { //空数组
+                        int n = (sc > 0) ? sc : DEFAULT_CAPACITY; //数组长度
                         @SuppressWarnings("unchecked")
-                        Node<K,V>[] nt = (Node<K,V>[])new Node<?,?>[n];
+                        Node<K,V>[] nt = (Node<K,V>[])new Node<?,?>[n]; //创建节点数组
                         table = tab = nt;
-                        sc = n - (n >>> 2);
+                        sc = n - (n >>> 2); //?
                     }
                 } finally {
                     sizeCtl = sc;
