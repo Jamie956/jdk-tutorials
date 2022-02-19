@@ -649,14 +649,14 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
         /**
          * Virtualized support for map.get(); overridden in subclasses.
          */
-        Node<K,V> find(int h, Object k) {
+        Node<K,V> find(int h, Object k) { //查找链表上的节点
             Node<K,V> e = this;
             if (k != null) {
                 do {
                     K ek;
                     if (e.hash == h &&
                         ((ek = e.key) == k || (ek != null && k.equals(ek))))
-                        return e;
+                        return e; //遍历节点链表，查找与参数key对象同一对象或eq参数key
                 } while ((e = e.next) != null);
             }
             return null;
@@ -937,12 +937,12 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
         if ((tab = table) != null && (n = tab.length) > 0 &&
             (e = tabAt(tab, (n - 1) & h)) != null) {
             if ((eh = e.hash) == h) {
-                if ((ek = e.key) == key || (ek != null && key.equals(ek)))
+                if ((ek = e.key) == key || (ek != null && key.equals(ek))) //table[i]第一个节点key 与参数key是同一对象或者eq相等
                     return e.val;
             }
-            else if (eh < 0)
-                return (p = e.find(h, key)) != null ? p.val : null;
-            while ((e = e.next) != null) {
+            else if (eh < 0) //负hash
+                return (p = e.find(h, key)) != null ? p.val : null; //查找链表
+            while ((e = e.next) != null) { //遍历链表查找
                 if (e.hash == h &&
                     ((ek = e.key) == key || (ek != null && key.equals(ek))))
                     return e.val;
@@ -1007,7 +1007,7 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
     }
 
     /** Implementation for put and putIfAbsent */
-    final V putVal(K key, V value, boolean onlyIfAbsent) {
+    final V putVal(K key, V value, boolean onlyIfAbsent) { //1）空数组时初始化数组，自旋CAS插入新节点；2）数组元素为空，CAS插入新节点；3）sync节点对象，与节点的key相同时，更新value；否则链表尾插；如果是树节点，插入树
         if (key == null || value == null) throw new NullPointerException();
         int hash = spread(key.hashCode()); //分散hash
         int binCount = 0;
@@ -1021,7 +1021,7 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
                     break;                   // no lock when adding to empty bin
             }
             else if ((fh = f.hash) == MOVED)
-                tab = helpTransfer(tab, f);
+                tab = helpTransfer(tab, f); //需要扩容
             else { //table[i]不为空
                 V oldVal = null;
                 synchronized (f) { //其他线程不能读写f结点对象
@@ -1050,7 +1050,7 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
                             Node<K,V> p;
                             binCount = 2;
                             if ((p = ((TreeBin<K,V>)f).putTreeVal(hash, key,
-                                                           value)) != null) {//节点加到树
+                                                           value)) != null) { //节点加到树
                                 oldVal = p.val;
                                 if (!onlyIfAbsent) //key相同时，是否要设值
                                     p.val = value;
@@ -1060,7 +1060,7 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
                 }
                 if (binCount != 0) {
                     if (binCount >= TREEIFY_THRESHOLD)
-                        treeifyBin(tab, i); //树化
+                        treeifyBin(tab, i); //树平衡
                     if (oldVal != null)
                         return oldVal;
                     break;
