@@ -2,27 +2,13 @@ package com.cat.concurrency.collections;
 
 import org.junit.Test;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ConcurrentHashMapTest {
-
-//    public static void main(String[] args) {
-//        ConcurrentHashMap<String, String> map = new ConcurrentHashMap<>();
-//        Thread t1 = new Thread(() -> {
-//            //Suspend Thread
-//            map.put("k1", "v1");
-//        });
-//        Thread t2 = new Thread(() -> {
-//            //Suspend Thread
-//            map.put("k1", "v1");
-//        });
-//        t1.start();
-//        t2.start();
-//    }
+    public static void main(String[] args) {
+        put2();
+    }
 
     @Test
     public void cons() {
@@ -50,7 +36,7 @@ public class ConcurrentHashMapTest {
 
     @Test
     public void cons5() {
-        ConcurrentHashMap<String, String> map = new ConcurrentHashMap<>(12, 0.5f, 2);
+        ConcurrentHashMap<String, String> map = new ConcurrentHashMap<>(12, 0.5f, 13);
     }
 
     @Test
@@ -77,7 +63,7 @@ public class ConcurrentHashMapTest {
         map.put("k1", "v1");
         map.put("k2", "v2");
 
-        String v2 = map.get("v2");
+        String v2 = map.get("k2");
     }
 
     @Test
@@ -95,7 +81,7 @@ public class ConcurrentHashMapTest {
         map.put("k1", "v1");
         map.put("k2", "v2");
 
-        boolean b = map.containsValue("v1");
+        boolean b = map.containsValue("v2");
     }
 
     @Test
@@ -103,6 +89,21 @@ public class ConcurrentHashMapTest {
         ConcurrentHashMap<String, String> map = new ConcurrentHashMap<>();
         map.put("k1", "v1");
         map.put("k2", "v2");
+    }
+
+    //多线程 put冲突
+    public static void put2() {
+        ConcurrentHashMap<String, String> map = new ConcurrentHashMap<>();
+        Thread t1 = new Thread(() -> {
+            //Suspend
+            map.put("k1", "v1");
+        });
+        Thread t2 = new Thread(() -> {
+            //Suspend
+            map.put("k1", "v1");
+        });
+        t1.start();
+        t2.start();
     }
 
     @Test
@@ -125,7 +126,7 @@ public class ConcurrentHashMapTest {
 
     @Test
     public void clear() {
-        ConcurrentHashMap<String, String> map = new ConcurrentHashMap<>();
+        ConcurrentHashMap<String, String> map = new ConcurrentHashMap<>(2);
         map.put("k1", "v1");
         map.put("k2", "v2");
         map.clear();
@@ -137,6 +138,9 @@ public class ConcurrentHashMapTest {
         map.put("k1", "v1");
         map.put("k2", "v2");
         ConcurrentHashMap.KeySetView<String, String> s = map.keySet();
+        Iterator<String> iterator = s.iterator();
+        System.out.println(iterator.next());
+        System.out.println(iterator.next());
     }
 
     @Test
@@ -145,6 +149,7 @@ public class ConcurrentHashMapTest {
         map.put("k1", "v1");
         map.put("k2", "v2");
         Collection<String> c = map.values();
+        Object[] objects = c.toArray();
     }
 
     @Test
@@ -176,7 +181,12 @@ public class ConcurrentHashMapTest {
         ConcurrentHashMap<String, String> map = new ConcurrentHashMap<>();
         map.put("k1", "v1");
         map.put("k2", "v2");
-        boolean eq = map.equals("k1");
+
+        ConcurrentHashMap<String, String> map2 = new ConcurrentHashMap<>();
+        map2.put("k1", "v1");
+        map2.put("k2", "v2");
+
+        boolean eq = map.equals(map2);
     }
 
     @Test
@@ -184,7 +194,7 @@ public class ConcurrentHashMapTest {
         ConcurrentHashMap<String, String> map = new ConcurrentHashMap<>();
         map.put("k1", "v1");
         map.put("k2", "v2");
-        String s = map.putIfAbsent("k3", "v3");
+        String s = map.putIfAbsent("k2", "v3");
     }
 
     @Test
@@ -210,45 +220,6 @@ public class ConcurrentHashMapTest {
         map.put("k2", "v2");
         String r = map.replace("k1", "up");
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

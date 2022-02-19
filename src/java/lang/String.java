@@ -111,7 +111,7 @@ import java.util.regex.PatternSyntaxException;
 public final class String
     implements java.io.Serializable, Comparable<String>, CharSequence {
     /** The value is used for character storage. */
-    private final char value[];
+    private final char value[]; //字符串由 char数组组成
 
     /** Cache the hash code for the string */
     private int hash; // Default to 0
@@ -1462,13 +1462,13 @@ public final class String
      *
      * @return  a hash code value for this object.
      */
-    public int hashCode() {
-        int h = hash;
+    public int hashCode() { //字符串的hash计算
+        int h = hash; //默认0
         if (h == 0 && value.length > 0) {
             char val[] = value;
 
             for (int i = 0; i < value.length; i++) {
-                h = 31 * h + val[i];
+                h = 31 * h + val[i]; //hash计算，上一个hash*31 + char数组元素值
             }
             hash = h;
         }
