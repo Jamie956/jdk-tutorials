@@ -96,7 +96,7 @@ public class ArrayDeque<E> extends AbstractCollection<E>
      * other.  We also guarantee that all array cells not holding
      * deque elements are always null.
      */
-    transient Object[] elements; // non-private to simplify nested class access
+    transient Object[] elements; // non-private to simplify nested class access //存储元素的数组
 
     /**
      * The index of the element at the head of the deque (which is the
@@ -115,7 +115,7 @@ public class ArrayDeque<E> extends AbstractCollection<E>
      * The minimum capacity that we'll use for a newly created deque.
      * Must be a power of 2.
      */
-    private static final int MIN_INITIAL_CAPACITY = 8;
+    private static final int MIN_INITIAL_CAPACITY = 8; //最小初始容量
 
     // ******  Array allocation and resizing utilities ******
 
@@ -123,7 +123,7 @@ public class ArrayDeque<E> extends AbstractCollection<E>
         int initialCapacity = MIN_INITIAL_CAPACITY;
         // Find the best power of two to hold elements.
         // Tests "<=" because arrays aren't kept full.
-        if (numElements >= initialCapacity) {
+        if (numElements >= initialCapacity) { //参数小于最小容量时使用最小容量
             initialCapacity = numElements;
             initialCapacity |= (initialCapacity >>>  1);
             initialCapacity |= (initialCapacity >>>  2);
@@ -143,7 +143,7 @@ public class ArrayDeque<E> extends AbstractCollection<E>
      *
      * @param numElements  the number of elements to hold
      */
-    private void allocateElements(int numElements) {
+    private void allocateElements(int numElements) { //初始化创建数组，长度不小于最小容量
         elements = new Object[calculateSize(numElements)];
     }
 
@@ -151,7 +151,7 @@ public class ArrayDeque<E> extends AbstractCollection<E>
      * Doubles the capacity of this deque.  Call only when full, i.e.,
      * when head and tail have wrapped around to become equal.
      */
-    private void doubleCapacity() {
+    private void doubleCapacity() { //扩容
         assert head == tail;
         int p = head;
         int n = elements.length;
@@ -189,7 +189,7 @@ public class ArrayDeque<E> extends AbstractCollection<E>
      * Constructs an empty array deque with an initial capacity
      * sufficient to hold 16 elements.
      */
-    public ArrayDeque() {
+    public ArrayDeque() { //默认创建长度16的数组
         elements = new Object[16];
     }
 
@@ -231,7 +231,7 @@ public class ArrayDeque<E> extends AbstractCollection<E>
     public void addFirst(E e) {
         if (e == null)
             throw new NullPointerException();
-        elements[head = (head - 1) & (elements.length - 1)] = e;
+        elements[head = (head - 1) & (elements.length - 1)] = e; //1...0 & 1111//1110&1111 //由后往前推
         if (head == tail)
             doubleCapacity();
     }
@@ -247,8 +247,8 @@ public class ArrayDeque<E> extends AbstractCollection<E>
     public void addLast(E e) {
         if (e == null)
             throw new NullPointerException();
-        elements[tail] = e;
-        if ( (tail = (tail + 1) & (elements.length - 1)) == head)
+        elements[tail] = e; //尾指针位置插入元素
+        if ( (tail = (tail + 1) & (elements.length - 1)) == head) //?
             doubleCapacity();
     }
 

@@ -32,7 +32,7 @@ public class ArrayDequeTest {
         q.addFirst("1");
         q.addFirst("2");
     }
-
+//
     @Test
     public void addLast() {
         ArrayDeque<String> q = new ArrayDeque<>();
