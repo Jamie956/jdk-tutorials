@@ -5,49 +5,42 @@ import org.junit.Test;
 import java.lang.reflect.Field;
 import java.util.*;
 
-/**
- * 测试 ArrayList API
- */
 public class ArrayListTest {
-
     @Test
-    public void newArrayListArg() {
+    public void cons() {
         ArrayList<Integer> list = new ArrayList<>(6);
     }
 
     @Test
-    public void newArrayList() {
+    public void cons2() {
         ArrayList<Integer> list = new ArrayList<>();
-        ArrayList<Integer> list2 = new ArrayList<>();
     }
 
     @Test
-    public void newArrayListByList() {
+    public void cons3() {
         ArrayList<Integer> list = new ArrayList<>();
         list.add(1);
         ArrayList<Integer> list2 = new ArrayList<>(list);
     }
 
     @Test
-    public void trimToSizeTest() throws NoSuchFieldException, IllegalAccessException {
+    public void trimToSize() throws NoSuchFieldException, IllegalAccessException {
         ArrayList<Integer> list = new ArrayList<>(12);
         for (int i = 0; i < 14; i++) {
             list.add(1);
         }
 
-        //数组实际长度
         Field f = list.getClass().getDeclaredField("elementData");
         f.setAccessible(true);
         Object[] arr = (Object[]) f.get(list);
         System.out.println(arr.length);
-        System.out.println(list.size());
 
         list.trimToSize();
-        System.out.println(list.size());
+        System.out.println(((Object[]) f.get(list)).length);
     }
 
     @Test
-    public void ensureCapacityTest() {
+    public void ensureCapacity() {
         ArrayList<Integer> list = new ArrayList<>();
         list.ensureCapacity(12);
 
@@ -56,7 +49,7 @@ public class ArrayListTest {
     }
 
     @Test
-    public void indexOfTest() {
+    public void indexOf() {
         ArrayList<Integer> list = new ArrayList<>();
         list.add(1);
         list.add(2);
@@ -64,7 +57,7 @@ public class ArrayListTest {
     }
 
     @Test
-    public void lastIndexOfTest() {
+    public void lastIndexOf() {
         ArrayList<Integer> list = new ArrayList<>();
         list.add(1);
         list.add(2);
@@ -74,7 +67,7 @@ public class ArrayListTest {
     }
 
     @Test
-    public void cloneTest() {
+    public void clone1() {
         ArrayList<Integer> list = new ArrayList<>();
         list.add(1);
 
@@ -82,7 +75,7 @@ public class ArrayListTest {
     }
 
     @Test
-    public void toArrayTest() {
+    public void toArray() {
         ArrayList<Integer> list = new ArrayList<>();
         list.add(1);
 
@@ -90,13 +83,13 @@ public class ArrayListTest {
     }
 
     @Test
-    public void toArrayTest2() {
+    public void toArray2() {
         ArrayList<Integer> list = new ArrayList<>();
         list.add(1);
         list.add(1);
-
+//
         Integer[] arr = new Integer[]{2, 3};
-        list.toArray(arr);
+        Integer[] is = list.toArray(arr);
     }
 
     @Test

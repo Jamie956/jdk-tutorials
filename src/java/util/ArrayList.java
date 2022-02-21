@@ -191,12 +191,12 @@ public class ArrayList<E> extends AbstractList<E>
      * list's current size.  An application can use this operation to minimize
      * the storage of an <tt>ArrayList</tt> instance.
      */
-    public void trimToSize() {
+    public void trimToSize() { //按元素长度，截取数组
         modCount++;
-        if (size < elementData.length) {//元素个数 < ArrayList 长度
+        if (size < elementData.length) {//边界前提条件
             elementData = (size == 0)
               ? EMPTY_ELEMENTDATA
-              : Arrays.copyOf(elementData, size);//ArrayList 长度改成元素个数
+              : Arrays.copyOf(elementData, size);//按数组元素长度 截取
         }
     }
 
@@ -213,9 +213,9 @@ public class ArrayList<E> extends AbstractList<E>
             ? 0
             // larger than default for default empty table. It's already
             // supposed to be at default size.
-            : DEFAULT_CAPACITY;//elementData为空，共用同1个对象
+            : DEFAULT_CAPACITY;//elementData为空，默认10容量
 
-        if (minCapacity > minExpand) {//数组为空时，取minCapacity
+        if (minCapacity > minExpand) { //大于原来的最小容量
             ensureExplicitCapacity(minCapacity);
         }
     }
@@ -231,12 +231,12 @@ public class ArrayList<E> extends AbstractList<E>
         ensureExplicitCapacity(calculateCapacity(elementData, minCapacity));//calculateCapacity：计算初始容量，容量至少为10；ensureExplicitCapacity：0.计算新容量；1.分配内存，创建数组；2.将原数组复制到刚刚创建的扩容数组
     }
 
-    private void ensureExplicitCapacity(int minCapacity) {//0.计算新容量；1.分配内存，创建数组；2.将原数组复制到刚刚创建的扩容数组
-        modCount++;//扩容前，modCount+1
+    private void ensureExplicitCapacity(int minCapacity) { //扩容
+        modCount++;//对结构进行修改 modify count +
 
         // overflow-conscious code
         if (minCapacity - elementData.length > 0)
-            grow(minCapacity);
+            grow(minCapacity); //扩容
     }
 
     /**
@@ -253,16 +253,16 @@ public class ArrayList<E> extends AbstractList<E>
      *
      * @param minCapacity the desired minimum capacity
      */
-    private void grow(int minCapacity) {//扩容
+    private void grow(int minCapacity) { //扩容
         // overflow-conscious code
-        int oldCapacity = elementData.length;//数组长度
-        int newCapacity = oldCapacity + (oldCapacity >> 1);//计算新长度，扩容到原来的1.5倍
+        int oldCapacity = elementData.length; //数组长度
+        int newCapacity = oldCapacity + (oldCapacity >> 1); //新长度是原来的1.5倍
         if (newCapacity - minCapacity < 0)
-            newCapacity = minCapacity;//新长度比最小长度还小，就使用最小长度
-        if (newCapacity - MAX_ARRAY_SIZE > 0)//超过最大长度
-            newCapacity = hugeCapacity(minCapacity);
+            newCapacity = minCapacity; //新长度比参数长度小，使用参数长度
+        if (newCapacity - MAX_ARRAY_SIZE > 0)
+            newCapacity = hugeCapacity(minCapacity); //最大长度
         // minCapacity is usually close to size, so this is a win:
-        elementData = Arrays.copyOf(elementData, newCapacity);//复制数组
+        elementData = Arrays.copyOf(elementData, newCapacity); //复制到长度1.5倍的新数组
     }
 
     private static int hugeCapacity(int minCapacity) {
@@ -315,11 +315,11 @@ public class ArrayList<E> extends AbstractList<E>
         if (o == null) {
             for (int i = 0; i < size; i++)
                 if (elementData[i]==null)
-                    return i;//查找第一个空元素
+                    return i; //返回匹配的第一个空元素的索引
         } else {
             for (int i = 0; i < size; i++)
                 if (o.equals(elementData[i]))
-                    return i;//遍历查找
+                    return i; //遍历查找匹配参数对象的元素所在索引
         }
         return -1;
     }
@@ -335,11 +335,11 @@ public class ArrayList<E> extends AbstractList<E>
         if (o == null) {
             for (int i = size-1; i >= 0; i--)
                 if (elementData[i]==null)
-                    return i;
+                    return i; //尾部开始遍历，返回第一个空元素的所在索引
         } else {
             for (int i = size-1; i >= 0; i--)
                 if (o.equals(elementData[i]))
-                    return i;//末尾开始遍历，返回第一个元素（同一个实例）
+                    return i; //末尾开始遍历，返回第一个匹配元素所在索引
         }
         return -1;
     }
@@ -350,11 +350,11 @@ public class ArrayList<E> extends AbstractList<E>
      *
      * @return a clone of this <tt>ArrayList</tt> instance
      */
-    public Object clone() {
+    public Object clone() { //克隆
         try {
-            ArrayList<?> v = (ArrayList<?>) super.clone();//对象复制
-            v.elementData = Arrays.copyOf(elementData, size);//数组复制赋值
-            v.modCount = 0;
+            ArrayList<?> v = (ArrayList<?>) super.clone();//浅克隆 ArrayList
+            v.elementData = Arrays.copyOf(elementData, size);//引用类型变量指向新的数组
+            v.modCount = 0; //初始化 modify count
             return v;
         } catch (CloneNotSupportedException e) {
             // this shouldn't happen, since we are Cloneable
@@ -377,7 +377,7 @@ public class ArrayList<E> extends AbstractList<E>
      *         proper sequence
      */
     public Object[] toArray() {
-        return Arrays.copyOf(elementData, size);//创建一个数组，并把元素复制到数组
+        return Arrays.copyOf(elementData, size); //创建一个size大小数组，elementData复制到新数组
     }
 
     /**
@@ -406,7 +406,7 @@ public class ArrayList<E> extends AbstractList<E>
      */
     @SuppressWarnings("unchecked")
     public <T> T[] toArray(T[] a) {
-        if (a.length < size)//数组a太小放不下，新建一个复制
+        if (a.length < size) //数组a太小放不下，新建一个复制
             // Make a new array of a's runtime type, but my contents:
             return (T[]) Arrays.copyOf(elementData, size, a.getClass());
         System.arraycopy(elementData, 0, a, 0, size);//将ArrayList 元素复制到数组
