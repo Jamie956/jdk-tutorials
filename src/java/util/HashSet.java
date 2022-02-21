@@ -103,7 +103,7 @@ public class HashSet<E>
      * default initial capacity (16) and load factor (0.75).
      */
     public HashSet() {
-        map = new HashMap<>();
+        map = new HashMap<>(); //实际上使用HashMap
     }
 
     /**
@@ -116,7 +116,7 @@ public class HashSet<E>
      * @throws NullPointerException if the specified collection is null
      */
     public HashSet(Collection<? extends E> c) {
-        map = new HashMap<>(Math.max((int) (c.size()/.75f) + 1, 16));
+        map = new HashMap<>(Math.max((int) (c.size()/.75f) + 1, 16)); //初始容量最小16
         addAll(c);
     }
 
@@ -170,7 +170,7 @@ public class HashSet<E>
      * @see ConcurrentModificationException
      */
     public Iterator<E> iterator() {
-        return map.keySet().iterator();
+        return map.keySet().iterator(); //key 遍历器
     }
 
     /**
@@ -217,7 +217,7 @@ public class HashSet<E>
      * element
      */
     public boolean add(E e) {
-        return map.put(e, PRESENT)==null;//set元素加到map key，value为静态对象
+        return map.put(e, PRESENT)==null;//set元素加到HashMap key，value为静态对象
     }
 
     /**
@@ -253,8 +253,8 @@ public class HashSet<E>
     @SuppressWarnings("unchecked")
     public Object clone() {
         try {
-            HashSet<E> newSet = (HashSet<E>) super.clone();
-            newSet.map = (HashMap<E, Object>) map.clone();
+            HashSet<E> newSet = (HashSet<E>) super.clone(); //克隆 HashSet 实例
+            newSet.map = (HashMap<E, Object>) map.clone(); //克隆引用类型map
             return newSet;
         } catch (CloneNotSupportedException e) {
             throw new InternalError(e);
