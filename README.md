@@ -26,7 +26,6 @@ Debug and comments step
 
 
 # 正在注释的类
-- HashSet
 - PriorityQueue
 - LinkedHashSet
 - ArrayBlockingQueue
@@ -72,3 +71,4 @@ Debug and comments step
 - Thread
 - ConcurrentHashMap
 - ArrayDeque
+- HashSet
