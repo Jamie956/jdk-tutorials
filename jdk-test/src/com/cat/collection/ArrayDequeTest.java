@@ -32,12 +32,21 @@ public class ArrayDequeTest {
         q.addFirst("1");
         q.addFirst("2");
     }
-//
+
     @Test
     public void addLast() {
         ArrayDeque<String> q = new ArrayDeque<>();
         q.addLast("1");
         q.addLast("2");
+    }
+
+    @Test
+    public void addLast2() {
+        ArrayDeque<String> q = new ArrayDeque<>();
+        for (int i = 0; i < 17; i++) {
+            //i == 15
+            q.addLast("1");
+        }
     }
 
     @Test
@@ -138,8 +147,19 @@ public class ArrayDequeTest {
         q.add("2");
         q.add("1");
         q.add("2");
-        q.add("1");
+        q.add("2");
 
+        boolean s = q.removeFirstOccurrence("1");
+    }
+
+    @Test
+    public void removeFirstOccurrence2() {
+        ArrayDeque<String> q = new ArrayDeque<>();
+        q.add("2");
+        q.add("1");
+        q.add("1");
+        q.add("2");
+        q.add("2");
 
         boolean s = q.removeFirstOccurrence("1");
     }
@@ -153,6 +173,17 @@ public class ArrayDequeTest {
         q.add("2");
         q.add("1");
 
+        boolean s = q.removeLastOccurrence("1");
+    }
+
+    @Test
+    public void removeLastOccurrence2() {
+        ArrayDeque<String> q = new ArrayDeque<>();
+        q.add("1");
+        q.add("2");
+        q.add("1");
+        q.add("1");
+        q.add("2");
 
         boolean s = q.removeLastOccurrence("1");
     }
@@ -261,6 +292,8 @@ public class ArrayDequeTest {
         q.add("2");
 
         Iterator<String> iterator = q.descendingIterator();
+        System.out.println(iterator.next());
+        System.out.println(iterator.next());
     }
 
     @Test
