@@ -165,15 +165,15 @@ public class FutureTask<V> implements RunnableFuture<V> { //interface: RunnableF
         if (!(state == NEW &&
               UNSAFE.compareAndSwapInt(this, stateOffset, NEW,
                   mayInterruptIfRunning ? INTERRUPTING : CANCELLED)))
-            return false;
+            return false; //状态不为NEW/CAS失败
         try {    // in case call to interrupt throws exception
-            if (mayInterruptIfRunning) {
+            if (mayInterruptIfRunning) { //是否中断线程
                 try {
                     Thread t = runner;
                     if (t != null)
                         t.interrupt();
                 } finally { // final state
-                    UNSAFE.putOrderedInt(this, stateOffset, INTERRUPTED);
+                    UNSAFE.putOrderedInt(this, stateOffset, INTERRUPTED); //更新状态为 INTERRUPTED
                 }
             }
         } finally {
@@ -351,7 +351,7 @@ public class FutureTask<V> implements RunnableFuture<V> { //interface: RunnableF
      * stack.  See other classes such as Phaser and SynchronousQueue
      * for more detailed explanation.
      */
-    static final class WaitNode {
+    static final class WaitNode { //线程对象链表
         volatile Thread thread;
         volatile WaitNode next;
         WaitNode() { thread = Thread.currentThread(); }
@@ -364,16 +364,16 @@ public class FutureTask<V> implements RunnableFuture<V> { //interface: RunnableF
     private void finishCompletion() {
         // assert state > COMPLETING;
         for (WaitNode q; (q = waiters) != null;) {
-            if (UNSAFE.compareAndSwapObject(this, waitersOffset, q, null)) {
+            if (UNSAFE.compareAndSwapObject(this, waitersOffset, q, null)) { //非空结点设为空
                 for (;;) {
                     Thread t = q.thread;
                     if (t != null) {
-                        q.thread = null;
-                        LockSupport.unpark(t);
+                        q.thread = null; //结点线程对象不为空时，线程对象设为空
+                        LockSupport.unpark(t); //唤醒线程
                     }
-                    WaitNode next = q.next;
+                    WaitNode next = q.next; //遍历下一结点
                     if (next == null)
-                        break;
+                        break; //自选直到遍历完链表
                     q.next = null; // unlink to help gc
                     q = next;
                 }

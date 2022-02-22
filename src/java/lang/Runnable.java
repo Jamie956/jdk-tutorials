@@ -65,5 +65,5 @@ public interface Runnable { //函数式接口
      *
      * @see     java.lang.Thread#run()
      */
-    public abstract void run(); //接口的抽象方法
+    public abstract void run(); //接口的抽象方法 //无参数无返回
 }
