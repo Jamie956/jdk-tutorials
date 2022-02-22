@@ -26,9 +26,7 @@ Debug and comments step
 
 
 # 正在注释的类
-- PriorityQueue //难
-
-- Future
+- FutureTask
 - AtomicInteger
 - CopyOnWriteArraySet
 - CopyOnWriteArrayList
@@ -41,6 +39,11 @@ Debug and comments step
 - SocketChannel
 - ServerSocket
 - ByteBuffer
+
+- Exception
+
+- PriorityQueue //复杂
+
 
 
 # 已做注释的类

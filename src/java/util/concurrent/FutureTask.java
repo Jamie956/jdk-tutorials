@@ -60,7 +60,7 @@ import java.util.concurrent.locks.LockSupport;
  * @author Doug Lea
  * @param <V> The result type returned by this FutureTask's {@code get} methods
  */
-public class FutureTask<V> implements RunnableFuture<V> {
+public class FutureTask<V> implements RunnableFuture<V> { //interface: RunnableFuture, Runnable, Future
     /*
      * Revision notes: This differs from previous versions of this
      * class that relied on AbstractQueuedSynchronizer, mainly to
