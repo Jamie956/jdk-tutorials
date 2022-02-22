@@ -87,7 +87,18 @@ public class ArrayListTest {
         ArrayList<Integer> list = new ArrayList<>();
         list.add(1);
         list.add(1);
-//
+
+        Integer[] arr = new Integer[]{2, 3};
+        Integer[] is = list.toArray(arr);
+    }
+
+    @Test
+    public void toArray3() {
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(1);
+        list.add(1);
+
         Integer[] arr = new Integer[]{2, 3};
         Integer[] is = list.toArray(arr);
     }
@@ -101,7 +112,7 @@ public class ArrayListTest {
     }
 
     @Test
-    public void setTest() {
+    public void set() {
         ArrayList<Integer> list = new ArrayList<>();
         list.add(1);
         list.add(2);
@@ -111,21 +122,21 @@ public class ArrayListTest {
     }
 
     @Test
-    public void addTest() {
+    public void add() {
         ArrayList<Integer> list = new ArrayList<>();
         list.add(1);
         list.add(2);
     }
 
     @Test
-    public void addTestByIndex() {
+    public void add2() {
         ArrayList<Integer> list = new ArrayList<>();
         list.add(1);
         list.add(0, 2);
     }
 
     @Test
-    public void removeTest() {
+    public void remove() {
         ArrayList<Integer> list = new ArrayList<>();
         list.add(1);
         list.add(2);
@@ -134,7 +145,7 @@ public class ArrayListTest {
     }
 
     @Test
-    public void removeTest2() {
+    public void remove2() {
         ArrayList<String> list = new ArrayList<>();
         list.add("1");
         list.add("2");
@@ -144,7 +155,7 @@ public class ArrayListTest {
     }
 
     @Test
-    public void clearTest() {
+    public void clear() {
         ArrayList<Integer> list = new ArrayList<>();
         list.add(1);
         list.add(2);
@@ -153,7 +164,7 @@ public class ArrayListTest {
     }
 
     @Test
-    public void addAllTest() {
+    public void addAll() {
         ArrayList<Integer> list = new ArrayList<>();
         list.add(1);
         list.add(2);
@@ -166,7 +177,7 @@ public class ArrayListTest {
     }
 
     @Test
-    public void addAllByIndexTest() {
+    public void addAll2() {
         ArrayList<Integer> list = new ArrayList<>();
         list.add(1);
         list.add(2);
@@ -180,7 +191,7 @@ public class ArrayListTest {
     }
 
     @Test
-    public void removeAllTest() {
+    public void removeAll() {
         ArrayList<Integer> list = new ArrayList<>();
         list.add(1);
         list.add(2);
@@ -196,7 +207,7 @@ public class ArrayListTest {
     }
 
     @Test
-    public void retainAllTest() {
+    public void retainAll() {
         ArrayList<Integer> list = new ArrayList<>();
         list.add(1);
         list.add(2);
@@ -212,17 +223,17 @@ public class ArrayListTest {
     }
 
     @Test
-    public void listIteratorTest() {
+    public void listIterator() {
         ArrayList<Integer> list = new ArrayList<>();
         list.add(1);
         list.add(2);
         list.add(3);
-
-        ListIterator<Integer> integerListIterator = list.listIterator(1);
+//
+        ListIterator<Integer> ite = list.listIterator(1);
     }
 
     @Test
-    public void listIteratorByIndexTest() {
+    public void listIterator2() {
         ArrayList<Integer> list = new ArrayList<>();
         list.add(1);
         list.add(2);
@@ -236,7 +247,7 @@ public class ArrayListTest {
     }
 
     @Test
-    public void iteratorTest() {
+    public void iterator() {
         ArrayList<Integer> list = new ArrayList<>();
         list.add(1);
         list.add(2);
@@ -251,7 +262,7 @@ public class ArrayListTest {
     }
 
     @Test
-    public void subListTest() {
+    public void subList() {
         ArrayList<Integer> list = new ArrayList<>();
         list.add(1);
         list.add(2);
@@ -260,7 +271,7 @@ public class ArrayListTest {
     }
 
     @Test
-    public void forEachTest() {
+    public void forEach() {
         ArrayList<Integer> list = new ArrayList<>();
         list.add(1);
         list.add(2);
@@ -269,7 +280,7 @@ public class ArrayListTest {
     }
 
     @Test
-    public void spliteratorTest() {
+    public void spliterator() {
         ArrayList<Integer> list = new ArrayList<>();
         list.add(1);
         list.add(2);
@@ -281,7 +292,7 @@ public class ArrayListTest {
     }
 
     @Test
-    public void removeIfTest() {
+    public void removeIf() {
         ArrayList<Integer> list = new ArrayList<>();
         list.add(1);
         list.add(2);
@@ -292,7 +303,7 @@ public class ArrayListTest {
     }
 
     @Test
-    public void replaceAllTest() {
+    public void replaceAll() {
         ArrayList<Integer> list = new ArrayList<>();
         list.add(1);
         list.add(2);
@@ -303,7 +314,7 @@ public class ArrayListTest {
     }
 
     @Test
-    public void sortTest() {
+    public void sort() {
         ArrayList<Integer> list = new ArrayList<>();
         list.add(1);
         list.add(3);
@@ -316,7 +327,7 @@ public class ArrayListTest {
     }
 
     @Test
-    public void sortNoComparatorTest() {
+    public void sort2() {
         ArrayList<Integer> list = new ArrayList<>();
         list.add(1);
         list.add(3);
@@ -329,7 +340,7 @@ public class ArrayListTest {
     }
 
     @Test
-    public void sortNoComparator32Test() {
+    public void sort3() {
         ArrayList<Integer> list = new ArrayList<>();
         Random random = new Random();
         for (int j = 0; j < 33; j++) {
