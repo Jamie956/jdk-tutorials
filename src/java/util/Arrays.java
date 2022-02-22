@@ -1309,7 +1309,7 @@ public class Arrays {
         if (LegacyMergeSort.userRequested)
             legacyMergeSort(a, fromIndex, toIndex);//?
         else
-            ComparableTimSort.sort(a, fromIndex, toIndex, null, 0, 0);//排序范围 from to
+            ComparableTimSort.sort(a, fromIndex, toIndex, null, 0, 0); //排序范围 from to
     }
 
     /** To be removed in a future release. */
@@ -1503,7 +1503,7 @@ public class Arrays {
     public static <T> void sort(T[] a, int fromIndex, int toIndex,
                                 Comparator<? super T> c) {
         if (c == null) {
-            sort(a, fromIndex, toIndex);//无比较器排序
+            sort(a, fromIndex, toIndex); //无比较器排序
         } else {
             rangeCheck(a.length, fromIndex, toIndex);
             if (LegacyMergeSort.userRequested)

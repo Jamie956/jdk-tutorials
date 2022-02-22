@@ -448,7 +448,7 @@ public class ArrayList<E> extends AbstractList<E>
         rangeCheck(index);
 
         E oldValue = elementData(index);
-        elementData[index] = element;//直接替换
+        elementData[index] = element; //直接替换
         return oldValue;
     }
 
@@ -478,7 +478,7 @@ public class ArrayList<E> extends AbstractList<E>
 
         ensureCapacityInternal(size + 1);  // Increments modCount!!
         System.arraycopy(elementData, index, elementData, index + 1,
-                         size - index);//移动index之后的元素
+                         size - index); //移动index之后的元素
         elementData[index] = element;
         size++;
     }
@@ -845,7 +845,7 @@ public class ArrayList<E> extends AbstractList<E>
      */
     private class Itr implements Iterator<E> {
         int cursor;       // index of next element to return
-        int lastRet = -1; // index of last element returned; -1 if no such
+        int lastRet = -1; // index of last element returned; -1 if no such //上次读取的位置
         int expectedModCount = modCount;
 
         Itr() {}
@@ -863,8 +863,8 @@ public class ArrayList<E> extends AbstractList<E>
             Object[] elementData = ArrayList.this.elementData;
             if (i >= elementData.length)
                 throw new ConcurrentModificationException();
-            cursor = i + 1;//下一次读取的游标
-            return (E) elementData[lastRet = i];//更新最后一个元素的游标
+            cursor = i + 1; //下一次读取的游标
+            return (E) elementData[lastRet = i]; //更新最后一个元素的游标
         }
 
         public void remove() {
@@ -937,32 +937,32 @@ public class ArrayList<E> extends AbstractList<E>
             int i = cursor - 1;
             if (i < 0)
                 throw new NoSuchElementException();
-            Object[] elementData = ArrayList.this.elementData;
+            Object[] elementData = ArrayList.this.elementData; //访问外部类变量
             if (i >= elementData.length)
                 throw new ConcurrentModificationException();
             cursor = i;
-            return (E) elementData[lastRet = i];//迭代最后加入的一个元素
+            return (E) elementData[lastRet = i]; //迭代最后加入的一个元素
         }
 
         public void set(E e) {
             if (lastRet < 0)
                 throw new IllegalStateException();
-            checkForComodification();
+            checkForComodification(); //mod count check
 
             try {
-                ArrayList.this.set(lastRet, e);//外部类set，修改ArrayList元素，位置是迭代器末尾元素位置 lastRet
+                ArrayList.this.set(lastRet, e); //外部类set方法
             } catch (IndexOutOfBoundsException ex) {
                 throw new ConcurrentModificationException();
             }
         }
 
-        public void add(E e) {//元素添加到外部类
+        public void add(E e) { //计算游标，写入数组
             checkForComodification();
 
             try {
                 int i = cursor;
-                ArrayList.this.add(i, e);//外部类方法
-                cursor = i + 1;//游标
+                ArrayList.this.add(i, e); //外部类方法
+                cursor = i + 1; //游标
                 lastRet = -1;
                 expectedModCount = modCount;
             } catch (IndexOutOfBoundsException ex) {
@@ -1034,7 +1034,7 @@ public class ArrayList<E> extends AbstractList<E>
             rangeCheck(index);
             checkForComodification();
             E oldValue = ArrayList.this.elementData(offset + index);
-            ArrayList.this.elementData[offset + index] = e;
+            ArrayList.this.elementData[offset + index] = e; //修改外部类数组对象
             return oldValue;
         }
 
@@ -1052,7 +1052,7 @@ public class ArrayList<E> extends AbstractList<E>
         public void add(int index, E e) {
             rangeCheckForAdd(index);
             checkForComodification();
-            parent.add(parentOffset + index, e);
+            parent.add(parentOffset + index, e); //修改parent
             this.modCount = parent.modCount;
             this.size++;
         }
@@ -1411,7 +1411,7 @@ public class ArrayList<E> extends AbstractList<E>
             @SuppressWarnings("unchecked")
             final E element = (E) elementData[i];
             if (filter.test(element)) {
-                removeSet.set(i);//过滤元素
+                removeSet.set(i); //过滤元素存到 BitSet
                 removeCount++;
             }
         }
@@ -1421,13 +1421,13 @@ public class ArrayList<E> extends AbstractList<E>
 
         // shift surviving elements left over the spaces left by removed elements
         final boolean anyToRemove = removeCount > 0;
-        if (anyToRemove) {
+        if (anyToRemove) { //有需要删除的元素
             final int newSize = size - removeCount;
             for (int i=0, j=0; (i < size) && (j < newSize); i++, j++) {
                 i = removeSet.nextClearBit(i);
-                elementData[j] = elementData[i];
+                elementData[j] = elementData[i]; //替换要删除的元素
             }
-            for (int k=newSize; k < size; k++) {
+            for (int k=newSize; k < size; k++) { //清空没用的元素
                 elementData[k] = null;  // Let gc do its work
             }
             this.size = newSize;
@@ -1444,10 +1444,10 @@ public class ArrayList<E> extends AbstractList<E>
     @SuppressWarnings("unchecked")
     public void replaceAll(UnaryOperator<E> operator) {
         Objects.requireNonNull(operator);
-        final int expectedModCount = modCount;
+        final int expectedModCount = modCount; //不可改
         final int size = this.size;
-        for (int i=0; modCount == expectedModCount && i < size; i++) {
-            elementData[i] = operator.apply((E) elementData[i]);//每个元素执行函数
+        for (int i=0; modCount == expectedModCount && i < size; i++) { //modCount 被修改，立即失败
+            elementData[i] = operator.apply((E) elementData[i]); //每个元素执行函数
         }
         if (modCount != expectedModCount) {
             throw new ConcurrentModificationException();
@@ -1459,8 +1459,8 @@ public class ArrayList<E> extends AbstractList<E>
     @SuppressWarnings("unchecked")
     public void sort(Comparator<? super E> c) {
         final int expectedModCount = modCount;
-        Arrays.sort((E[]) elementData, 0, size, c);//数组排序 (arr, from, to, comparator)
-        if (modCount != expectedModCount) {
+        Arrays.sort((E[]) elementData, 0, size, c); //数组比较器排序
+        if (modCount != expectedModCount) { //modCount被修改，快速失败
             throw new ConcurrentModificationException();
         }
         modCount++;

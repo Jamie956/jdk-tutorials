@@ -198,7 +198,7 @@ public final class Objects {
      * @return {@code obj} if not {@code null}
      * @throws NullPointerException if {@code obj} is {@code null}
      */
-    public static <T> T requireNonNull(T obj) {
+    public static <T> T requireNonNull(T obj) { //判空
         if (obj == null)
             throw new NullPointerException();
         return obj;

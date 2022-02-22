@@ -228,8 +228,15 @@ public class ArrayListTest {
         list.add(1);
         list.add(2);
         list.add(3);
-//
+
         ListIterator<Integer> ite = list.listIterator(1);
+        boolean a = ite.hasPrevious();
+        int b = ite.nextIndex();
+        int c = ite.previousIndex();
+        Integer d = ite.previous();
+        ite.set(4);
+        ite.add(9);
+        Integer e = ite.next();
     }
 
     @Test
