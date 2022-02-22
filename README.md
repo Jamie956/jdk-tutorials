@@ -26,19 +26,14 @@ Debug and comments step
 
 
 # 正在注释的类
-- PriorityQueue
-- LinkedHashSet
-- ArrayBlockingQueue
-- LinkedBlockingQueue
-
-
+- PriorityQueue //难
 
 - Future
 - AtomicInteger
 - CopyOnWriteArraySet
 - CopyOnWriteArrayList
-
-
+- ArrayBlockingQueue
+- LinkedBlockingQueue
 
 - HttpURLConnection
 - Socket
@@ -46,8 +41,6 @@ Debug and comments step
 - SocketChannel
 - ServerSocket
 - ByteBuffer
-
-
 
 
 # 已做注释的类
@@ -72,3 +65,4 @@ Debug and comments step
 - ConcurrentHashMap
 - ArrayDeque
 - HashSet
+- LinkedHashSet
