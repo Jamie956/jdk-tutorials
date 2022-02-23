@@ -943,7 +943,7 @@ class Thread implements Runnable {
      * @see #isInterrupted()
      * @revised 6.0
      */
-    public static boolean interrupted() {//判断线程是否是中断状态，执行后清除状态
+    public static boolean interrupted() { //判断线程是否是中断状态，执行后清除状态
         return currentThread().isInterrupted(true);
     }
 

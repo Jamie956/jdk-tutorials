@@ -76,7 +76,20 @@ public class FutureTaskTest {
         ft.cancel(true);
     }
 
+    @Test
+    public void get() throws ExecutionException, InterruptedException {
+        Callable<Integer> c = () -> {
+            int a = 0;
+            for (int i = 0; i < 100; i++) {
+                a += i;
+            }
+            return a;
+        };
 
+        FutureTask<Integer> ft = new FutureTask<>(c);
+        new Thread(ft).start();
+        Integer result = ft.get();
+    }
 
 
 

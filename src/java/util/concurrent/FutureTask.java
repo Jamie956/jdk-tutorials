@@ -101,7 +101,7 @@ public class FutureTask<V> implements RunnableFuture<V> { //interface: RunnableF
     /** The underlying callable; nulled out after running */
     private Callable<V> callable;
     /** The result to return or exception to throw from get() */
-    private Object outcome; // non-volatile, protected by state reads/writes
+    private Object outcome; // non-volatile, protected by state reads/writes //任务执行结果
     /** The thread running the callable; CASed during run() */
     private volatile Thread runner;
     /** Treiber stack of waiting threads */
@@ -116,7 +116,7 @@ public class FutureTask<V> implements RunnableFuture<V> { //interface: RunnableF
     private V report(int s) throws ExecutionException {
         Object x = outcome;
         if (s == NORMAL)
-            return (V)x;
+            return (V)x; //任务执行完返回执行结果
         if (s >= CANCELLED)
             throw new CancellationException();
         throw new ExecutionException((Throwable)x);
@@ -188,7 +188,7 @@ public class FutureTask<V> implements RunnableFuture<V> { //interface: RunnableF
     public V get() throws InterruptedException, ExecutionException {
         int s = state;
         if (s <= COMPLETING)
-            s = awaitDone(false, 0L);
+            s = awaitDone(false, 0L); //任务未完成一直阻塞
         return report(s);
     }
 
@@ -228,7 +228,7 @@ public class FutureTask<V> implements RunnableFuture<V> { //interface: RunnableF
      */
     protected void set(V v) {
         if (UNSAFE.compareAndSwapInt(this, stateOffset, NEW, COMPLETING)) {
-            outcome = v;
+            outcome = v; //设置任务执行结果
             UNSAFE.putOrderedInt(this, stateOffset, NORMAL); // final state
             finishCompletion();
         }
@@ -271,7 +271,7 @@ public class FutureTask<V> implements RunnableFuture<V> { //interface: RunnableF
                     setException(ex);
                 }
                 if (ran)
-                    set(result);
+                    set(result); //设置任务执行结果
             }
         } finally {
             // runner must be non-null until state is settled to
@@ -393,14 +393,14 @@ public class FutureTask<V> implements RunnableFuture<V> { //interface: RunnableF
      * @param nanos time to wait, if timed
      * @return state upon completion
      */
-    private int awaitDone(boolean timed, long nanos)
+    private int awaitDone(boolean timed, long nanos) //timed 是否设置超时
         throws InterruptedException {
         final long deadline = timed ? System.nanoTime() + nanos : 0L;
         WaitNode q = null;
         boolean queued = false;
         for (;;) {
             if (Thread.interrupted()) {
-                removeWaiter(q);
+                removeWaiter(q); //线程已经中断，移除等待结点
                 throw new InterruptedException();
             }
 
@@ -413,11 +413,11 @@ public class FutureTask<V> implements RunnableFuture<V> { //interface: RunnableF
             else if (s == COMPLETING) // cannot time out yet
                 Thread.yield();
             else if (q == null)
-                q = new WaitNode();
-            else if (!queued)
+                q = new WaitNode(); //初次进入创建等待结点
+            else if (!queued) //状态还是NEW状态时，将q作为链表头结点
                 queued = UNSAFE.compareAndSwapObject(this, waitersOffset,
                                                      q.next = waiters, q);
-            else if (timed) {
+            else if (timed) { //如果设置超时，判断是否超时
                 nanos = deadline - System.nanoTime();
                 if (nanos <= 0L) {
                     removeWaiter(q);
@@ -426,7 +426,7 @@ public class FutureTask<V> implements RunnableFuture<V> { //interface: RunnableF
                 LockSupport.parkNanos(this, nanos);
             }
             else
-                LockSupport.park(this);
+                LockSupport.park(this); //没有设置超时，挂起
         }
     }
 
