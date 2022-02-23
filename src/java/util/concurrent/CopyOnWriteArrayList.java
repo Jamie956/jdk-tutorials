@@ -656,9 +656,9 @@ public class CopyOnWriteArrayList<E>
     public boolean containsAll(Collection<?> c) {
         Object[] elements = getArray();
         int len = elements.length;
-        for (Object e : c) {
+        for (Object e : c) { //遍历参数集合
             if (indexOf(e, elements, 0, len) < 0)
-                return false;
+                return false; //elements 不包含集合某个元素，返回false
         }
         return true;
     }
@@ -679,7 +679,7 @@ public class CopyOnWriteArrayList<E>
      *         or if the specified collection is null
      * @see #remove(Object)
      */
-    public boolean removeAll(Collection<?> c) {
+    public boolean removeAll(Collection<?> c) { //删除elements中与参数集合c包含的元素
         if (c == null) throw new NullPointerException();
         final ReentrantLock lock = this.lock;
         lock.lock();
@@ -691,12 +691,12 @@ public class CopyOnWriteArrayList<E>
                 int newlen = 0;
                 Object[] temp = new Object[len];
                 for (int i = 0; i < len; ++i) {
-                    Object element = elements[i];
+                    Object element = elements[i]; //遍历elements 数组
                     if (!c.contains(element))
-                        temp[newlen++] = element;
+                        temp[newlen++] = element; //将集合c不包含的元素插入临时数组
                 }
-                if (newlen != len) {
-                    setArray(Arrays.copyOf(temp, newlen));
+                if (newlen != len) { //有删除元素情况
+                    setArray(Arrays.copyOf(temp, newlen)); //临时数组复制，替换array
                     return true;
                 }
             }

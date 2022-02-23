@@ -1,6 +1,8 @@
 package com.cat.concurrency.collections;
 
 import org.junit.Test;
+
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -182,9 +184,36 @@ public class CopyOnWriteArrayListTest {
         boolean c = a.addIfAbsent("7");
     }
 
+    @Test
+    public void containsAll() {
+        CopyOnWriteArrayList<String> a = new CopyOnWriteArrayList<>();
+        a.add("2");
+        a.add("1");
+        a.add("5");
 
+        ArrayList<String> l = new ArrayList<>();
+        l.add("2");
+        l.add("1");
+        l.add("5");
+        l.add("7");
 
+        boolean b = a.containsAll(l);
+    }
 
+    @Test
+    public void removeAll() {
+        CopyOnWriteArrayList<String> a = new CopyOnWriteArrayList<>();
+        a.add("2");
+        a.add("1");
+        a.add("5");
+
+        ArrayList<String> l = new ArrayList<>();
+        l.add("2");
+        l.add("5");
+        l.add("7");
+
+        boolean b = a.removeAll(l);
+    }
 
 
 
