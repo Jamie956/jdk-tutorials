@@ -26,8 +26,8 @@ Debug and comments step
 
 
 # 正在注释的类
-- CopyOnWriteArraySet
 - CopyOnWriteArrayList
+- CopyOnWriteArraySet
 - ArrayBlockingQueue
 - LinkedBlockingQueue
 
