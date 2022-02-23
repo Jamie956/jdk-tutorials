@@ -3,11 +3,15 @@ package com.cat.concurrency.collections;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 
 public class CopyOnWriteArrayListTest {
-
     @Test
     public void cons() {
         CopyOnWriteArrayList<Integer> a = new CopyOnWriteArrayList<>();
@@ -215,19 +219,156 @@ public class CopyOnWriteArrayListTest {
         boolean b = a.removeAll(l);
     }
 
+    @Test
+    public void retainAll() {
+        CopyOnWriteArrayList<String> a = new CopyOnWriteArrayList<>();
+        a.add("2");
+        a.add("1");
+        a.add("5");
 
+        ArrayList<String> l = new ArrayList<>();
+        l.add("2");
+        l.add("5");
+        l.add("7");
 
+        boolean b = a.retainAll(l);
+    }
 
+    @Test
+    public void addAllAbsent() {
+        CopyOnWriteArrayList<String> a = new CopyOnWriteArrayList<>();
+        a.add("2");
+        a.add("1");
+        a.add("5");
 
+        ArrayList<String> l = new ArrayList<>();
+        l.add("2");
+        l.add("5");
+        l.add("7");
+        l.add("7");
+        l.add("6");
 
+        int b = a.addAllAbsent(l);
+    }
 
+    @Test
+    public void clear() {
+        CopyOnWriteArrayList<String> a = new CopyOnWriteArrayList<>();
+        a.add("2");
+        a.add("1");
+        a.add("5");
+        a.clear();
+    }
 
+    @Test
+    public void addAll() {
+        CopyOnWriteArrayList<String> a = new CopyOnWriteArrayList<>();
+        ArrayList<String> l = new ArrayList<>();
+        l.add("2");
+        l.add("5");
+        l.add("7");
+        boolean b = a.addAll(l);
+    }
 
+    @Test
+    public void addAll2() {
+        CopyOnWriteArrayList<String> a = new CopyOnWriteArrayList<>();
+        a.add("0");
+        a.add("1");
+        a.add("2");
 
+        ArrayList<String> l = new ArrayList<>();
+        l.add("9");
+        l.add("5");
+        l.add("7");
+        boolean b = a.addAll(1, l);
+    }
 
+    @Test
+    public void forEach() {
+        CopyOnWriteArrayList<String> a = new CopyOnWriteArrayList<>();
+        a.add("0");
+        a.add("1");
+        a.add("2");
+        Consumer<String> c = e -> System.out.println(e);
+       a.forEach(c);
+    }
 
+    @Test
+    public void removeIf() {
+        CopyOnWriteArrayList<String> a = new CopyOnWriteArrayList<>();
+        a.add("0");
+        a.add("1");
+        a.add("2");
+        Predicate<String> p = e -> "2".equals(e);
+        boolean b = a.removeIf(p);
+    }
 
+    @Test
+    public void replaceAll() {
+        CopyOnWriteArrayList<String> a = new CopyOnWriteArrayList<>();
+        a.add("0");
+        a.add("1");
+        a.add("2");
+        UnaryOperator<String> u = e -> e+";";
+        a.replaceAll(u);
+    }
 
+    @Test
+    public void sort() {
+        CopyOnWriteArrayList<Integer> a = new CopyOnWriteArrayList<>();
+        a.add(5);
+        a.add(1);
+        a.add(8);
+        a.add(2);
+        Comparator<Object> c = Comparator.comparingInt(e -> (int) e);
+        a.sort(c);
+    }
+
+    @Test
+    public void toString1() {
+        CopyOnWriteArrayList<Integer> a = new CopyOnWriteArrayList<>();
+        a.add(5);
+        a.add(1);
+        a.add(8);
+
+        String s = a.toString();
+    }
+
+    @Test
+    public void equals1() {
+        CopyOnWriteArrayList<Integer> a = new CopyOnWriteArrayList<>();
+        a.add(5);
+        a.add(1);
+        a.add(8);
+        CopyOnWriteArrayList<Integer> b = new CopyOnWriteArrayList<>();
+        b.add(5);
+        b.add(1);
+        b.add(8);
+//        b.add(8);
+        boolean c = a.equals(b);
+    }
+
+    @Test
+    public void hashCode1() {
+        CopyOnWriteArrayList<Integer> a = new CopyOnWriteArrayList<>();
+        a.add(5);
+        a.add(1);
+        a.add(8);
+        int hc = a.hashCode();
+    }
+
+    @Test
+    public void iterator() {
+        CopyOnWriteArrayList<Integer> a = new CopyOnWriteArrayList<>();
+        a.add(5);
+        a.add(1);
+        a.add(8);
+        Iterator<Integer> it = a.iterator();
+        Integer b = it.next();
+        Integer c = it.next();
+        Integer d = it.next();
+    }
 
 
 
