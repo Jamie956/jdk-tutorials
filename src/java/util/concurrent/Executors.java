@@ -509,7 +509,7 @@ public class Executors {
         }
         public T call() {
             task.run();
-            return result;
+            return result; //返回构造函数初始的result
         }
     }
 
