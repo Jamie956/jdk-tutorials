@@ -26,8 +26,6 @@ Debug and comments step
 
 
 # 正在注释的类
-- FutureTask
-- AtomicInteger
 - CopyOnWriteArraySet
 - CopyOnWriteArrayList
 - ArrayBlockingQueue
@@ -69,3 +67,7 @@ Debug and comments step
 - ArrayDeque
 - HashSet
 - LinkedHashSet
+- FutureTask
+- AtomicInteger
+
+
