@@ -1100,7 +1100,7 @@ public class CopyOnWriteArrayList<E>
      *
      * @throws IndexOutOfBoundsException {@inheritDoc}
      */
-    public ListIterator<E> listIterator(int index) {
+    public ListIterator<E> listIterator(int index) { //按参数指定的游标，返回遍历器
         Object[] elements = getArray();
         int len = elements.length;
         if (index < 0 || index > len)
@@ -1680,7 +1680,7 @@ public class CopyOnWriteArrayList<E>
             UNSAFE = sun.misc.Unsafe.getUnsafe();
             Class<?> k = CopyOnWriteArrayList.class;
             lockOffset = UNSAFE.objectFieldOffset
-                (k.getDeclaredField("lock"));
+                (k.getDeclaredField("lock")); //反射 lock 变量的Field对象
         } catch (Exception e) {
             throw new Error(e);
         }

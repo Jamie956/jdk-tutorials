@@ -37,7 +37,7 @@ public class CopyOnWriteArrayListTest {
 
     @Test
     public void cons4() {
-        Integer[] arr = {4,7,9};
+        Integer[] arr = {4, 7, 9};
         CopyOnWriteArrayList<Integer> a = new CopyOnWriteArrayList<>(arr);
     }
 
@@ -291,7 +291,7 @@ public class CopyOnWriteArrayListTest {
         a.add("1");
         a.add("2");
         Consumer<String> c = e -> System.out.println(e);
-       a.forEach(c);
+        a.forEach(c);
     }
 
     @Test
@@ -310,7 +310,7 @@ public class CopyOnWriteArrayListTest {
         a.add("0");
         a.add("1");
         a.add("2");
-        UnaryOperator<String> u = e -> e+";";
+        UnaryOperator<String> u = e -> e + ";";
         a.replaceAll(u);
     }
 
@@ -370,33 +370,15 @@ public class CopyOnWriteArrayListTest {
         Integer d = it.next();
     }
 
+    @Test
+    public void listIterator() {
+        CopyOnWriteArrayList<Integer> a = new CopyOnWriteArrayList<>();
+        a.add(5);
+        a.add(1);
+        a.add(8);
+        Iterator<Integer> it = a.listIterator(1);
+        Integer b = it.next();
+        Integer c = it.next();
+    }
 
-
-
-
-
-
-    //----------------------- 场景模拟 -----------------------
-
-//    public static void main(String[] args) throws InterruptedException {
-//        CopyOnWriteArrayList<String> list = new CopyOnWriteArrayList<>();
-//
-//        Runnable r = () -> {
-//            for (int i = 0; i < 6; i++) {
-//                String name = Thread.currentThread().getName() + "  " + i;
-//                //Suspend Thread
-//                list.add(name);
-//                list.get(i);
-//            }
-//        };
-//
-//        Thread t1 = new Thread(r);
-//        Thread t2 = new Thread(r);
-//
-//        t1.start();
-//        t2.start();
-//
-//        t1.join();
-//        t2.join();
-//    }
 }
