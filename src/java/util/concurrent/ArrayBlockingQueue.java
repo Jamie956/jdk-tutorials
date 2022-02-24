@@ -321,7 +321,7 @@ public class ArrayBlockingQueue<E> extends AbstractQueue<E>
      *
      * @throws NullPointerException if the specified element is null
      */
-    public boolean offer(E e) {
+    public boolean offer(E e) { //入队，不阻塞等待
         checkNotNull(e);
         final ReentrantLock lock = this.lock;
         lock.lock();
@@ -395,7 +395,7 @@ public class ArrayBlockingQueue<E> extends AbstractQueue<E>
         }
     }
 
-    public E take() throws InterruptedException {
+    public E take() throws InterruptedException { //出队，可阻塞等待
         final ReentrantLock lock = this.lock;
         lock.lockInterruptibly();
         try {
@@ -613,7 +613,7 @@ public class ArrayBlockingQueue<E> extends AbstractQueue<E>
      * @throws NullPointerException if the specified array is null
      */
     @SuppressWarnings("unchecked")
-    public <T> T[] toArray(T[] a) {
+    public <T> T[] toArray(T[] a) { //将items 写到参数数组a
         final Object[] items = this.items;
         final ReentrantLock lock = this.lock;
         lock.lock();
@@ -622,7 +622,7 @@ public class ArrayBlockingQueue<E> extends AbstractQueue<E>
             final int len = a.length;
             if (len < count)
                 a = (T[])java.lang.reflect.Array.newInstance(
-                    a.getClass().getComponentType(), count);
+                    a.getClass().getComponentType(), count); //反射实例化数组
             int n = items.length - takeIndex;
             if (count <= n)
                 System.arraycopy(items, takeIndex, a, 0, count);
@@ -649,13 +649,13 @@ public class ArrayBlockingQueue<E> extends AbstractQueue<E>
             final Object[] items = this.items;
             StringBuilder sb = new StringBuilder();
             sb.append('[');
-            for (int i = takeIndex; ; ) {
+            for (int i = takeIndex; ; ) { //从takeIndex 开始遍历items
                 Object e = items[i];
                 sb.append(e == this ? "(this Collection)" : e);
-                if (--k == 0)
+                if (--k == 0) //中止循环出口，元素全部读取完
                     return sb.append(']').toString();
                 sb.append(',').append(' ');
-                if (++i == items.length)
+                if (++i == items.length) //重置索引i
                     i = 0;
             }
         } finally {
@@ -667,7 +667,7 @@ public class ArrayBlockingQueue<E> extends AbstractQueue<E>
      * Atomically removes all of the elements from this queue.
      * The queue will be empty after this call returns.
      */
-    public void clear() {
+    public void clear() { //释放数组items全部元素
         final Object[] items = this.items;
         final ReentrantLock lock = this.lock;
         lock.lock();
@@ -677,16 +677,16 @@ public class ArrayBlockingQueue<E> extends AbstractQueue<E>
                 final int putIndex = this.putIndex;
                 int i = takeIndex;
                 do {
-                    items[i] = null;
-                    if (++i == items.length)
+                    items[i] = null; //释放元素
+                    if (++i == items.length) //重置索引
                         i = 0;
-                } while (i != putIndex);
-                takeIndex = putIndex;
+                } while (i != putIndex); //从takeIndex 开始遍历，直到游标指向putIndex位置
+                takeIndex = putIndex; //重置takeIndex
                 count = 0;
                 if (itrs != null)
                     itrs.queueIsEmpty();
-                for (; k > 0 && lock.hasWaiters(notFull); k--)
-                    notFull.signal();
+                for (; k > 0 && lock.hasWaiters(notFull); k--) //condition queue 还有等待节点
+                    notFull.signal(); //发出队列未满通知，可以往队列添加元素
             }
         } finally {
             lock.unlock();
@@ -709,7 +709,7 @@ public class ArrayBlockingQueue<E> extends AbstractQueue<E>
      * @throws NullPointerException          {@inheritDoc}
      * @throws IllegalArgumentException      {@inheritDoc}
      */
-    public int drainTo(Collection<? super E> c, int maxElements) {
+    public int drainTo(Collection<? super E> c, int maxElements) { //items数组的元素加到参数集合c，同时把items数组元素释放
         checkNotNull(c);
         if (c == this)
             throw new IllegalArgumentException();
@@ -726,8 +726,8 @@ public class ArrayBlockingQueue<E> extends AbstractQueue<E>
                 while (i < n) {
                     @SuppressWarnings("unchecked")
                     E x = (E) items[take];
-                    c.add(x);
-                    items[take] = null;
+                    c.add(x); //遍历数组items，元素加到参数集合c
+                    items[take] = null; //释放数组items 元素
                     if (++take == items.length)
                         take = 0;
                     i++;

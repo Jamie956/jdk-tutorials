@@ -26,7 +26,7 @@ Debug and comments step
 
 
 # 正在注释的类
-- ArrayBlockingQueue
+
 - LinkedBlockingQueue
 
 - HttpURLConnection
@@ -69,3 +69,4 @@ Debug and comments step
 - AtomicInteger
 - CopyOnWriteArrayList
 - CopyOnWriteArraySet
+- ArrayBlockingQueue

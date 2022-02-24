@@ -3,6 +3,7 @@ package com.cat.concurrency.collections;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -127,65 +128,57 @@ public class ArrayBlockingQueueTest {
         Object[] arr = q.toArray();
     }
 
+    @Test
+    public void toArray2() {
+        ArrayBlockingQueue<String> q = new ArrayBlockingQueue<>(3);
+        q.add("1");
+        q.add("5");
+        q.add("7");
+        String[] arr = {"7", "3", "8"};
+        Object[] r = q.toArray(arr);
+    }
 
+    @Test
+    public void toString1() {
+        ArrayBlockingQueue<String> q = new ArrayBlockingQueue<>(3);
+        q.add("1");
+        q.add("5");
+        q.add("7");
+        String s = q.toString();
+    }
 
+    @Test
+    public void clear() {
+        ArrayBlockingQueue<String> q = new ArrayBlockingQueue<>(3);
+        q.add("1");
+        q.add("5");
+        q.add("7");
+        q.clear();
+    }
 
+    @Test
+    public void drainTo() {
+        ArrayBlockingQueue<String> q = new ArrayBlockingQueue<>(3);
+        q.add("1");
+        q.add("5");
+        q.add("7");
 
+        ArrayList<String> l = new ArrayList<>();
+        l.add("1");
+        l.add("2");
+        l.add("3");
+        int i = q.drainTo(l);
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //------------------------ 场景模拟 ------------------------
-
-    /*
-        往满的数组阻塞队列 添加元素
-     */
-    public static void main(String[] args) throws InterruptedException {
-        ArrayBlockingQueue<Integer> queue = new ArrayBlockingQueue<>(2);
-
-        Thread t1 = new Thread(() -> {
-            try {
-                queue.put(1);
-                System.out.println("加入1");
-                queue.put(2);
-                System.out.println("加入2");
-                //Suspend Thread，模拟队列元素满了，再往队列添加元素
-                queue.put(3);
-                System.out.println("加入3");
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-
-        Thread t2 = new Thread(() -> {
-            try {
-                TimeUnit.SECONDS.sleep(2);
-                //Suspend Thread
-                queue.take();
-                System.out.println("取走第一个元素");
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-
-        t1.start();
-        t2.start();
-
-        t1.join();
-        t2.join();
+    @Test
+    public void iterator() {
+        ArrayBlockingQueue<String> q = new ArrayBlockingQueue<>(3);
+        q.add("1");
+        q.add("5");
+        q.add("7");
+        Iterator<String> it = q.iterator();
+        String a1 = it.next();
+        String a2 = it.next();
+        String a3 = it.next();
     }
 }
