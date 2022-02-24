@@ -110,6 +110,7 @@ Debug and comments step
 
 - Thread 注释
 - Exception
+  - Throwable 当前
 
 
 

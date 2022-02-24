@@ -128,7 +128,7 @@ public class Throwable implements Serializable {
      *
      * @serial
      */
-    private String detailMessage;
+    private String detailMessage; //打印的异常信息
 
 
     /**
@@ -195,7 +195,7 @@ public class Throwable implements Serializable {
      * @serial
      * @since 1.4
      */
-    private Throwable cause = this;
+    private Throwable cause = this; //导致异常的异常
 
     /**
      * The stack trace, as returned by {@link #getStackTrace()}.
@@ -208,7 +208,7 @@ public class Throwable implements Serializable {
      * @serial
      * @since 1.4
      */
-    private StackTraceElement[] stackTrace = UNASSIGNED_STACK;
+    private StackTraceElement[] stackTrace = UNASSIGNED_STACK; //方法栈方法
 
     // Setting this static field introduces an acceptable
     // initialization dependency on a few java.util classes.
