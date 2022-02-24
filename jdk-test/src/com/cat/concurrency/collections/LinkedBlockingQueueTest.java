@@ -3,6 +3,7 @@ package com.cat.concurrency.collections;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -98,74 +99,62 @@ public class LinkedBlockingQueueTest {
         boolean b = q.remove("7");
     }
 
+    @Test
+    public void contains() {
+        LinkedBlockingQueue<String> q = new LinkedBlockingQueue<>(3);
+        q.offer("5");
+        q.offer("7");
+        q.offer("0");
+        boolean b = q.contains("0");
+    }
 
+    @Test
+    public void toArray() {
+        LinkedBlockingQueue<String> q = new LinkedBlockingQueue<>(3);
+        q.offer("5");
+        q.offer("7");
+        q.offer("0");
+        Object[] arr = q.toArray();
+    }
 
+    @Test
+    public void toArray2() {
+        LinkedBlockingQueue<String> q = new LinkedBlockingQueue<>(3);
+        q.offer("5");
+        q.offer("7");
+        q.offer("0");
+        String[] arr = {"3", "7", "0"};
+        Object[] r = q.toArray(arr);
+    }
 
+    @Test
+    public void clear() {
+        LinkedBlockingQueue<String> q = new LinkedBlockingQueue<>(3);
+        q.offer("5");
+        q.offer("7");
+        q.offer("0");
+        q.clear();
+    }
 
+    @Test
+    public void drainTo() {
+        LinkedBlockingQueue<String> q = new LinkedBlockingQueue<>(3);
+        q.offer("5");
+        q.offer("7");
+        q.offer("0");
+        ArrayList<String> l = new ArrayList<>();
+        int i = q.drainTo(l, 2);
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //--------------------------- 场景模拟 ---------------------------
-    public static void main(String[] args) {
-        LinkedBlockingQueue<Integer> queue = new LinkedBlockingQueue<>(2);
-
-        new Thread(() -> {
-            try {
-                queue.put(1);
-                System.out.println("put 1" + queue);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }).start();
-
-        new Thread(() -> {
-            try {
-                queue.put(2);
-                System.out.println("put 2" + queue);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }).start();
-
-        new Thread(() -> {
-            try {
-                queue.take();
-                System.out.println("take" + queue);
-                queue.put(3);
-                System.out.println("put 3" + queue);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }).start();
+    @Test
+    public void iterator() {
+        LinkedBlockingQueue<String> q = new LinkedBlockingQueue<>(3);
+        q.offer("5");
+        q.offer("7");
+        q.offer("0");
+        Iterator<String> it = q.iterator();
+        String a1 = it.next();
+        String a2 = it.next();
+        String a3 = it.next();
     }
 }

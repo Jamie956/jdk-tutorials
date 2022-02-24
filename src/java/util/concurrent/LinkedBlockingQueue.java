@@ -574,7 +574,7 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E>
         fullyLock();
         try {
             for (Node<E> p = head.next; p != null; p = p.next)
-                if (o.equals(p.item))
+                if (o.equals(p.item)) //遍历，比较
                     return true;
             return false;
         } finally {
@@ -602,7 +602,7 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E>
             Object[] a = new Object[size];
             int k = 0;
             for (Node<E> p = head.next; p != null; p = p.next)
-                a[k++] = p.item;
+                a[k++] = p.item; //遍历逐个写入数组
             return a;
         } finally {
             fullyUnlock();
@@ -655,7 +655,7 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E>
 
             int k = 0;
             for (Node<E> p = head.next; p != null; p = p.next)
-                a[k++] = (T)p.item;
+                a[k++] = (T)p.item; //遍历，写入
             if (a.length > k)
                 a[k] = null;
             return a;
@@ -740,8 +740,8 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E>
             try {
                 while (i < n) {
                     Node<E> p = h.next;
-                    c.add(p.item);
-                    p.item = null;
+                    c.add(p.item); //加到参数集合
+                    p.item = null; //释放
                     h.next = h;
                     h = p;
                     ++i;
@@ -815,7 +815,7 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E>
                     return head.next;
                 if (s == null || s.item != null)
                     return s;
-                p = s;
+                p = s; //s.item 为空
             }
         }
 

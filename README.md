@@ -26,9 +26,6 @@ Debug and comments step
 
 
 # 正在注释的类
-
-- LinkedBlockingQueue
-
 - HttpURLConnection
 - Socket
 - FileChannel
@@ -70,3 +67,4 @@ Debug and comments step
 - CopyOnWriteArrayList
 - CopyOnWriteArraySet
 - ArrayBlockingQueue
+- LinkedBlockingQueue
