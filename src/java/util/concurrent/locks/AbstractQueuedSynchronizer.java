@@ -895,7 +895,7 @@ public abstract class AbstractQueuedSynchronizer
                 }
                 if (shouldParkAfterFailedAcquire(p, node) &&
                     parkAndCheckInterrupt())
-                    throw new InterruptedException();
+                    throw new InterruptedException(); //与acquireQueued区别就是会抛中断异常
             }
         } finally {
             if (failed)
@@ -1217,7 +1217,7 @@ public abstract class AbstractQueuedSynchronizer
     public final void acquireInterruptibly(int arg)//抢占锁，可中断
             throws InterruptedException {
         if (Thread.interrupted())
-            throw new InterruptedException();
+            throw new InterruptedException(); //如果线程已经被中断，抛出异常，不参与抢锁了
         if (!tryAcquire(arg))
             doAcquireInterruptibly(arg);//自旋抢锁，还没轮到或者失败时就park
     }
