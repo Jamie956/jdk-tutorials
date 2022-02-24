@@ -24,97 +24,51 @@ Debug and comments step
 
 
 
-# 正在注释的类
-- Socket
-- FileChannel
-- SocketChannel
-- ServerSocket
-- ByteBuffer
-- Exception
-- TimeUnit
-- ForkJoinPool //复杂
-- PriorityQueue //复杂
-- ReentrantReadWriteLock
-- LockSupport
-- Condition
-
-
-
-# 已做注释的类
-- ArrayList
-- LinkedList
-- HashMap
-- FileInputStream
-- FileOutputStream
-- ByteArrayInputStream
-- ByteArrayOutputStream
-- InputStreamReader
-- OutputStreamWriter
-- ReentrantLock
-- ThreadPoolExecutor
-- Semaphore
-- CyclicBarrier
-- CountDownLatch
-- TreeMap
-- TreeSet
-- Thread
-- ConcurrentHashMap
-- ArrayDeque
-- HashSet
-- LinkedHashSet
-- FutureTask
-- AtomicInteger
-- CopyOnWriteArrayList
-- CopyOnWriteArraySet
-- ArrayBlockingQueue
-- LinkedBlockingQueue
-
-
-
 # java.util
 
 - Collection
-  - ArrayDequeue
-  - ArrayList
-  - HashSet
-  - LinkedHashSet
-  - LinkedList
+  - ArrayDequeue 注释
+  - ArrayList 注释
+  - HashSet 注释
+  - LinkedHashSet 注释
+  - LinkedList 注释
   - PriorityQueue
-  - TreeSet
+  - TreeSet 注释
 - Map
-  - HashMap
-  - Treemap
+  - HashMap 注释
+  - Treemap 注释
 
 - concurrent
   - Collection
-    - ArrayBlokingQueue
-    - ConcurrentHashMap
-    - CopyOnWriteArrayList
-    - CopyOnWriteArraySet
-    - LinkedBlockingQueue
+    - ArrayBlokingQueue 注释
+    - ConcurrentHashMap 注释
+    - CopyOnWriteArrayList 注释
+    - CopyOnWriteArraySet 注释
+    - LinkedBlockingQueue 注释
   - Lock
-    - CountDownLatch
+    - CountDownLatch 注释
     - LockSupport
-    - ReentrantLock
+    - ReentrantLock 注释
     - ReentrantReadWriteLock
-    - Semaphore
+    - Semaphore 注释
+    - CyclicBarrier 注释
   - Atomic
-    - AtomicInteger
+    - AtomicInteger 注释
   - ForkJoinPool
-  - FutureTask
-  - ThreadPoolExecutor
+  - FutureTask 注释
+  - ThreadPoolExecutor 注释
   - Timeunit
 
 
 
 # java.io
 
-- ByteArrayInputStream
-- ByteArrayOutputStream
-- FileInputStream
-- FileOutputStream
-- InputStreamReader
-- OutputStreamWriter
+- ByteArrayInputStream 注释
+- ByteArrayOutputStream 注释
+- FileInputStream 注释
+- FileOutputStream 注释
+- InputStreamReader 注释
+- OutputStreamWriter 注释
 
 
 
@@ -127,13 +81,11 @@ Debug and comments step
   - SocketChannel
   - Selector
   - SelectionKey
-  - 
+  - FileChannel
 
 
 
 # java8
-
-
 
 - StreamSupport
 - FunctionalInterface
@@ -143,15 +95,9 @@ Debug and comments step
 
 # java.net
 
-
-
 - HttpURLConnection
 - ServerSocket
 - Socket
-
-
-
-
 
 
 
@@ -162,7 +108,8 @@ Debug and comments step
   - Proxy
   - InvocationHandler
 
-- Thread
+- Thread 注释
+- Exception
 
 
 
