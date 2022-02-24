@@ -57,6 +57,8 @@ public class CyclicBarrierTest {
         int i = c.getNumberWaiting();
     }
 
+    //----------------- 场景模拟 -----------------
+
     public static void demo1() {
         CyclicBarrier c = new CyclicBarrier(3, () -> System.out.println("action"));
 

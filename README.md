@@ -18,29 +18,29 @@ Debug and comments step
 
 
 # 策略
-1. 粗看一遍源码大体结构
+1. 粗看一下源码，看类的变量、内部类、实现接口、继承类、核心方法
 2. 写API 测试方法
-3. 调试API 方法，注释
-4. 细看一遍源码
+3. 调试API 方法，源码写注释
 
 
 
 # 正在注释的类
-- HttpURLConnection
 - Socket
 - FileChannel
 - SocketChannel
 - ServerSocket
 - ByteBuffer
-
 - Exception
-
+- TimeUnit
+- ForkJoinPool //复杂
 - PriorityQueue //复杂
+- ReentrantReadWriteLock
+- LockSupport
+- Condition
 
 
 
 # 已做注释的类
-- ReentrantReadWriteLock
 - ArrayList
 - LinkedList
 - HashMap
@@ -68,3 +68,109 @@ Debug and comments step
 - CopyOnWriteArraySet
 - ArrayBlockingQueue
 - LinkedBlockingQueue
+
+
+
+# java.util
+
+- Collection
+  - ArrayDequeue
+  - ArrayList
+  - HashSet
+  - LinkedHashSet
+  - LinkedList
+  - PriorityQueue
+  - TreeSet
+- Map
+  - HashMap
+  - Treemap
+
+- concurrent
+  - Collection
+    - ArrayBlokingQueue
+    - ConcurrentHashMap
+    - CopyOnWriteArrayList
+    - CopyOnWriteArraySet
+    - LinkedBlockingQueue
+  - Lock
+    - CountDownLatch
+    - LockSupport
+    - ReentrantLock
+    - ReentrantReadWriteLock
+    - Semaphore
+  - Atomic
+    - AtomicInteger
+  - ForkJoinPool
+  - FutureTask
+  - ThreadPoolExecutor
+  - Timeunit
+
+
+
+# java.io
+
+- ByteArrayInputStream
+- ByteArrayOutputStream
+- FileInputStream
+- FileOutputStream
+- InputStreamReader
+- OutputStreamWriter
+
+
+
+# java.nio
+
+- ByteBuffer
+- CharBuffer
+- channels
+  - ServerSocketChannel
+  - SocketChannel
+  - Selector
+  - SelectionKey
+  - 
+
+
+
+# java8
+
+
+
+- StreamSupport
+- FunctionalInterface
+- Optional
+
+
+
+# java.net
+
+
+
+- HttpURLConnection
+- ServerSocket
+- Socket
+
+
+
+
+
+
+
+# java.lang
+
+- reflect
+  - Method
+  - Proxy
+  - InvocationHandler
+
+- Thread
+
+
+
+
+
+
+
+
+
+
+
