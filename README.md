@@ -174,11 +174,11 @@ https://mirrors.tuna.tsinghua.edu.cn/AdoptOpenJDK/8/jdk/x64/windows/
 33. //TreeSet
 34. //ThreadGroup
 35. //ServerSocket
-36. ArrayDeque
-37. AbstractPlainSocketImpl
-38. DualStackPLainSocketImpl
-39. Inet4AddressImpl
-40. Inet6AddressImpl
+36. //ArrayDeque
+37. //AbstractPlainSocketImpl
+38. //DualStackPLainSocketImpl
+39. //Inet4AddressImpl
+40. //Inet6AddressImpl
 41. InetSocketAddress
 42. PlainSocketImpl
 43. Runtime

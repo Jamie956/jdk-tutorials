@@ -96,7 +96,7 @@ public class ArrayDeque<E> extends AbstractCollection<E>
      * other.  We also guarantee that all array cells not holding
      * deque elements are always null.
      */
-    transient Object[] elements; // non-private to simplify nested class access
+    transient Object[] elements; // non-private to simplify nested class access //存储元素的数组
 
     /**
      * The index of the element at the head of the deque (which is the
@@ -115,7 +115,7 @@ public class ArrayDeque<E> extends AbstractCollection<E>
      * The minimum capacity that we'll use for a newly created deque.
      * Must be a power of 2.
      */
-    private static final int MIN_INITIAL_CAPACITY = 8;
+    private static final int MIN_INITIAL_CAPACITY = 8; //最小初始容量
 
     // ******  Array allocation and resizing utilities ******
 
@@ -123,7 +123,7 @@ public class ArrayDeque<E> extends AbstractCollection<E>
         int initialCapacity = MIN_INITIAL_CAPACITY;
         // Find the best power of two to hold elements.
         // Tests "<=" because arrays aren't kept full.
-        if (numElements >= initialCapacity) {
+        if (numElements >= initialCapacity) { //参数小于最小容量时使用最小容量
             initialCapacity = numElements;
             initialCapacity |= (initialCapacity >>>  1);
             initialCapacity |= (initialCapacity >>>  2);
@@ -143,7 +143,7 @@ public class ArrayDeque<E> extends AbstractCollection<E>
      *
      * @param numElements  the number of elements to hold
      */
-    private void allocateElements(int numElements) {
+    private void allocateElements(int numElements) { //初始化创建数组，长度不小于最小容量
         elements = new Object[calculateSize(numElements)];
     }
 
@@ -151,17 +151,17 @@ public class ArrayDeque<E> extends AbstractCollection<E>
      * Doubles the capacity of this deque.  Call only when full, i.e.,
      * when head and tail have wrapped around to become equal.
      */
-    private void doubleCapacity() {
+    private void doubleCapacity() { //扩容
         assert head == tail;
         int p = head;
         int n = elements.length;
         int r = n - p; // number of elements to the right of p
-        int newCapacity = n << 1;
+        int newCapacity = n << 1; //双倍扩容
         if (newCapacity < 0)
             throw new IllegalStateException("Sorry, deque too big");
-        Object[] a = new Object[newCapacity];
-        System.arraycopy(elements, p, a, 0, r);
-        System.arraycopy(elements, 0, a, r, p);
+        Object[] a = new Object[newCapacity]; //创建新数组
+        System.arraycopy(elements, p, a, 0, r); //(Object src, int srcPos, Object dest, int destPos, int length)
+        System.arraycopy(elements, 0, a, r, p); //?
         elements = a;
         head = 0;
         tail = n;
@@ -174,7 +174,7 @@ public class ArrayDeque<E> extends AbstractCollection<E>
      *
      * @return its argument
      */
-    private <T> T[] copyElements(T[] a) {
+    private <T> T[] copyElements(T[] a) { //elements 复制到数组 a
         if (head < tail) {
             System.arraycopy(elements, head, a, 0, size());
         } else if (head > tail) {
@@ -189,7 +189,7 @@ public class ArrayDeque<E> extends AbstractCollection<E>
      * Constructs an empty array deque with an initial capacity
      * sufficient to hold 16 elements.
      */
-    public ArrayDeque() {
+    public ArrayDeque() { //默认创建长度16的数组
         elements = new Object[16];
     }
 
@@ -231,7 +231,7 @@ public class ArrayDeque<E> extends AbstractCollection<E>
     public void addFirst(E e) {
         if (e == null)
             throw new NullPointerException();
-        elements[head = (head - 1) & (elements.length - 1)] = e;
+        elements[head = (head - 1) & (elements.length - 1)] = e; //1...0 & 1111//1110&1111 //由后往前推
         if (head == tail)
             doubleCapacity();
     }
@@ -247,8 +247,8 @@ public class ArrayDeque<E> extends AbstractCollection<E>
     public void addLast(E e) {
         if (e == null)
             throw new NullPointerException();
-        elements[tail] = e;
-        if ( (tail = (tail + 1) & (elements.length - 1)) == head)
+        elements[tail] = e; //尾指针位置插入元素
+        if ( (tail = (tail + 1) & (elements.length - 1)) == head) //1 & 1111=1 //1 0000 & 1111=0 扩容
             doubleCapacity();
     }
 
@@ -301,10 +301,10 @@ public class ArrayDeque<E> extends AbstractCollection<E>
         @SuppressWarnings("unchecked")
         E result = (E) elements[h];
         // Element is null if deque empty
-        if (result == null)
+        if (result == null) //元素为空不用移除
             return null;
         elements[h] = null;     // Must null out slot
-        head = (h + 1) & (elements.length - 1);
+        head = (h + 1) & (elements.length - 1); //更新头
         return result;
     }
 
@@ -314,7 +314,7 @@ public class ArrayDeque<E> extends AbstractCollection<E>
         E result = (E) elements[t];
         if (result == null)
             return null;
-        elements[t] = null;
+        elements[t] = null; //末尾元素
         tail = t;
         return result;
     }
@@ -324,7 +324,7 @@ public class ArrayDeque<E> extends AbstractCollection<E>
      */
     public E getFirst() {
         @SuppressWarnings("unchecked")
-        E result = (E) elements[head];
+        E result = (E) elements[head]; //头元素
         if (result == null)
             throw new NoSuchElementException();
         return result;
@@ -335,7 +335,7 @@ public class ArrayDeque<E> extends AbstractCollection<E>
      */
     public E getLast() {
         @SuppressWarnings("unchecked")
-        E result = (E) elements[(tail - 1) & (elements.length - 1)];
+        E result = (E) elements[(tail - 1) & (elements.length - 1)]; //末尾元素
         if (result == null)
             throw new NoSuchElementException();
         return result;
@@ -349,7 +349,7 @@ public class ArrayDeque<E> extends AbstractCollection<E>
 
     @SuppressWarnings("unchecked")
     public E peekLast() {
-        return (E) elements[(tail - 1) & (elements.length - 1)];
+        return (E) elements[(tail - 1) & (elements.length - 1)]; //无异常，跟getLast() 基本相同
     }
 
     /**
@@ -372,7 +372,7 @@ public class ArrayDeque<E> extends AbstractCollection<E>
         Object x;
         while ( (x = elements[i]) != null) {
             if (o.equals(x)) {
-                delete(i);
+                delete(i); //遍历数组，找到第一个匹配的元素，删除元素
                 return true;
             }
             i = (i + 1) & mask;
@@ -400,10 +400,10 @@ public class ArrayDeque<E> extends AbstractCollection<E>
         Object x;
         while ( (x = elements[i]) != null) {
             if (o.equals(x)) {
-                delete(i);
+                delete(i); //末尾开始遍历，将匹配的第一个元素删除
                 return true;
             }
-            i = (i - 1) & mask;
+            i = (i - 1) & mask; //下一个元素
         }
         return false;
     }
@@ -551,12 +551,12 @@ public class ArrayDeque<E> extends AbstractCollection<E>
 
         // Invariant: head <= i < tail mod circularity
         if (front >= ((t - h) & mask))
-            throw new ConcurrentModificationException();
+            throw new ConcurrentModificationException(); //?
 
         // Optimize for least element motion
         if (front < back) {
             if (h <= i) {
-                System.arraycopy(elements, h, elements, h + 1, front);
+                System.arraycopy(elements, h, elements, h + 1, front); //数组复制
             } else { // Wrap around
                 System.arraycopy(elements, 0, elements, 1, i);
                 elements[0] = elements[mask];
@@ -567,8 +567,8 @@ public class ArrayDeque<E> extends AbstractCollection<E>
             return false;
         } else {
             if (i < t) { // Copy the null tail as well
-                System.arraycopy(elements, i + 1, elements, i, back);
-                tail = t - 1;
+                System.arraycopy(elements, i + 1, elements, i, back); //复制后面长度小的数组
+                tail = t - 1; //移动尾指针
             } else { // Wrap around
                 System.arraycopy(elements, i + 1, elements, i, mask - i);
                 elements[mask] = elements[0];
@@ -646,8 +646,8 @@ public class ArrayDeque<E> extends AbstractCollection<E>
             // but does catch the ones that corrupt traversal
             if (tail != fence || result == null)
                 throw new ConcurrentModificationException();
-            lastRet = cursor;
-            cursor = (cursor + 1) & (elements.length - 1);
+            lastRet = cursor; //上一次的读取位置
+            cursor = (cursor + 1) & (elements.length - 1); //移动游标遍历
             return result;
         }
 
@@ -728,7 +728,7 @@ public class ArrayDeque<E> extends AbstractCollection<E>
         int i = head;
         Object x;
         while ( (x = elements[i]) != null) {
-            if (o.equals(x))
+            if (o.equals(x)) //遍历比较
                 return true;
             i = (i + 1) & mask;
         }
@@ -765,8 +765,8 @@ public class ArrayDeque<E> extends AbstractCollection<E>
             int mask = elements.length - 1;
             do {
                 elements[i] = null;
-                i = (i + 1) & mask;
-            } while (i != t);
+                i = (i + 1) & mask; //下一个位置
+            } while (i != t); //头开始遍历到尾，清空每一个位置的元素
         }
     }
 
@@ -784,7 +784,7 @@ public class ArrayDeque<E> extends AbstractCollection<E>
      * @return an array containing all of the elements in this deque
      */
     public Object[] toArray() {
-        return copyElements(new Object[size()]);
+        return copyElements(new Object[size()]); //复制到新数组
     }
 
     /**
@@ -828,7 +828,7 @@ public class ArrayDeque<E> extends AbstractCollection<E>
         int size = size();
         if (a.length < size)
             a = (T[])java.lang.reflect.Array.newInstance(
-                    a.getClass().getComponentType(), size);
+                    a.getClass().getComponentType(), size); //a数组长度小于elements，创建新数组
         copyElements(a);
         if (a.length > size)
             a[size] = null;
@@ -845,8 +845,8 @@ public class ArrayDeque<E> extends AbstractCollection<E>
     public ArrayDeque<E> clone() {
         try {
             @SuppressWarnings("unchecked")
-            ArrayDeque<E> result = (ArrayDeque<E>) super.clone();
-            result.elements = Arrays.copyOf(elements, elements.length);
+            ArrayDeque<E> result = (ArrayDeque<E>) super.clone(); //浅克隆ArrayDeque
+            result.elements = Arrays.copyOf(elements, elements.length); //复制ArrayDeque的引用类型elements，赋值给克隆对象的elements属性
             return result;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();

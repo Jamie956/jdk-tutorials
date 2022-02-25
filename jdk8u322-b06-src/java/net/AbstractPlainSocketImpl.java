@@ -105,13 +105,13 @@ abstract class AbstractPlainSocketImpl extends SocketImpl
                 throw ioe;
             }
         } else {
-            fd = new FileDescriptor();
-            socketCreate(true);
+            fd = new FileDescriptor(); //实例化文件描述符
+            socketCreate(true); //创建socket，设置文件描述符
         }
         if (socket != null)
             socket.setCreated();
         if (serverSocket != null)
-            serverSocket.setCreated();
+            serverSocket.setCreated(); //更新socket已创建状态
     }
 
     /**
