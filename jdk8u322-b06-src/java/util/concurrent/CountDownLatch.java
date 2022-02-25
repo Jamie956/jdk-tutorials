@@ -158,7 +158,7 @@ public class CountDownLatch {
      * Synchronization control For CountDownLatch.
      * Uses AQS state to represent count.
      */
-    private static final class Sync extends AbstractQueuedSynchronizer {
+    private static final class Sync extends AbstractQueuedSynchronizer {//静态内部类//AQS实现类
         private static final long serialVersionUID = 4982264981922014374L;
 
         Sync(int count) {
@@ -170,7 +170,7 @@ public class CountDownLatch {
         }
 
         protected int tryAcquireShared(int acquires) {
-            return (getState() == 0) ? 1 : -1;
+            return (getState() == 0) ? 1 : -1;//state ==0, 锁已经分配完, 否则自旋重试 park
         }
 
         protected boolean tryReleaseShared(int releases) {
@@ -179,7 +179,7 @@ public class CountDownLatch {
                 int c = getState();
                 if (c == 0)
                     return false;
-                int nextc = c-1;
+                int nextc = c-1;//每次只会减持1把锁
                 if (compareAndSetState(c, nextc))
                     return nextc == 0;
             }
@@ -197,7 +197,7 @@ public class CountDownLatch {
      */
     public CountDownLatch(int count) {
         if (count < 0) throw new IllegalArgumentException("count < 0");
-        this.sync = new Sync(count);
+        this.sync = new Sync(count);//实例化静态内部类
     }
 
     /**
@@ -228,7 +228,7 @@ public class CountDownLatch {
      *         while waiting
      */
     public void await() throws InterruptedException {
-        sync.acquireSharedInterruptibly(1);
+        sync.acquireSharedInterruptibly(1);//获取共享锁
     }
 
     /**
@@ -274,7 +274,7 @@ public class CountDownLatch {
      */
     public boolean await(long timeout, TimeUnit unit)
         throws InterruptedException {
-        return sync.tryAcquireSharedNanos(1, unit.toNanos(timeout));
+        return sync.tryAcquireSharedNanos(1, unit.toNanos(timeout));//获取共享锁，设置超时
     }
 
     /**
@@ -288,7 +288,7 @@ public class CountDownLatch {
      * <p>If the current count equals zero then nothing happens.
      */
     public void countDown() {
-        sync.releaseShared(1);
+        sync.releaseShared(1);//释放锁
     }
 
     /**
@@ -299,7 +299,7 @@ public class CountDownLatch {
      * @return the current count
      */
     public long getCount() {
-        return sync.getCount();
+        return sync.getCount();//state
     }
 
     /**

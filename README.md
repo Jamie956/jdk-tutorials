@@ -149,11 +149,11 @@ https://mirrors.tuna.tsinghua.edu.cn/AdoptOpenJDK/8/jdk/x64/windows/
 8. //LinkedList
 9. //ReentrantReadWriteLock
 10. //Semaphore
-11. CountDownLatch
-12. CyclicBarrier
-13. HashMap
-14. AbstractMap
-15. ArrayBlockingQueue
+11. //CountDownLatch
+12. //CyclicBarrier
+13. //HashMap
+14. //AbstractMap
+15. //ArrayBlockingQueue
 16. ConcurrentHashMap
 17. CopyOnWriteArrayList
 18. CopyOnWriteArraySet
