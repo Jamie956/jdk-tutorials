@@ -162,7 +162,7 @@ public final class URL implements java.io.Serializable {
      * The protocol to use (ftp, http, nntp, ... etc.) .
      * @serial
      */
-    private String protocol;
+    private String protocol; //协议
 
     /**
      * The host name to connect to.
@@ -547,11 +547,11 @@ public final class URL implements java.io.Serializable {
         }
 
         try {
-            limit = spec.length();
-            while ((limit > 0) && (spec.charAt(limit - 1) <= ' ')) {
+            limit = spec.length(); //请求 url 长度
+            while ((limit > 0) && (spec.charAt(limit - 1) <= ' ')) { //去空
                 limit--;        //eliminate trailing whitespace
             }
-            while ((start < limit) && (spec.charAt(start) <= ' ')) {
+            while ((start < limit) && (spec.charAt(start) <= ' ')) { //去空
                 start++;        // eliminate leading whitespace
             }
 
@@ -563,16 +563,16 @@ public final class URL implements java.io.Serializable {
                  * This means protocols cannot start w/ '#', but we must parse
                  * ref URL's like: "hello:there" w/ a ':' in them.
                  */
-                aRef=true;
+                aRef=true; //url是否以#开头
             }
-            for (i = start ; !aRef && (i < limit) &&
+            for (i = start ; !aRef && (i < limit) && //从去除了空的start 开始遍历
                      ((c = spec.charAt(i)) != '/') ; i++) {
                 if (c == ':') {
 
-                    String s = spec.substring(start, i).toLowerCase();
+                    String s = spec.substring(start, i).toLowerCase(); //截取协议，比如https
                     if (isValidProtocol(s)) {
                         newProtocol = s;
-                        start = i + 1;
+                        start = i + 1; //更新url 起始位置，排除协议
                     }
                     break;
                 }
@@ -607,7 +607,7 @@ public final class URL implements java.io.Serializable {
                 }
             }
 
-            if (protocol == null) {
+            if (protocol == null) { //必须要有协议
                 throw new MalformedURLException("no protocol: "+original);
             }
 
@@ -622,7 +622,7 @@ public final class URL implements java.io.Serializable {
 
             i = spec.indexOf('#', start);
             if (i >= 0) {
-                ref = spec.substring(i + 1, limit);
+                ref = spec.substring(i + 1, limit); //截取#的后半段
                 limit = i;
             }
 
@@ -653,15 +653,15 @@ public final class URL implements java.io.Serializable {
      */
     private boolean isValidProtocol(String protocol) {
         int len = protocol.length();
-        if (len < 1)
+        if (len < 1) //协议长度不少于1
             return false;
         char c = protocol.charAt(0);
-        if (!Character.isLetter(c))
+        if (!Character.isLetter(c)) //协议第一个字符是字母
             return false;
         for (int i = 1; i < len; i++) {
             c = protocol.charAt(i);
             if (!Character.isLetterOrDigit(c) && c != '.' && c != '+' &&
-                c != '-') {
+                c != '-') { //协议除首个字符外，其他字符是字母或者数字, '.', '+', '-'
                 return false;
             }
         }

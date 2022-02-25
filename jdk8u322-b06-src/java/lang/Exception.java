@@ -42,7 +42,7 @@ package java.lang;
  * @jls 11.2 Compile-Time Checking of Exceptions
  * @since   JDK1.0
  */
-public class Exception extends Throwable {
+public class Exception extends Throwable { //Class: Throwable
     static final long serialVersionUID = -3387516993124229948L;
 
     /**
@@ -51,7 +51,7 @@ public class Exception extends Throwable {
      * call to {@link #initCause}.
      */
     public Exception() {
-        super();
+        super(); //构造根类 Throwable
     }
 
     /**

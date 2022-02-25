@@ -44,7 +44,7 @@ class IOException extends Exception {
      * as its error detail message.
      */
     public IOException() {
-        super();
+        super(); //构造根类 Throwable
     }
 
     /**

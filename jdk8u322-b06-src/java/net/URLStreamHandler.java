@@ -335,7 +335,7 @@ public abstract class URLStreamHandler {
     protected boolean equals(URL u1, URL u2) {
         String ref1 = u1.getRef();
         String ref2 = u2.getRef();
-        return (ref1 == ref2 || (ref1 != null && ref1.equals(ref2))) &&
+        return (ref1 == ref2 || (ref1 != null && ref1.equals(ref2))) && //先比较url 的#段
                sameFile(u1, u2);
     }
 
@@ -347,7 +347,7 @@ public abstract class URLStreamHandler {
      * @return an {@code int} suitable for hash table indexing
      * @since 1.3
      */
-    protected int hashCode(URL u) {
+    protected int hashCode(URL u) { //由协议、地址、File、端口、ref的hashcode共同组成
         int h = 0;
 
         // Generate the protocol part.
@@ -395,7 +395,7 @@ public abstract class URLStreamHandler {
      * @return true if u1 and u2 refer to the same file
      * @since 1.3
      */
-    protected boolean sameFile(URL u1, URL u2) {
+    protected boolean sameFile(URL u1, URL u2) { //比较2个url的协议、File?、端口、host
         // Compare the protocols.
         if (!((u1.getProtocol() == u2.getProtocol()) ||
               (u1.getProtocol() != null &&
@@ -442,7 +442,7 @@ public abstract class URLStreamHandler {
      * are equal, {@code false} otherwise.
      * @since 1.3
      */
-    protected boolean hostsEqual(URL u1, URL u2) {
+    protected boolean hostsEqual(URL u1, URL u2) { //比较host地址
         InetAddress a1 = getHostAddress(u1);
         InetAddress a2 = getHostAddress(u2);
         // if we have internet address for both, compare them
@@ -462,7 +462,7 @@ public abstract class URLStreamHandler {
      * @param   u   the URL.
      * @return  a string representation of the {@code URL} argument.
      */
-    protected String toExternalForm(URL u) {
+    protected String toExternalForm(URL u) { //toString 拼接
 
         // pre-compute length of StringBuffer
         int len = u.getProtocol().length() + 1;
