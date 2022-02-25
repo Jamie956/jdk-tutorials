@@ -81,7 +81,7 @@ public class HttpsURLConnectionImpl
         this(u, null, handler);
     }
 
-    static URL checkURL(URL u) throws IOException {
+    static URL checkURL(URL u) throws IOException { //检查URL
         if (u != null) {
             if (u.toExternalForm().indexOf('\n') > -1) {
                 throw new MalformedURLException("Illegal character in URL");

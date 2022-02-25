@@ -1480,7 +1480,7 @@ public class HttpURLConnection extends java.net.HttpURLConnection {
     }
 
     @Override
-    public synchronized InputStream getInputStream() throws IOException {
+    public synchronized InputStream getInputStream() throws IOException { //获取请求输入流
         connecting = true;
         SocketPermission p = URLtoSocketPermission(this.url);
 

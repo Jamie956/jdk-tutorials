@@ -2,8 +2,9 @@ package myjava.net;
 
 import org.junit.Test;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.*;
+import java.nio.charset.Charset;
 
 public class URLTest {
     @Test
@@ -60,11 +61,33 @@ public class URLTest {
         URLConnection c = a.openConnection();
     }
 
+    @Test
+    public void openConnection2() throws IOException {
+        URL a = new URL("https://www.baidu.com");
+        //?
+        URLConnection c = a.openConnection(new Proxy(Proxy.Type.DIRECT, null));
+    }
 
+    @Test
+    public void openStream() throws IOException {
+        URL a = new URL("https://www.baidu.com");
+        InputStream in = a.openStream();
+        InputStreamReader inr = new InputStreamReader(in, Charset.defaultCharset());
+        BufferedReader br = new BufferedReader(inr);
+        String line;
+        StringBuilder sb = new StringBuilder();
+        while ((line = br.readLine()) != null) {
+            sb.append(line);
+        }
+        String s = sb.toString();
+    }
 
-
-
-
+    @Test
+    public void getContent() throws IOException {
+        URL a = new URL("https://www.baidu.com");
+        //?
+        Object content = a.getContent();
+    }
 
 
 

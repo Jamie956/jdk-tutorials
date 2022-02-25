@@ -4,10 +4,9 @@
 下载地址 open jdk：
 https://mirrors.tuna.tsinghua.edu.cn/AdoptOpenJDK/8/jdk/x64/windows/
 
-[测试代码](https://github.com/Jamie956/jdk-src/tree/main/jdk-test)
-
-[jdk1.8.0_231  src.zip 解压文件](https://github.com/Jamie956/jdk-src/tree/main/jdk8u231-src)
-[jdk8u322-b06-src  src.zip 解压文件](https://github.com/Jamie956/jdk-src/tree/main/jdk8u322-b06-src)
+- [测试代码](https://github.com/Jamie956/jdk-src/tree/main/jdk-test)
+- [jdk1.8.0_231  src.zip 解压文件](https://github.com/Jamie956/jdk-src/tree/main/jdk8u231-src)
+- [jdk8u322-b06-src  src.zip 解压文件](https://github.com/Jamie956/jdk-src/tree/main/jdk8u322-b06-src)
 
 
 
