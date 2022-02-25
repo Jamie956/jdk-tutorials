@@ -95,6 +95,7 @@ Debug and comments step
 
 # java.net
 
+- URL 当前
 - HttpURLConnection
 - ServerSocket
 - Socket
@@ -116,7 +117,15 @@ Debug and comments step
       - NullPointerException 注释
   - Error 注释
 
-
+- String
+- Byte
+- Short
+- Integer
+- Long
+- Float
+- Double
+- Char
+- Boolean
 
 
 

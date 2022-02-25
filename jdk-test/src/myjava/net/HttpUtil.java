@@ -1,82 +1,57 @@
 package myjava.net;
 
+import org.junit.Test;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.Charset;
 
-/**
- * http请求操作类
- *
- * @author pangu
- * @link https://bbs.huaweicloud.com/blogs/104013
- */
 public class HttpUtil {
 
-    /**
-     * 发送GET请求
-     *
-     * @param requestUrl
-     * @return
-     */
-    public static Object getRequest(String requestUrl, String charSetName) {
-        String res = "";
-        StringBuffer buffer = new StringBuffer();
+
+    //--------------------- 场景模拟 ---------------------
+    @Test
+    public void get() {
         try {
-            URL url = new URL(requestUrl);
-            HttpURLConnection urlCon = (HttpURLConnection) url.openConnection();
-            if (200 == urlCon.getResponseCode()) {
-                InputStream is = urlCon.getInputStream();
-                InputStreamReader isr = new InputStreamReader(is, charSetName);
-                BufferedReader br = new BufferedReader(isr);
-                String str = null;
-                while ((str = br.readLine()) != null) {
-                    buffer.append(str);
-                }
-                br.close();
-                isr.close();
-                is.close();
-                res = buffer.toString();
-                return res;
-            } else {
-                throw new Exception("连接失败");
+            String link = "https://www.baidu.com/";
+            URL url = new URL(link);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            InputStream is = connection.getInputStream();
+            InputStreamReader isr = new InputStreamReader(is, Charset.defaultCharset());
+            BufferedReader br = new BufferedReader(isr);
+            String str;
+            StringBuilder sb = new StringBuilder();
+            while ((str = br.readLine()) != null) {
+                sb.append(str);
             }
+            System.out.println(sb.toString());
         } catch (Exception e) {
-//            log.error(e.getMessage());
+            e.printStackTrace();
         }
-        return null;
     }
 
-    /**
-     * 发送POST请求
-     *
-     * @param path
-     * @param post
-     * @return
-     */
-    public static Object postRequest(String path, String post) {
-        URL url = null;
+    @Test
+    public void post() {
         try {
-            url = new URL(path);
-            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-            // 提交模式
-            httpURLConnection.setRequestMethod("POST");
-            //连接超时 单位毫秒
-            httpURLConnection.setConnectTimeout(10000);
-            //读取超时 单位毫秒
-            httpURLConnection.setReadTimeout(2000);
+            String path = "https://www.baidu.com/";
+            URL url = new URL(path);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setConnectTimeout(10000);
+            connection.setReadTimeout(2000);
             // 发送POST请求必须设置如下两行
-            httpURLConnection.setDoOutput(true);
-            httpURLConnection.setDoInput(true);
-            // 获取URLConnection对象对应的输出流
-            PrintWriter printWriter = new PrintWriter(httpURLConnection.getOutputStream());
-            // 发送请求参数
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
+            OutputStream outputStream = connection.getOutputStream();
+
+            PrintWriter printWriter = new PrintWriter(outputStream);
             //post的参数 xx=xx&yy=yy
-            printWriter.write(post);
-            // flush输出流的缓冲
+            printWriter.write("xx=xx&yy=yy");
             printWriter.flush();
-            //开始获取数据
-            BufferedInputStream bis = new BufferedInputStream(httpURLConnection.getInputStream());
+
+            InputStream inputStream = connection.getInputStream();
+            BufferedInputStream bis = new BufferedInputStream(inputStream);
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             int len;
             byte[] arr = new byte[1024];
@@ -84,12 +59,10 @@ public class HttpUtil {
                 bos.write(arr, 0, len);
                 bos.flush();
             }
+            System.out.println(bos.toString("utf-8"));
             bos.close();
-
-            return bos.toString("utf-8");
         } catch (Exception e) {
-//            log.error(e.getMessage());
+            e.printStackTrace();
         }
-        return null;
     }
 }
