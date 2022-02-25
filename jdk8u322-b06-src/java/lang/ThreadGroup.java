@@ -54,7 +54,7 @@ import sun.misc.VM;
  * while we work on the children.
  */
 public
-class ThreadGroup implements Thread.UncaughtExceptionHandler {
+class ThreadGroup implements Thread.UncaughtExceptionHandler { //ThreadGroup是Java提供的一种对线程进行分组管理的手段，可以对所有线程以组为单位进行操作，如设置优先级、守护线程等。
     private final ThreadGroup parent;
     String name;
     int maxPriority;
@@ -333,7 +333,7 @@ class ThreadGroup implements Thread.UncaughtExceptionHandler {
      *
      * @since   JDK1.0
      */
-    public int activeCount() {
+    public int activeCount() { //统计当前组和子组的全部线程总数
         int result;
         // Snapshot sub-group data so we don't hold this lock
         // while our children are computing.
