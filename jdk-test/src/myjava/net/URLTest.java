@@ -85,46 +85,37 @@ public class URLTest {
     @Test
     public void getContent() throws IOException {
         URL a = new URL("https://www.baidu.com");
-        //?
-        Object content = a.getContent();
+        InputStream in = (InputStream) a.getContent();
+
+        byte[] buf = new byte[1024];
+        int read = -1;
+        StringBuilder sb = new StringBuilder();
+        while ((read = in.read(buf)) != -1) {
+            sb.append(new String(buf, 0, read, Charset.defaultCharset()));
+        }
+        String s = sb.toString();
     }
 
+    @Test
+    public void getContent2() throws IOException {
+        URL a = new URL("https://www.baidu.com");
+        Class[] cs = {InputStream.class};
+        InputStream in = (InputStream) a.getContent(cs);
 
+        byte[] buf = new byte[1024];
+        int read = -1;
+        StringBuilder sb = new StringBuilder();
+        while ((read = in.read(buf)) != -1) {
+            sb.append(new String(buf, 0, read, Charset.defaultCharset()));
+        }
+        String s = sb.toString();
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    @Test
+    public void setURLStreamHandlerFactory() throws IOException {
+        URL a = new URL("https://www.baidu.com");
+        a.setURLStreamHandlerFactory(null);
+    }
 
 
 }

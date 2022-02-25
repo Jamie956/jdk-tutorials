@@ -1163,7 +1163,7 @@ public final class URL implements java.io.Serializable {
             if (security != null) {
                 security.checkSetFactory();
             }
-            handlers.clear();
+            handlers.clear(); //清空了协议处理器的集合
             factory = fac;
         }
     }
@@ -1171,7 +1171,7 @@ public final class URL implements java.io.Serializable {
     /**
      * A table of protocol handlers.
      */
-    static Hashtable<String,URLStreamHandler> handlers = new Hashtable<>();
+    static Hashtable<String,URLStreamHandler> handlers = new Hashtable<>(); //key 协议
     private static Object streamHandlerLock = new Object();
 
     /**

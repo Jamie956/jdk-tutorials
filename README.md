@@ -95,11 +95,12 @@ Debug and comments step
 
 # java.net
 
-- URL 当前
-- HttpURLConnection
+- URL 注释
+- HttpURLConnection 当前
 - ServerSocket
 - Socket
-
+- URI
+- URLConnection
 
 
 # java.lang
