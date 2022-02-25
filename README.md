@@ -140,11 +140,11 @@ https://mirrors.tuna.tsinghua.edu.cn/AdoptOpenJDK/8/jdk/x64/windows/
 # Comment Class
 
 1. //ThreadPoolExecutor
-2. AbstractQueuedSynchronizer
-3. Thread
-4. ReentrantLock
-5. ArrayList
-6. Arrays
+2. //AbstractQueuedSynchronizer
+3. //Thread
+4. //ReentrantLock
+5. //ArrayList
+6. //Arrays
 7. HashSet
 8. LinkedList
 9. ReentrantReadWriteLock

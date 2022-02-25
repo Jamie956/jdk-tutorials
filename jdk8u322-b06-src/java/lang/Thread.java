@@ -263,7 +263,7 @@ class Thread implements Runnable {
      *
      * @return  the currently executing thread.
      */
-    public static native Thread currentThread();
+    public static native Thread currentThread();//静态本地方法，获取当前线程
 
     /**
      * A hint to the scheduler that the current thread is willing to yield
@@ -281,7 +281,7 @@ class Thread implements Runnable {
      * concurrency control constructs such as the ones in the
      * {@link java.util.concurrent.locks} package.
      */
-    public static native void yield();
+    public static native void yield();//当前线程交出CPU资源，线程从运行状态变成就绪状态，如果有锁不释放锁
 
     /**
      * Causes the currently executing thread to sleep (temporarily cease
@@ -300,7 +300,7 @@ class Thread implements Runnable {
      *          <i>interrupted status</i> of the current thread is
      *          cleared when this exception is thrown.
      */
-    public static native void sleep(long millis) throws InterruptedException;
+    public static native void sleep(long millis) throws InterruptedException;//不释放锁
 
     /**
      * Causes the currently executing thread to sleep (temporarily cease
@@ -387,7 +387,7 @@ class Thread implements Runnable {
             /* If the security doesn't have a strong opinion of the matter
                use the parent thread group. */
             if (g == null) {
-                g = parent.getThreadGroup();
+                g = parent.getThreadGroup(); //如果构造函数没有指定线程组，默认使用父线程组
             }
         }
 
@@ -712,7 +712,7 @@ class Thread implements Runnable {
         /* Notify the group that this thread is about to be started
          * so that it can be added to the group's list of threads
          * and the group's unstarted count can be decremented. */
-        group.add(this);
+        group.add(this);//加到线程组
 
         boolean started = false;
         try {
@@ -747,7 +747,7 @@ class Thread implements Runnable {
     @Override
     public void run() {
         if (target != null) {
-            target.run();
+            target.run(); //执行runnable
         }
     }
 
@@ -916,8 +916,8 @@ class Thread implements Runnable {
      * @revised 6.0
      * @spec JSR-51
      */
-    public void interrupt() {
-        if (this != Thread.currentThread())
+    public void interrupt() { //设置线程中断标志
+        if (this != Thread.currentThread()) //this 线程对象，Thread.currentThread() 是执行的线程
             checkAccess();
 
         synchronized (blockerLock) {
@@ -948,7 +948,7 @@ class Thread implements Runnable {
      * @see #isInterrupted()
      * @revised 6.0
      */
-    public static boolean interrupted() {
+    public static boolean interrupted() { //判断线程是否是中断状态，执行后清除状态
         return currentThread().isInterrupted(true);
     }
 
@@ -965,7 +965,7 @@ class Thread implements Runnable {
      * @see     #interrupted()
      * @revised 6.0
      */
-    public boolean isInterrupted() {
+    public boolean isInterrupted() {//判断线程是否是中断状态，不清除状态
         return isInterrupted(false);
     }
 
@@ -1005,7 +1005,7 @@ class Thread implements Runnable {
      * @return  <code>true</code> if this thread is alive;
      *          <code>false</code> otherwise.
      */
-    public final native boolean isAlive();
+    public final native boolean isAlive(); //true 线程已经启动，还没死亡
 
     /**
      * Suspends this thread.
@@ -1095,7 +1095,7 @@ class Thread implements Runnable {
         }
         if((g = getThreadGroup()) != null) {
             if (newPriority > g.getMaxPriority()) {
-                newPriority = g.getMaxPriority();
+                newPriority = g.getMaxPriority(); //不能超过线程组的最大优先度
             }
             setPriority0(priority = newPriority);
         }
@@ -1132,7 +1132,7 @@ class Thread implements Runnable {
         }
 
         this.name = name;
-        if (threadStatus != 0) {
+        if (threadStatus != 0) { //线程启动后状态为0
             setNativeName(name);
         }
     }
@@ -1253,17 +1253,17 @@ class Thread implements Runnable {
         }
 
         if (millis == 0) {
-            while (isAlive()) {
-                wait(0);
+            while (isAlive()) { //线程存活就一直等待，直到线程执行完任务，死亡
+                wait(0); //Thread.currentThread() 是调用者main 线程，所以是调用者等待
             }
         } else {
-            while (isAlive()) {
+            while (isAlive()) { //线程已经启动
                 long delay = millis - now;
-                if (delay <= 0) {
+                if (delay <= 0) { //超时
                     break;
                 }
                 wait(delay);
-                now = System.currentTimeMillis() - base;
+                now = System.currentTimeMillis() - base; //差值
             }
         }
     }
@@ -1497,7 +1497,7 @@ class Thread implements Runnable {
      *         the specified object.
      * @since 1.4
      */
-    public static native boolean holdsLock(Object obj);
+    public static native boolean holdsLock(Object obj); //对象是否持有锁
 
     private static final StackTraceElement[] EMPTY_STACK_TRACE
         = new StackTraceElement[0];

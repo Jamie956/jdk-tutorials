@@ -1305,11 +1305,11 @@ public class Arrays {
      *         integers).
      */
     public static void sort(Object[] a, int fromIndex, int toIndex) {
-        rangeCheck(a.length, fromIndex, toIndex);
+        rangeCheck(a.length, fromIndex, toIndex);//边界检查
         if (LegacyMergeSort.userRequested)
-            legacyMergeSort(a, fromIndex, toIndex);
+            legacyMergeSort(a, fromIndex, toIndex);//?
         else
-            ComparableTimSort.sort(a, fromIndex, toIndex, null, 0, 0);
+            ComparableTimSort.sort(a, fromIndex, toIndex, null, 0, 0); //排序范围 from to
     }
 
     /** To be removed in a future release. */
@@ -1503,7 +1503,7 @@ public class Arrays {
     public static <T> void sort(T[] a, int fromIndex, int toIndex,
                                 Comparator<? super T> c) {
         if (c == null) {
-            sort(a, fromIndex, toIndex);
+            sort(a, fromIndex, toIndex); //无比较器排序
         } else {
             rangeCheck(a.length, fromIndex, toIndex);
             if (LegacyMergeSort.userRequested)
@@ -3205,13 +3205,13 @@ public class Arrays {
      *     an array of class <tt>newType</tt>
      * @since 1.6
      */
-    public static <T,U> T[] copyOf(U[] original, int newLength, Class<? extends T[]> newType) {
+    public static <T,U> T[] copyOf(U[] original, int newLength, Class<? extends T[]> newType) {//复制数组
         @SuppressWarnings("unchecked")
         T[] copy = ((Object)newType == (Object)Object[].class)
-            ? (T[]) new Object[newLength]
-            : (T[]) Array.newInstance(newType.getComponentType(), newLength);
+            ? (T[]) new Object[newLength]//数组类型，创建数组
+            : (T[]) Array.newInstance(newType.getComponentType(), newLength); //按类型创建数组
         System.arraycopy(original, 0, copy, 0,
-                         Math.min(original.length, newLength));
+                         Math.min(original.length, newLength)); //数组original复制到数组copy
         return copy;
     }
 
