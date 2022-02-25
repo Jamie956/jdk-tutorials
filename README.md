@@ -145,10 +145,10 @@ https://mirrors.tuna.tsinghua.edu.cn/AdoptOpenJDK/8/jdk/x64/windows/
 4. //ReentrantLock
 5. //ArrayList
 6. //Arrays
-7. HashSet
-8. LinkedList
-9. ReentrantReadWriteLock
-10. Semaphore
+7. //HashSet
+8. //LinkedList
+9. //ReentrantReadWriteLock
+10. //Semaphore
 11. CountDownLatch
 12. CyclicBarrier
 13. HashMap
