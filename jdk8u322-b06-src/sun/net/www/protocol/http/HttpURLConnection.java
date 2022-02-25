@@ -1098,7 +1098,7 @@ public class HttpURLConnection extends java.net.HttpURLConnection {
         return null;
     }
 
-    protected void plainConnect0()  throws IOException {
+    protected void plainConnect0()  throws IOException { //HTTP/HTTPS 请求连接
         // try to see if request can be served from local cache
         if (cacheHandler != null && getUseCaches()) {
             try {
@@ -1502,7 +1502,7 @@ public class HttpURLConnection extends java.net.HttpURLConnection {
     }
 
     @SuppressWarnings("empty-statement")
-    private synchronized InputStream getInputStream0() throws IOException {
+    private synchronized InputStream getInputStream0() throws IOException { //获取请求输出流
 
         if (!doInput) {
             throw new ProtocolException("Cannot read from URLConnection"
@@ -3094,7 +3094,7 @@ public class HttpURLConnection extends java.net.HttpURLConnection {
      * @param n the index of the header field
      */
     @Override
-    public String getHeaderField(int n) {
+    public String getHeaderField(int n) { //获取 HTTP Header 的value
         try {
             getInputStream();
         } catch (IOException e) {}
@@ -3111,7 +3111,7 @@ public class HttpURLConnection extends java.net.HttpURLConnection {
      * @param n the index of the header field
      */
     @Override
-    public String getHeaderFieldKey(int n) {
+    public String getHeaderFieldKey(int n) { //获取 HTTP Header 的key
         try {
             getInputStream();
         } catch (IOException e) {}
