@@ -2,29 +2,28 @@ package myjava.lang.exception;
 
 import org.junit.Test;
 
-public class ExceptionTest {
+public class ErrorTest {
     @Test
     public void cons() {
-        Exception e = new Exception();
+        Error e = new Error();
         e.printStackTrace();
     }
 
     @Test
     public void cons2() {
-        Exception e = new Exception("exp ee");
+        Error e = new Error("exp ee");
         e.printStackTrace();
     }
 
     @Test
     public void cons3() {
-        Exception e = new Exception("exp ee", new Exception("cause aa"));
+        Error e = new Error("exp ee", new Error("cause aa"));
         e.printStackTrace();
     }
 
     @Test
     public void cons4() {
-        Exception e = new Exception(new Exception("cause aa"));
+        Error e = new Error(new Error("cause aa"));
         e.printStackTrace();
     }
-
 }

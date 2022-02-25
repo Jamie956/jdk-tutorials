@@ -57,7 +57,7 @@ class NullPointerException extends RuntimeException {
      * Constructs a {@code NullPointerException} with no detail message.
      */
     public NullPointerException() {
-        super();
+        super(); //构造根类 Throwable
     }
 
     /**

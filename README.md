@@ -110,8 +110,11 @@ Debug and comments step
 
 - Thread 注释
 - Throwable 注释
-  - Exception 当前
-  - Error
+  - Exception 注释
+    - IOException 注释
+    - RuntimeException 注释
+      - NullPointerException 注释
+  - Error 注释
 
 
 

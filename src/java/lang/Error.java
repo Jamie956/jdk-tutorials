@@ -55,7 +55,7 @@ public class Error extends Throwable {
      * call to {@link #initCause}.
      */
     public Error() {
-        super();
+        super(); //构造根类 Throwable
     }
 
     /**

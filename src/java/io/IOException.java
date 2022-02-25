@@ -45,7 +45,7 @@ class IOException extends Exception {
      */
     public IOException() {
         super();
-    }
+    } //调Throwable
 
     /**
      * Constructs an {@code IOException} with the specified detail message.

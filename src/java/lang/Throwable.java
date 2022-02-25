@@ -653,7 +653,7 @@ public class Throwable implements Serializable {
 
         synchronized (s.lock()) { //lock 是 PrintStream 实例
             // Print our stack trace
-            s.println(this); //打印 Throwable toString
+            s.println(this); //打印 Throwable 或它子类的 toString
             StackTraceElement[] trace = getOurStackTrace(); //方法栈
             for (StackTraceElement traceElement : trace)
                 s.println("\tat " + traceElement); //遍历方法栈链路，逐个打印方法栈方法
