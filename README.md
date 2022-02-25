@@ -154,11 +154,11 @@ https://mirrors.tuna.tsinghua.edu.cn/AdoptOpenJDK/8/jdk/x64/windows/
 13. //HashMap
 14. //AbstractMap
 15. //ArrayBlockingQueue
-16. ConcurrentHashMap
-17. CopyOnWriteArrayList
-18. CopyOnWriteArraySet
-19. LinkedBlockingQueue
-20. BlockingQueue
+16. //ConcurrentHashMap
+17. //CopyOnWriteArrayList
+18. //CopyOnWriteArraySet
+19. //LinkedBlockingQueue
+20. //BlockingQueue
 21. AbstractList
 22. Integer
 23. ComparableTimSort

@@ -94,7 +94,7 @@ import java.util.function.Consumer;
  * @param <E> the type of elements held in this collection
  */
 public class CopyOnWriteArraySet<E> extends AbstractSet<E>
-        implements java.io.Serializable {
+        implements java.io.Serializable { //Class: AbstractSet, AbstractCollection; Interface: Collection, Set
     private static final long serialVersionUID = 5457747651344034263L;
 
     private final CopyOnWriteArrayList<E> al;
@@ -102,7 +102,7 @@ public class CopyOnWriteArraySet<E> extends AbstractSet<E>
     /**
      * Creates an empty set.
      */
-    public CopyOnWriteArraySet() {
+    public CopyOnWriteArraySet() { //实际上是 CopyOnWriteArrayList
         al = new CopyOnWriteArrayList<E>();
     }
 
@@ -116,7 +116,7 @@ public class CopyOnWriteArraySet<E> extends AbstractSet<E>
     public CopyOnWriteArraySet(Collection<? extends E> c) {
         if (c.getClass() == CopyOnWriteArraySet.class) {
             @SuppressWarnings("unchecked") CopyOnWriteArraySet<E> cc =
-                (CopyOnWriteArraySet<E>)c;
+                (CopyOnWriteArraySet<E>)c; //class 判断，向下转型
             al = new CopyOnWriteArrayList<E>(cc.al);
         }
         else {
@@ -365,9 +365,9 @@ public class CopyOnWriteArraySet<E> extends AbstractSet<E>
      * @return {@code true} if the specified object is equal to this set
      */
     public boolean equals(Object o) {
-        if (o == this)
+        if (o == this) //同一个实例
             return true;
-        if (!(o instanceof Set))
+        if (!(o instanceof Set)) //不是Set 的实现类
             return false;
         Set<?> set = (Set<?>)(o);
         Iterator<?> it = set.iterator();
@@ -379,10 +379,10 @@ public class CopyOnWriteArraySet<E> extends AbstractSet<E>
         Object[] elements = al.getArray();
         int len = elements.length;
         // Mark matched elements to avoid re-checking
-        boolean[] matched = new boolean[len];
+        boolean[] matched = new boolean[len]; //标记每个索引位置的元素是否匹配
         int k = 0;
-        outer: while (it.hasNext()) {
-            if (++k > len)
+        outer: while (it.hasNext()) { //参数集合遍历器
+            if (++k > len) //参数集合长度比较大，元素个数不一致
                 return false;
             Object x = it.next();
             for (int i = 0; i < len; ++i) {
@@ -391,9 +391,9 @@ public class CopyOnWriteArraySet<E> extends AbstractSet<E>
                     continue outer;
                 }
             }
-            return false;
+            return false; //找不到匹配
         }
-        return k == len;
+        return k == len; //k<len 时 false
     }
 
     public boolean removeIf(Predicate<? super E> filter) {

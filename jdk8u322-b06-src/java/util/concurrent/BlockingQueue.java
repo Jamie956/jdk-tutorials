@@ -372,5 +372,5 @@ public interface BlockingQueue<E> extends Queue<E> {
      *         queue, or some property of an element of this queue prevents
      *         it from being added to the specified collection
      */
-    int drainTo(Collection<? super E> c, int maxElements);
+    int drainTo(Collection<? super E> c, int maxElements); //数组的元素加到参数集合c，同时把数组元素释放
 }

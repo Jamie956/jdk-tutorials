@@ -91,7 +91,7 @@ import sun.misc.SharedSecrets;
  * @param <E> the type of elements held in this collection
  */
 public class CopyOnWriteArrayList<E>
-    implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
+    implements List<E>, RandomAccess, Cloneable, java.io.Serializable { //List, Collection, Iterable
     private static final long serialVersionUID = 8673264195747942595L;
 
     /** The lock protecting all mutators */
@@ -119,7 +119,7 @@ public class CopyOnWriteArrayList<E>
      * Creates an empty list.
      */
     public CopyOnWriteArrayList() {
-        setArray(new Object[0]);
+        setArray(new Object[0]); //创建长度为0的数组
     }
 
     /**
@@ -132,10 +132,10 @@ public class CopyOnWriteArrayList<E>
      */
     public CopyOnWriteArrayList(Collection<? extends E> c) {
         Object[] elements;
-        if (c.getClass() == CopyOnWriteArrayList.class)
+        if (c.getClass() == CopyOnWriteArrayList.class) //同一个class对象，而不是比较实例 //可以用instanceof 替代？
             elements = ((CopyOnWriteArrayList<?>)c).getArray();
         else {
-            elements = c.toArray();
+            elements = c.toArray(); //集合转数组，由集合子类实现 toArray
             if (c.getClass() != java.util.ArrayList.class)
                 elements = Arrays.copyOf(elements, elements.length, Object[].class);
         }
@@ -150,7 +150,7 @@ public class CopyOnWriteArrayList<E>
      * @throws NullPointerException if the specified array is null
      */
     public CopyOnWriteArrayList(E[] toCopyIn) {
-        setArray(Arrays.copyOf(toCopyIn, toCopyIn.length, Object[].class));
+        setArray(Arrays.copyOf(toCopyIn, toCopyIn.length, Object[].class)); //复制数组，不与参数数组共用
     }
 
     /**
@@ -187,18 +187,18 @@ public class CopyOnWriteArrayList<E>
      * @param fence one past last index to search
      * @return index of element, or -1 if absent
      */
-    private static int indexOf(Object o, Object[] elements,
-                               int index, int fence) {
+    private static int indexOf(Object o, Object[] elements, //搜索数组 elements, 搜索对象 o
+                               int index, int fence) { //搜索范围 index-fence
         if (o == null) {
             for (int i = index; i < fence; i++)
-                if (elements[i] == null)
+                if (elements[i] == null) //找空元素，返回第一个找到的空元素的索引
                     return i;
         } else {
             for (int i = index; i < fence; i++)
-                if (o.equals(elements[i]))
+                if (o.equals(elements[i])) //返回第一个匹配的元素的索引
                     return i;
         }
-        return -1;
+        return -1; //找不到返回-1
     }
 
     /**
@@ -210,12 +210,12 @@ public class CopyOnWriteArrayList<E>
      */
     private static int lastIndexOf(Object o, Object[] elements, int index) {
         if (o == null) {
-            for (int i = index; i >= 0; i--)
+            for (int i = index; i >= 0; i--) //从后往前
                 if (elements[i] == null)
                     return i;
         } else {
             for (int i = index; i >= 0; i--)
-                if (o.equals(elements[i]))
+                if (o.equals(elements[i])) //从后往前找第一个匹配的元素索引
                     return i;
         }
         return -1;
@@ -303,8 +303,8 @@ public class CopyOnWriteArrayList<E>
             @SuppressWarnings("unchecked")
             CopyOnWriteArrayList<E> clone =
                 (CopyOnWriteArrayList<E>) super.clone();
-            clone.resetLock();
-            return clone;
+            clone.resetLock(); //clone 实例的lock 变量指向新的lcok 对象
+            return clone; //this.array == clone.array, 克隆对象没用创建新的数组，与this 共用同一个array
         } catch (CloneNotSupportedException e) {
             // this shouldn't happen, since we are Cloneable
             throw new InternalError();
@@ -326,7 +326,7 @@ public class CopyOnWriteArrayList<E>
      */
     public Object[] toArray() {
         Object[] elements = getArray();
-        return Arrays.copyOf(elements, elements.length);
+        return Arrays.copyOf(elements, elements.length); //创建一个新数组返回
     }
 
     /**
@@ -368,7 +368,7 @@ public class CopyOnWriteArrayList<E>
      * @throws NullPointerException if the specified array is null
      */
     @SuppressWarnings("unchecked")
-    public <T> T[] toArray(T a[]) {
+    public <T> T[] toArray(T a[]) { //将elements 存到 a数组
         Object[] elements = getArray();
         int len = elements.length;
         if (a.length < len)
@@ -385,7 +385,7 @@ public class CopyOnWriteArrayList<E>
 
     @SuppressWarnings("unchecked")
     private E get(Object[] a, int index) {
-        return (E) a[index];
+        return (E) a[index]; //获取数组a 的index位置的元素
     }
 
     /**
@@ -408,16 +408,16 @@ public class CopyOnWriteArrayList<E>
         lock.lock();
         try {
             Object[] elements = getArray();
-            E oldValue = get(elements, index);
+            E oldValue = get(elements, index); //旧值用来返回
 
-            if (oldValue != element) {
+            if (oldValue != element) { //新值与旧值不同，需要修改
                 int len = elements.length;
-                Object[] newElements = Arrays.copyOf(elements, len);
-                newElements[index] = element;
-                setArray(newElements);
+                Object[] newElements = Arrays.copyOf(elements, len); //创建一个新数组
+                newElements[index] = element; //把新值写到新数组的对应位置
+                setArray(newElements); //copy 之后，write
             } else {
                 // Not quite a no-op; ensures volatile write semantics
-                setArray(elements);
+                setArray(elements); //？
             }
             return oldValue;
         } finally {
@@ -437,9 +437,9 @@ public class CopyOnWriteArrayList<E>
         try {
             Object[] elements = getArray();
             int len = elements.length;
-            Object[] newElements = Arrays.copyOf(elements, len + 1);
-            newElements[len] = e;
-            setArray(newElements);
+            Object[] newElements = Arrays.copyOf(elements, len + 1); //创建一个新数组
+            newElements[len] = e; //把新值写到新数组的对应位置
+            setArray(newElements); //替换原来的数组
             return true;
         } finally {
             lock.unlock();
@@ -459,20 +459,20 @@ public class CopyOnWriteArrayList<E>
         try {
             Object[] elements = getArray();
             int len = elements.length;
-            if (index > len || index < 0)
+            if (index > len || index < 0) //边界检查
                 throw new IndexOutOfBoundsException("Index: "+index+
                                                     ", Size: "+len);
             Object[] newElements;
             int numMoved = len - index;
-            if (numMoved == 0)
+            if (numMoved == 0) //不需要移动元素
                 newElements = Arrays.copyOf(elements, len + 1);
             else {
-                newElements = new Object[len + 1];
-                System.arraycopy(elements, 0, newElements, 0, index);
+                newElements = new Object[len + 1]; //增加1个元素，array.length+1
+                System.arraycopy(elements, 0, newElements, 0, index); //原数组 0-index 复制到新数组
                 System.arraycopy(elements, index, newElements, index + 1,
-                                 numMoved);
+                                 numMoved); //原数组移动元素复制到新数组
             }
-            newElements[index] = element;
+            newElements[index] = element; //替换数组
             setArray(newElements);
         } finally {
             lock.unlock();
@@ -494,14 +494,14 @@ public class CopyOnWriteArrayList<E>
             int len = elements.length;
             E oldValue = get(elements, index);
             int numMoved = len - index - 1;
-            if (numMoved == 0)
+            if (numMoved == 0) //不需要移动元素
                 setArray(Arrays.copyOf(elements, len - 1));
             else {
                 Object[] newElements = new Object[len - 1];
-                System.arraycopy(elements, 0, newElements, 0, index);
-                System.arraycopy(elements, index + 1, newElements, index,
+                System.arraycopy(elements, 0, newElements, 0, index); //复制前段
+                System.arraycopy(elements, index + 1, newElements, index, //复制后段，排除删除元素
                                  numMoved);
-                setArray(newElements);
+                setArray(newElements); //替换数组
             }
             return oldValue;
         } finally {
@@ -524,7 +524,7 @@ public class CopyOnWriteArrayList<E>
      */
     public boolean remove(Object o) {
         Object[] snapshot = getArray();
-        int index = indexOf(o, snapshot, 0, snapshot.length);
+        int index = indexOf(o, snapshot, 0, snapshot.length); //是否存在元素
         return (index < 0) ? false : remove(o, snapshot, index);
     }
 
@@ -538,7 +538,7 @@ public class CopyOnWriteArrayList<E>
         try {
             Object[] current = getArray();
             int len = current.length;
-            if (snapshot != current) findIndex: {
+            if (snapshot != current) findIndex: { //array = new Object[0] 重现
                 int prefix = Math.min(index, len);
                 for (int i = 0; i < prefix; i++) {
                     if (current[i] != snapshot[i] && eq(o, current[i])) {
@@ -555,11 +555,11 @@ public class CopyOnWriteArrayList<E>
                     return false;
             }
             Object[] newElements = new Object[len - 1];
-            System.arraycopy(current, 0, newElements, 0, index);
+            System.arraycopy(current, 0, newElements, 0, index); //复制前段
             System.arraycopy(current, index + 1,
                              newElements, index,
-                             len - index - 1);
-            setArray(newElements);
+                             len - index - 1); //复制后段
+            setArray(newElements); //替换
             return true;
         } finally {
             lock.unlock();
@@ -612,7 +612,7 @@ public class CopyOnWriteArrayList<E>
     public boolean addIfAbsent(E e) {
         Object[] snapshot = getArray();
         return indexOf(e, snapshot, 0, snapshot.length) >= 0 ? false :
-            addIfAbsent(e, snapshot);
+            addIfAbsent(e, snapshot); //元素不存在才插入
     }
 
     /**
@@ -634,9 +634,9 @@ public class CopyOnWriteArrayList<E>
                 if (indexOf(e, current, common, len) >= 0)
                         return false;
             }
-            Object[] newElements = Arrays.copyOf(current, len + 1);
-            newElements[len] = e;
-            setArray(newElements);
+            Object[] newElements = Arrays.copyOf(current, len + 1); //复制创建新数组
+            newElements[len] = e; //元素插入新数组
+            setArray(newElements); //替换数组
             return true;
         } finally {
             lock.unlock();
@@ -656,9 +656,9 @@ public class CopyOnWriteArrayList<E>
     public boolean containsAll(Collection<?> c) {
         Object[] elements = getArray();
         int len = elements.length;
-        for (Object e : c) {
+        for (Object e : c) { //遍历参数集合
             if (indexOf(e, elements, 0, len) < 0)
-                return false;
+                return false; //elements 不包含集合某个元素，返回false
         }
         return true;
     }
@@ -679,7 +679,7 @@ public class CopyOnWriteArrayList<E>
      *         or if the specified collection is null
      * @see #remove(Object)
      */
-    public boolean removeAll(Collection<?> c) {
+    public boolean removeAll(Collection<?> c) { //删除elements中与参数集合c包含的元素
         if (c == null) throw new NullPointerException();
         final ReentrantLock lock = this.lock;
         lock.lock();
@@ -691,12 +691,12 @@ public class CopyOnWriteArrayList<E>
                 int newlen = 0;
                 Object[] temp = new Object[len];
                 for (int i = 0; i < len; ++i) {
-                    Object element = elements[i];
+                    Object element = elements[i]; //遍历elements 数组
                     if (!c.contains(element))
-                        temp[newlen++] = element;
+                        temp[newlen++] = element; //将集合c不包含的元素插入临时数组
                 }
-                if (newlen != len) {
-                    setArray(Arrays.copyOf(temp, newlen));
+                if (newlen != len) { //有删除元素情况
+                    setArray(Arrays.copyOf(temp, newlen)); //临时数组复制，替换array
                     return true;
                 }
             }
@@ -734,12 +734,12 @@ public class CopyOnWriteArrayList<E>
                 int newlen = 0;
                 Object[] temp = new Object[len];
                 for (int i = 0; i < len; ++i) {
-                    Object element = elements[i];
-                    if (c.contains(element))
+                    Object element = elements[i]; //遍历elements
+                    if (c.contains(element)) //只保留参数c集合包含的元素
                         temp[newlen++] = element;
                 }
                 if (newlen != len) {
-                    setArray(Arrays.copyOf(temp, newlen));
+                    setArray(Arrays.copyOf(temp, newlen)); //替换数组
                     return true;
                 }
             }
@@ -760,7 +760,7 @@ public class CopyOnWriteArrayList<E>
      * @throws NullPointerException if the specified collection is null
      * @see #addIfAbsent(Object)
      */
-    public int addAllAbsent(Collection<? extends E> c) {
+    public int addAllAbsent(Collection<? extends E> c) { //将集合元素加到 elements
         Object[] cs = c.toArray();
         if (c.getClass() != ArrayList.class) {
             cs = cs.clone();
@@ -774,16 +774,16 @@ public class CopyOnWriteArrayList<E>
             int len = elements.length;
             int added = 0;
             // uniquify and compact elements in cs
-            for (int i = 0; i < cs.length; ++i) {
+            for (int i = 0; i < cs.length; ++i) { //遍历参数集合c转换的数组
                 Object e = cs[i];
-                if (indexOf(e, elements, 0, len) < 0 &&
-                    indexOf(e, cs, 0, added) < 0)
+                if (indexOf(e, elements, 0, len) < 0 && //elements 没有集合数组元素
+                    indexOf(e, cs, 0, added) < 0) //之前还没加入过这个元素
                     cs[added++] = e;
             }
             if (added > 0) {
                 Object[] newElements = Arrays.copyOf(elements, len + added);
                 System.arraycopy(cs, 0, newElements, len, added);
-                setArray(newElements);
+                setArray(newElements); //复制数组，修改数组，替换数组
             }
             return added;
         } finally {
@@ -799,7 +799,7 @@ public class CopyOnWriteArrayList<E>
         final ReentrantLock lock = this.lock;
         lock.lock();
         try {
-            setArray(new Object[0]);
+            setArray(new Object[0]); //直接清空
         } finally {
             lock.unlock();
         }
@@ -819,7 +819,7 @@ public class CopyOnWriteArrayList<E>
         Object[] cs = (c.getClass() == CopyOnWriteArrayList.class) ?
             ((CopyOnWriteArrayList<?>)c).getArray() : c.toArray();
         if (cs.length == 0)
-            return false;
+            return false; //无数据插入
         final ReentrantLock lock = this.lock;
         lock.lock();
         try {
@@ -831,7 +831,7 @@ public class CopyOnWriteArrayList<E>
             } else {
                 Object[] newElements = Arrays.copyOf(elements, len + cs.length);
                 System.arraycopy(cs, 0, newElements, len, cs.length);
-                setArray(newElements);
+                setArray(newElements); //复制、更新、替换
             }
             return true;
         } finally {
@@ -862,24 +862,24 @@ public class CopyOnWriteArrayList<E>
         try {
             Object[] elements = getArray();
             int len = elements.length;
-            if (index > len || index < 0)
+            if (index > len || index < 0) //插入位置越界
                 throw new IndexOutOfBoundsException("Index: "+index+
                                                     ", Size: "+len);
             if (cs.length == 0)
-                return false;
-            int numMoved = len - index;
+                return false; //空数组不需要插入
+            int numMoved = len - index; //要移动的元素个数
             Object[] newElements;
-            if (numMoved == 0)
+            if (numMoved == 0) //不需要移动，直接复制
                 newElements = Arrays.copyOf(elements, len + cs.length);
-            else {
+            else { //需要移动elements 元素
                 newElements = new Object[len + cs.length];
-                System.arraycopy(elements, 0, newElements, 0, index);
+                System.arraycopy(elements, 0, newElements, 0, index); //前段复制
                 System.arraycopy(elements, index,
                                  newElements, index + cs.length,
-                                 numMoved);
+                                 numMoved); //后段复制。中间留空
             }
-            System.arraycopy(cs, 0, newElements, index, cs.length);
-            setArray(newElements);
+            System.arraycopy(cs, 0, newElements, index, cs.length); //写到空位
+            setArray(newElements); //替换
             return true;
         } finally {
             lock.unlock();
@@ -892,7 +892,7 @@ public class CopyOnWriteArrayList<E>
         int len = elements.length;
         for (int i = 0; i < len; ++i) {
             @SuppressWarnings("unchecked") E e = (E) elements[i];
-            action.accept(e);
+            action.accept(e); //遍历数组，传入元素，执行函数
         }
     }
 
@@ -906,13 +906,13 @@ public class CopyOnWriteArrayList<E>
             if (len != 0) {
                 int newlen = 0;
                 Object[] temp = new Object[len];
-                for (int i = 0; i < len; ++i) {
+                for (int i = 0; i < len; ++i) { //遍历elements 数组
                     @SuppressWarnings("unchecked") E e = (E) elements[i];
-                    if (!filter.test(e))
-                        temp[newlen++] = e;
+                    if (!filter.test(e)) //函数过滤
+                        temp[newlen++] = e; //函数过滤的元素先加到临时数组，不影响读
                 }
                 if (newlen != len) {
-                    setArray(Arrays.copyOf(temp, newlen));
+                    setArray(Arrays.copyOf(temp, newlen)); //复制、替换！
                     return true;
                 }
             }
@@ -931,10 +931,10 @@ public class CopyOnWriteArrayList<E>
             int len = elements.length;
             Object[] newElements = Arrays.copyOf(elements, len);
             for (int i = 0; i < len; ++i) {
-                @SuppressWarnings("unchecked") E e = (E) elements[i];
-                newElements[i] = operator.apply(e);
+                @SuppressWarnings("unchecked") E e = (E) elements[i]; //元素向下转型
+                newElements[i] = operator.apply(e); //遍历元素，入参函数，执行结果加入新数组
             }
-            setArray(newElements);
+            setArray(newElements); //替换
         } finally {
             lock.unlock();
         }
@@ -947,7 +947,7 @@ public class CopyOnWriteArrayList<E>
             Object[] elements = getArray();
             Object[] newElements = Arrays.copyOf(elements, elements.length);
             @SuppressWarnings("unchecked") E[] es = (E[])newElements;
-            Arrays.sort(es, c);
+            Arrays.sort(es, c); //使用参数比较器c，对新数组排序
             setArray(newElements);
         } finally {
             lock.unlock();
@@ -1034,20 +1034,20 @@ public class CopyOnWriteArrayList<E>
      */
     public boolean equals(Object o) {
         if (o == this)
-            return true;
+            return true; //是自己的实例
         if (!(o instanceof List))
-            return false;
+            return false; //非List
 
-        List<?> list = (List<?>)(o);
+        List<?> list = (List<?>)(o); //向下转型，instanceof List 确保List是父级接口
         Iterator<?> it = list.iterator();
         Object[] elements = getArray();
         int len = elements.length;
         for (int i = 0; i < len; ++i)
-            if (!it.hasNext() || !eq(elements[i], it.next()))
+            if (!it.hasNext() || !eq(elements[i], it.next())) //两个List 遍历比较
                 return false;
         if (it.hasNext())
             return false;
-        return true;
+        return true; //两个List 长度相等，元素值都相同，就认为 equals ——> true
     }
 
     /**
@@ -1063,7 +1063,7 @@ public class CopyOnWriteArrayList<E>
         int len = elements.length;
         for (int i = 0; i < len; ++i) {
             Object obj = elements[i];
-            hashCode = 31*hashCode + (obj==null ? 0 : obj.hashCode());
+            hashCode = 31*hashCode + (obj==null ? 0 : obj.hashCode()); //上一个元素的hashcode + 当前遍历元素的hashcode
         }
         return hashCode;
     }
@@ -1104,7 +1104,7 @@ public class CopyOnWriteArrayList<E>
      *
      * @throws IndexOutOfBoundsException {@inheritDoc}
      */
-    public ListIterator<E> listIterator(int index) {
+    public ListIterator<E> listIterator(int index) { //按参数指定的游标，返回遍历器
         Object[] elements = getArray();
         int len = elements.length;
         if (index < 0 || index > len)
@@ -1138,7 +1138,7 @@ public class CopyOnWriteArrayList<E>
         /** Index of element to be returned by subsequent call to next.  */
         private int cursor;
 
-        private COWIterator(Object[] elements, int initialCursor) {
+        private COWIterator(Object[] elements, int initialCursor) { //初始化游标和外部类数组
             cursor = initialCursor;
             snapshot = elements;
         }
@@ -1155,7 +1155,7 @@ public class CopyOnWriteArrayList<E>
         public E next() {
             if (! hasNext())
                 throw new NoSuchElementException();
-            return (E) snapshot[cursor++];
+            return (E) snapshot[cursor++]; //游标读取
         }
 
         @SuppressWarnings("unchecked")
@@ -1684,7 +1684,7 @@ public class CopyOnWriteArrayList<E>
             UNSAFE = sun.misc.Unsafe.getUnsafe();
             Class<?> k = CopyOnWriteArrayList.class;
             lockOffset = UNSAFE.objectFieldOffset
-                (k.getDeclaredField("lock"));
+                (k.getDeclaredField("lock")); //反射 lock 变量的Field对象
         } catch (Exception e) {
             throw new Error(e);
         }
