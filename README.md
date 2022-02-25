@@ -179,11 +179,11 @@ https://mirrors.tuna.tsinghua.edu.cn/AdoptOpenJDK/8/jdk/x64/windows/
 38. //DualStackPLainSocketImpl
 39. //Inet4AddressImpl
 40. //Inet6AddressImpl
-41. InetSocketAddress
-42. PlainSocketImpl
-43. Runtime
-44. PriorityQueue
-45. Objects
+41. //InetSocketAddress
+42. //PlainSocketImpl
+43. //Runtime
+44. //PriorityQueue
+45. //Objects
 46. Runnable
 47. FutureTask
 48. RunnableFuture

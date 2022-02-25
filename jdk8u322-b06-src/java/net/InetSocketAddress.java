@@ -138,8 +138,8 @@ public class InetSocketAddress
 
     private static final long serialVersionUID = 5076001401234631237L;
 
-    private static int checkPort(int port) {
-        if (port < 0 || port > 0xFFFF)
+    private static int checkPort(int port) { //检查端口范围
+        if (port < 0 || port > 0xFFFF) //0 - 2^16
             throw new IllegalArgumentException("port out of range:" + port);
         return port;
     }
@@ -182,10 +182,10 @@ public class InetSocketAddress
      * range of valid port values.
      */
     public InetSocketAddress(InetAddress addr, int port) {
-        holder = new InetSocketAddressHolder(
+        holder = new InetSocketAddressHolder( //实例化静态内部类 存储地址和端口
                         null,
-                        addr == null ? InetAddress.anyLocalAddress() : addr,
-                        checkPort(port));
+                        addr == null ? InetAddress.anyLocalAddress() : addr, //地址为空时生成地址
+                        checkPort(port)); //检查端口范围
     }
 
     /**

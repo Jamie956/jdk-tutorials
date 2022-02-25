@@ -166,8 +166,8 @@ public class PriorityQueue<E> extends AbstractQueue<E>
         // but continues for 1.5 compatibility
         if (initialCapacity < 1)
             throw new IllegalArgumentException();
-        this.queue = new Object[initialCapacity];
-        this.comparator = comparator;
+        this.queue = new Object[initialCapacity]; //创建数组
+        this.comparator = comparator; //初始化比较器
     }
 
     /**
@@ -190,7 +190,7 @@ public class PriorityQueue<E> extends AbstractQueue<E>
     public PriorityQueue(Collection<? extends E> c) {
         if (c instanceof SortedSet<?>) {
             SortedSet<? extends E> ss = (SortedSet<? extends E>) c;
-            this.comparator = (Comparator<? super E>) ss.comparator();
+            this.comparator = (Comparator<? super E>) ss.comparator(); //提取比较器
             initElementsFromCollection(ss);
         }
         else if (c instanceof PriorityQueue<?>) {
@@ -261,7 +261,7 @@ public class PriorityQueue<E> extends AbstractQueue<E>
             for (int i = 0; i < len; i++)
                 if (a[i] == null)
                     throw new NullPointerException();
-        this.queue = a;
+        this.queue = a; //指向集合转换的数组
         this.size = a.length;
     }
 
@@ -690,16 +690,16 @@ public class PriorityQueue<E> extends AbstractQueue<E>
     }
 
     @SuppressWarnings("unchecked")
-    private void siftDownComparable(int k, E x) {
-        Comparable<? super E> key = (Comparable<? super E>)x;
-        int half = size >>> 1;        // loop while a non-leaf
+    private void siftDownComparable(int k, E x) { //索引，元素
+        Comparable<? super E> key = (Comparable<? super E>)x; //使用元素的比较器
+        int half = size >>> 1;        // loop while a non-leaf //中点
         while (k < half) {
             int child = (k << 1) + 1; // assume left child is least
             Object c = queue[child];
             int right = child + 1;
             if (right < size &&
-                ((Comparable<? super E>) c).compareTo((E) queue[right]) > 0)
-                c = queue[child = right];
+                ((Comparable<? super E>) c).compareTo((E) queue[right]) > 0) //左 > 右
+                c = queue[child = right]; //child 右移
             if (key.compareTo((E) c) <= 0)
                 break;
             queue[k] = c;
@@ -731,9 +731,9 @@ public class PriorityQueue<E> extends AbstractQueue<E>
      * assuming nothing about the order of the elements prior to the call.
      */
     @SuppressWarnings("unchecked")
-    private void heapify() {
-        for (int i = (size >>> 1) - 1; i >= 0; i--)
-            siftDown(i, (E) queue[i]);
+    private void heapify() { //堆化
+        for (int i = (size >>> 1) - 1; i >= 0; i--) //中点往前遍历
+            siftDown(i, (E) queue[i]); //索引，元素
     }
 
     /**
