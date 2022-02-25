@@ -51,7 +51,7 @@ class ByteArrayInputStream extends InputStream {
      * stream;  element <code>buf[pos]</code> is
      * the next byte to be read.
      */
-    protected byte buf[];
+    protected byte buf[];//缓存数组
 
     /**
      * The index of the next character to read from the input stream buffer.
@@ -60,7 +60,7 @@ class ByteArrayInputStream extends InputStream {
      * The next byte to be read from the input stream buffer
      * will be <code>buf[pos]</code>.
      */
-    protected int pos;
+    protected int pos;//读取指针
 
     /**
      * The currently marked position in the stream.
@@ -86,7 +86,7 @@ class ByteArrayInputStream extends InputStream {
      * the last byte within <code>buf</code> that
      * can ever be read  from the input stream buffer.
      */
-    protected int count;
+    protected int count;//数组缓存的长度
 
     /**
      * Creates a <code>ByteArrayInputStream</code>
@@ -122,8 +122,8 @@ class ByteArrayInputStream extends InputStream {
      */
     public ByteArrayInputStream(byte buf[], int offset, int length) {
         this.buf = buf;
-        this.pos = offset;
-        this.count = Math.min(offset + length, buf.length);
+        this.pos = offset;//读取指针起始位置
+        this.count = Math.min(offset + length, buf.length);//长度不能超过参数数组的长度
         this.mark = offset;
     }
 
@@ -140,8 +140,8 @@ class ByteArrayInputStream extends InputStream {
      * @return  the next byte of data, or <code>-1</code> if the end of the
      *          stream has been reached.
      */
-    public synchronized int read() {
-        return (pos < count) ? (buf[pos++] & 0xff) : -1;
+    public synchronized int read() {//对象锁//获取缓存数组元素
+        return (pos < count) ? (buf[pos++] & 0xff) : -1;//0xff只保留低32位?
     }
 
     /**
@@ -184,14 +184,14 @@ class ByteArrayInputStream extends InputStream {
             return -1;
         }
 
-        int avail = count - pos;
+        int avail = count - pos;//剩余还有多数长度可以读
         if (len > avail) {
             len = avail;
         }
         if (len <= 0) {
             return 0;
         }
-        System.arraycopy(buf, pos, b, off, len);
+        System.arraycopy(buf, pos, b, off, len);//buf复制到参数buf
         pos += len;
         return len;
     }
@@ -214,7 +214,7 @@ class ByteArrayInputStream extends InputStream {
             k = n < 0 ? 0 : n;
         }
 
-        pos += k;
+        pos += k;//读指针移动k位
         return k;
     }
 
@@ -229,7 +229,7 @@ class ByteArrayInputStream extends InputStream {
      *          over) from this input stream without blocking.
      */
     public synchronized int available() {
-        return count - pos;
+        return count - pos;//剩余可以读的长度
     }
 
     /**
@@ -268,7 +268,7 @@ class ByteArrayInputStream extends InputStream {
      * in the constructor.
      */
     public synchronized void reset() {
-        pos = mark;
+        pos = mark;//把读指针重置到mark
     }
 
     /**

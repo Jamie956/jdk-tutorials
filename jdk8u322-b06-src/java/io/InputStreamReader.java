@@ -165,7 +165,7 @@ public class InputStreamReader extends Reader {
      * @exception  IOException  If an I/O error occurs
      */
     public int read() throws IOException {
-        return sd.read();
+        return sd.read();//读1个字节
     }
 
     /**
@@ -181,7 +181,7 @@ public class InputStreamReader extends Reader {
      * @exception  IOException  If an I/O error occurs
      */
     public int read(char cbuf[], int offset, int length) throws IOException {
-        return sd.read(cbuf, offset, length);
+        return sd.read(cbuf, offset, length);//将流写入 cbuf, 写入位置offset开始，长度为length
     }
 
     /**

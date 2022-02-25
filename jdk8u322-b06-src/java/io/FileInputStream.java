@@ -133,9 +133,9 @@ class FileInputStream extends InputStream
             throw new FileNotFoundException("Invalid file path");
         }
         fd = new FileDescriptor();
-        fd.attach(this);
+        fd.attach(this);//初始文件描述符
         path = name;
-        open(name);
+        open(name);//打开文件
     }
 
     /**
@@ -204,7 +204,7 @@ class FileInputStream extends InputStream
      * @exception  IOException  if an I/O error occurs.
      */
     public int read() throws IOException {
-        return read0();
+        return read0();//读一个字节
     }
 
     private native int read0() throws IOException;
@@ -230,7 +230,7 @@ class FileInputStream extends InputStream
      * @exception  IOException  if an I/O error occurs.
      */
     public int read(byte b[]) throws IOException {
-        return readBytes(b, 0, b.length);
+        return readBytes(b, 0, b.length);//读取指定长度字节数据到数组缓存
     }
 
     /**
@@ -252,7 +252,7 @@ class FileInputStream extends InputStream
      * @exception  IOException  if an I/O error occurs.
      */
     public int read(byte b[], int off, int len) throws IOException {
-        return readBytes(b, off, len);
+        return readBytes(b, off, len);//读取len个字节，写到数组off位置
     }
 
     /**
@@ -280,7 +280,7 @@ class FileInputStream extends InputStream
      *             support seek, or if an I/O error occurs.
      */
     public long skip(long n) throws IOException {
-        return skip0(n);
+        return skip0(n);//跳过前n个字节，不读取
     }
 
     private native long skip0(long n) throws IOException;
@@ -303,7 +303,7 @@ class FileInputStream extends InputStream
      *             {@code close} or an I/O error occurs.
      */
     public int available() throws IOException {
-        return available0();
+        return available0();//还剩下几个没读的字节
     }
 
     private native int available0() throws IOException;
