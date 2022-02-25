@@ -53,7 +53,7 @@ package java.lang;
  * @since   JDK1.0
  */
 @FunctionalInterface
-public interface Runnable {
+public interface Runnable { //函数式接口
     /**
      * When an object implementing interface <code>Runnable</code> is used
      * to create a thread, starting the thread causes the object's
@@ -65,5 +65,5 @@ public interface Runnable {
      *
      * @see     java.lang.Thread#run()
      */
-    public abstract void run();
+    public abstract void run(); //接口的抽象方法 //无参数无返回
 }

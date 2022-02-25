@@ -184,11 +184,11 @@ https://mirrors.tuna.tsinghua.edu.cn/AdoptOpenJDK/8/jdk/x64/windows/
 43. //Runtime
 44. //PriorityQueue
 45. //Objects
-46. Runnable
-47. FutureTask
-48. RunnableFuture
-49. Executors
-50. AtomicInteger
+46. //Runnable
+47. //FutureTask
+48. //RunnableFuture
+49. //Executors
+50. //AtomicInteger
 51. Throwable
 52. IOException
 53. Error
