@@ -109,9 +109,9 @@ Debug and comments step
   - InvocationHandler
 
 - Thread 注释
-- Exception
-  - Throwable 当前
-
+- Throwable 注释
+  - Exception 当前
+  - Error
 
 
 

@@ -225,7 +225,7 @@ public class Throwable implements Serializable {
      * @serial
      * @since 1.7
      */
-    private List<Throwable> suppressedExceptions = SUPPRESSED_SENTINEL;
+    private List<Throwable> suppressedExceptions = SUPPRESSED_SENTINEL; //存放 suppressed 异常
 
     /** Message for trying to suppress a null exception. */
     private static final String NULL_CAUSE_MESSAGE = "Cannot suppress a null exception.";
@@ -640,7 +640,7 @@ public class Throwable implements Serializable {
      *
      * @param s {@code PrintStream} to use for output
      */
-    public void printStackTrace(PrintStream s) {
+    public void printStackTrace(PrintStream s) { //异常字节流输出
         printStackTrace(new WrappedPrintStream(s));
     }
 
@@ -651,20 +651,20 @@ public class Throwable implements Serializable {
             Collections.newSetFromMap(new IdentityHashMap<Throwable, Boolean>());
         dejaVu.add(this);
 
-        synchronized (s.lock()) {
+        synchronized (s.lock()) { //lock 是 PrintStream 实例
             // Print our stack trace
-            s.println(this);
-            StackTraceElement[] trace = getOurStackTrace();
+            s.println(this); //打印 Throwable toString
+            StackTraceElement[] trace = getOurStackTrace(); //方法栈
             for (StackTraceElement traceElement : trace)
-                s.println("\tat " + traceElement);
+                s.println("\tat " + traceElement); //遍历方法栈链路，逐个打印方法栈方法
 
             // Print suppressed exceptions, if any
             for (Throwable se : getSuppressed())
-                se.printEnclosedStackTrace(s, trace, SUPPRESSED_CAPTION, "\t", dejaVu);
+                se.printEnclosedStackTrace(s, trace, SUPPRESSED_CAPTION, "\t", dejaVu); //打印Suppressed
 
             // Print cause, if any
             Throwable ourCause = getCause();
-            if (ourCause != null)
+            if (ourCause != null) //如果有 cause 就打印
                 ourCause.printEnclosedStackTrace(s, trace, CAUSE_CAPTION, "", dejaVu);
         }
     }
@@ -680,7 +680,7 @@ public class Throwable implements Serializable {
                                          Set<Throwable> dejaVu) {
         assert Thread.holdsLock(s.lock());
         if (dejaVu.contains(this)) {
-            s.println("\t[CIRCULAR REFERENCE:" + this + "]");
+            s.println("\t[CIRCULAR REFERENCE:" + this + "]"); //循环引用
         } else {
             dejaVu.add(this);
             // Compute number of frames in common between this and enclosing trace
@@ -718,7 +718,7 @@ public class Throwable implements Serializable {
      * @param s {@code PrintWriter} to use for output
      * @since   JDK1.1
      */
-    public void printStackTrace(PrintWriter s) {
+    public void printStackTrace(PrintWriter s) { //异常字符流输出
         printStackTrace(new WrappedPrintWriter(s));
     }
 
@@ -737,7 +737,7 @@ public class Throwable implements Serializable {
     private static class WrappedPrintStream extends PrintStreamOrWriter {
         private final PrintStream printStream;
 
-        WrappedPrintStream(PrintStream printStream) {
+        WrappedPrintStream(PrintStream printStream) { //包装 PrintStream
             this.printStream = printStream;
         }
 
@@ -745,7 +745,7 @@ public class Throwable implements Serializable {
             return printStream;
         }
 
-        void println(Object o) {
+        void println(Object o) { //代替printStream 执行 printlin
             printStream.println(o);
         }
     }
@@ -778,7 +778,7 @@ public class Throwable implements Serializable {
      * @return  a reference to this {@code Throwable} instance.
      * @see     java.lang.Throwable#printStackTrace()
      */
-    public synchronized Throwable fillInStackTrace() {
+    public synchronized Throwable fillInStackTrace() { //填充执行方法链路栈
         if (stackTrace != null ||
             backtrace != null /* Out of protocol state */ ) {
             fillInStackTrace(0);
@@ -814,7 +814,7 @@ public class Throwable implements Serializable {
      * @since  1.4
      */
     public StackTraceElement[] getStackTrace() {
-        return getOurStackTrace().clone();
+        return getOurStackTrace().clone(); //获取方法栈并克隆返回
     }
 
     private synchronized StackTraceElement[] getOurStackTrace() {
@@ -860,11 +860,11 @@ public class Throwable implements Serializable {
      *
      * @since  1.4
      */
-    public void setStackTrace(StackTraceElement[] stackTrace) {
+    public void setStackTrace(StackTraceElement[] stackTrace) { //更改stackTrace
         // Validate argument
-        StackTraceElement[] defensiveCopy = stackTrace.clone();
+        StackTraceElement[] defensiveCopy = stackTrace.clone(); //克隆一份 stackTrace
         for (int i = 0; i < defensiveCopy.length; i++) {
-            if (defensiveCopy[i] == null)
+            if (defensiveCopy[i] == null) //stackTrace 不能为空
                 throw new NullPointerException("stackTrace[" + i + "]");
         }
 
@@ -872,7 +872,7 @@ public class Throwable implements Serializable {
             if (this.stackTrace == null && // Immutable stack
                 backtrace == null) // Test for out of protocol state
                 return;
-            this.stackTrace = defensiveCopy;
+            this.stackTrace = defensiveCopy; //替换原来的 stackTrace
         }
     }
 
@@ -1078,10 +1078,10 @@ public class Throwable implements Serializable {
      * @since 1.7
      */
     public final synchronized void addSuppressed(Throwable exception) {
-        if (exception == this)
+        if (exception == this) //不能是调用者
             throw new IllegalArgumentException(SELF_SUPPRESSION_MESSAGE, exception);
 
-        if (exception == null)
+        if (exception == null) //不为空
             throw new NullPointerException(NULL_CAUSE_MESSAGE);
 
         if (suppressedExceptions == null) // Suppressed exceptions not recorded
@@ -1090,7 +1090,7 @@ public class Throwable implements Serializable {
         if (suppressedExceptions == SUPPRESSED_SENTINEL)
             suppressedExceptions = new ArrayList<>(1);
 
-        suppressedExceptions.add(exception);
+        suppressedExceptions.add(exception); //打印的时候会从这个集合取值打印
     }
 
     private static final Throwable[] EMPTY_THROWABLE_ARRAY = new Throwable[0];
