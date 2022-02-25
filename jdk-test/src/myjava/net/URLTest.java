@@ -2,8 +2,8 @@ package myjava.net;
 
 import org.junit.Test;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.io.IOException;
+import java.net.*;
 
 public class URLTest {
     @Test
@@ -42,11 +42,23 @@ public class URLTest {
         boolean c = a.sameFile(b);
     }
 
+    @Test
+    public void toString1() throws MalformedURLException {
+        URL a = new URL("https://www.baidu.com");
+        String s = a.toString();
+    }
 
+    @Test
+    public void toURI() throws MalformedURLException, URISyntaxException {
+        URL a = new URL("https://www.baidu.com");
+        URI s = a.toURI();
+    }
 
-
-
-
+    @Test
+    public void openConnection() throws IOException {
+        URL a = new URL("https://www.baidu.com");
+        URLConnection c = a.openConnection();
+    }
 
 
 

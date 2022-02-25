@@ -1,5 +1,6 @@
 
 # 快速开始
+
 版本：jdk1.8.0_231 
 
 
@@ -126,6 +127,10 @@ Debug and comments step
 - Double
 - Char
 - Boolean
+
+# 部分sun 源码无法查看，更换open jdk
+下载地址：
+https://mirrors.tuna.tsinghua.edu.cn/AdoptOpenJDK/8/jdk/x64/windows/
 
 
 

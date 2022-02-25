@@ -477,7 +477,7 @@ public abstract class URLStreamHandler {
      * @param   u   the URL.
      * @return  a string representation of the {@code URL} argument.
      */
-    protected String toExternalForm(URL u) {
+    protected String toExternalForm(URL u) { //toString 拼接
 
         // pre-compute length of StringBuffer
         int len = u.getProtocol().length() + 1;
