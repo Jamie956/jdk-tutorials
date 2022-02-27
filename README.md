@@ -98,7 +98,7 @@ Debug and comments step
 - URL 注释
 - HttpURLConnection 注释
 - ServerSocket 注释
-- Socket 当前
+- Socket 未完
 - URI
 
 
@@ -118,7 +118,7 @@ Debug and comments step
       - NullPointerException 注释
   - Error 注释
 
-- String
+- String 当前
 - Byte
 - Short
 - Integer
