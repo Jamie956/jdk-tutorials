@@ -345,7 +345,7 @@ abstract class AbstractPlainSocketImpl extends SocketImpl
             }
         }
         try {
-            acquireFD();
+            acquireFD(); //socket 需要获取文件描述符
             try {
                 socketConnect(address, port, timeout);
                 /* socket may have been closed during poll/select */

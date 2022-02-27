@@ -449,7 +449,7 @@ class Socket implements java.io.Closeable {
             createImpl(stream);
             if (localAddr != null)
                 bind(localAddr);
-            connect(address);
+            connect(address); //Socket 连接
         } catch (IOException | IllegalArgumentException | SecurityException e) {
             try {
                 close();
@@ -590,8 +590,8 @@ class Socket implements java.io.Closeable {
             throw new IllegalArgumentException("Unsupported address type");
 
         InetSocketAddress epoint = (InetSocketAddress) endpoint;
-        InetAddress addr = epoint.getAddress ();
-        int port = epoint.getPort();
+        InetAddress addr = epoint.getAddress (); //地址
+        int port = epoint.getPort(); //端口
         checkAddress(addr, "connect");
 
         SecurityManager security = System.getSecurityManager();

@@ -372,7 +372,7 @@ class SocksSocketImpl extends PlainSocketImpl implements SocksConsts {
                 host = "[" + host + "]";
             }
             try {
-                uri = new URI("socket://" + ParseUtil.encodePath(host) + ":"+ epoint.getPort());
+                uri = new URI("socket://" + ParseUtil.encodePath(host) + ":"+ epoint.getPort()); //URI socket 连接
             } catch (URISyntaxException e) {
                 // This shouldn't happen
                 assert false : e;

@@ -1,4 +1,4 @@
-package myjava.nio;
+package myjava.net;
 
 import org.junit.Test;
 
