@@ -320,7 +320,7 @@ public final class String
      * @see  #String(byte[])
      */
     @Deprecated
-    public String(byte ascii[], int hibyte, int offset, int count) {
+    public String(byte ascii[], int hibyte, int offset, int count) { //ascii 解析成String
         checkBounds(ascii, offset, count);
         char value[] = new char[count];
 
@@ -419,7 +419,7 @@ public final class String
      * @since  JDK1.1
      */
     public String(byte bytes[], int offset, int length, String charsetName)
-            throws UnsupportedEncodingException {
+            throws UnsupportedEncodingException { //按指定字符串的Charset 将参数bytes数组解析成字符串
         if (charsetName == null)
             throw new NullPointerException("charsetName");
         checkBounds(bytes, offset, length);
@@ -456,7 +456,7 @@ public final class String
      *
      * @since  1.6
      */
-    public String(byte bytes[], int offset, int length, Charset charset) {
+    public String(byte bytes[], int offset, int length, Charset charset) { //按指定Charset 将参数bytes数组解析成字符串
         if (charset == null)
             throw new NullPointerException("charset");
         checkBounds(bytes, offset, length);
@@ -596,7 +596,7 @@ public final class String
      *
      * @since  1.5
      */
-    public String(StringBuilder builder) {
+    public String(StringBuilder builder) { //复制StringBuilder String
         this.value = Arrays.copyOf(builder.getValue(), builder.length());
     }
 
@@ -619,7 +619,7 @@ public final class String
      * @return  the length of the sequence of characters represented by this
      *          object.
      */
-    public int length() {
+    public int length() { //数组长度
         return value.length;
     }
 
@@ -657,7 +657,7 @@ public final class String
         if ((index < 0) || (index >= value.length)) {
             throw new StringIndexOutOfBoundsException(index);
         }
-        return value[index];
+        return value[index]; //获取char数组元素
     }
 
     /**
@@ -813,7 +813,7 @@ public final class String
      *            <li>{@code dstBegin+(srcEnd-srcBegin)} is larger than
      *                {@code dst.length}</ul>
      */
-    public void getChars(int srcBegin, int srcEnd, char dst[], int dstBegin) {
+    public void getChars(int srcBegin, int srcEnd, char dst[], int dstBegin) { //复制value数组到参数数组dst
         if (srcBegin < 0) {
             throw new StringIndexOutOfBoundsException(srcBegin);
         }
@@ -870,7 +870,7 @@ public final class String
      *          </ul>
      */
     @Deprecated
-    public void getBytes(int srcBegin, int srcEnd, byte dst[], int dstBegin) {
+    public void getBytes(int srcBegin, int srcEnd, byte dst[], int dstBegin) { //将value 数组元素转byte，写入参数数组dst
         if (srcBegin < 0) {
             throw new StringIndexOutOfBoundsException(srcBegin);
         }
@@ -913,7 +913,7 @@ public final class String
      * @since  JDK1.1
      */
     public byte[] getBytes(String charsetName)
-            throws UnsupportedEncodingException {
+            throws UnsupportedEncodingException { //转成指定字符编码
         if (charsetName == null) throw new NullPointerException();
         return StringCoding.encode(charsetName, value, 0, value.length);
     }
@@ -936,7 +936,7 @@ public final class String
      *
      * @since  1.6
      */
-    public byte[] getBytes(Charset charset) {
+    public byte[] getBytes(Charset charset) { //转成指定字符编码
         if (charset == null) throw new NullPointerException();
         return StringCoding.encode(charset, value, 0, value.length);
     }
@@ -954,7 +954,7 @@ public final class String
      *
      * @since      JDK1.1
      */
-    public byte[] getBytes() {
+    public byte[] getBytes() { //不指定编码
         return StringCoding.encode(value, 0, value.length);
     }
 
@@ -974,18 +974,18 @@ public final class String
      * @see  #equalsIgnoreCase(String)
      */
     public boolean equals(Object anObject) {
-        if (this == anObject) {
+        if (this == anObject) { //参数对象与调用对象的实例是同一个实例
             return true;
         }
-        if (anObject instanceof String) {
+        if (anObject instanceof String) { //对象类型判断
             String anotherString = (String)anObject;
             int n = value.length;
-            if (n == anotherString.value.length) {
+            if (n == anotherString.value.length) { //长度比较
                 char v1[] = value;
                 char v2[] = anotherString.value;
                 int i = 0;
                 while (n-- != 0) {
-                    if (v1[i] != v2[i])
+                    if (v1[i] != v2[i]) //遍历char，逐个比较
                         return false;
                     i++;
                 }
@@ -1014,15 +1014,15 @@ public final class String
         return contentEquals((CharSequence)sb);
     }
 
-    private boolean nonSyncContentEquals(AbstractStringBuilder sb) {
+    private boolean nonSyncContentEquals(AbstractStringBuilder sb) { //本类String 与AbstractStringBuilder 继承类的字符串值比较
         char v1[] = value;
         char v2[] = sb.getValue();
         int n = v1.length;
-        if (n != sb.length()) {
+        if (n != sb.length()) { //首先长度比较
             return false;
         }
         for (int i = 0; i < n; i++) {
-            if (v1[i] != v2[i]) {
+            if (v1[i] != v2[i]) { //相同长度时，遍历逐个比较
                 return false;
             }
         }
@@ -1047,9 +1047,9 @@ public final class String
      */
     public boolean contentEquals(CharSequence cs) {
         // Argument is a StringBuffer, StringBuilder
-        if (cs instanceof AbstractStringBuilder) {
+        if (cs instanceof AbstractStringBuilder) { //类型判断
             if (cs instanceof StringBuffer) {
-                synchronized(cs) {
+                synchronized(cs) { //锁
                    return nonSyncContentEquals((AbstractStringBuilder)cs);
                 }
             } else {
@@ -1057,10 +1057,10 @@ public final class String
             }
         }
         // Argument is a String
-        if (cs instanceof String) {
+        if (cs instanceof String) { //类型判断
             return equals(cs);
         }
-        // Argument is a generic CharSequence
+        // Argument is a generic CharSequence //参数非String、非AbstractStringBuilder，是CharSequence的其他实现类
         char v1[] = value;
         int n = v1.length;
         if (n != cs.length()) {
@@ -1150,7 +1150,7 @@ public final class String
      *          value greater than {@code 0} if this string is
      *          lexicographically greater than the string argument.
      */
-    public int compareTo(String anotherString) {//字符串比较
+    public int compareTo(String anotherString) { //字符串比较
         int len1 = value.length;
         int len2 = anotherString.value.length;
         int lim = Math.min(len1, len2);

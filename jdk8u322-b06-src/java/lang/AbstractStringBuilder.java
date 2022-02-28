@@ -48,7 +48,7 @@ abstract class AbstractStringBuilder implements Appendable, CharSequence {
     /**
      * The value is used for character storage.
      */
-    char[] value;
+    char[] value; //动态数组
 
     /**
      * The count is the number of characters used.
