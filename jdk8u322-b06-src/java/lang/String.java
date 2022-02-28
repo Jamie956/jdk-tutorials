@@ -163,7 +163,7 @@ public final class String
      *         The initial value of the string
      */
     public String(char value[]) {
-        this.value = Arrays.copyOf(value, value.length);
+        this.value = Arrays.copyOf(value, value.length); //复制数组，不与参数共用同一个
     }
 
     /**
@@ -188,15 +188,15 @@ public final class String
      *          characters outside the bounds of the {@code value} array
      */
     public String(char value[], int offset, int count) {
-        if (offset < 0) {
+        if (offset < 0) { //偏移索引位置必须>0
             throw new StringIndexOutOfBoundsException(offset);
         }
         if (count <= 0) {
-            if (count < 0) {
+            if (count < 0) { //必须有元素个数
                 throw new StringIndexOutOfBoundsException(count);
             }
             if (offset <= value.length) {
-                this.value = "".value;
+                this.value = "".value; //无元素，空字符串
                 return;
             }
         }
@@ -204,7 +204,7 @@ public final class String
         if (offset > value.length - count) {
             throw new StringIndexOutOfBoundsException(offset + count);
         }
-        this.value = Arrays.copyOfRange(value, offset, offset+count);
+        this.value = Arrays.copyOfRange(value, offset, offset+count); //复制数组
     }
 
     /**

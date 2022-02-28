@@ -226,7 +226,7 @@ class StringCoding {
           .onUnmappableCharacter(CodingErrorAction.REPLACE)
           .reset();
         if (cd instanceof ArrayDecoder) {
-            int clen = ((ArrayDecoder)cd).decode(ba, off, len, ca);
+            int clen = ((ArrayDecoder)cd).decode(ba, off, len, ca); //指定Charset 读取byte数组
             return safeTrim(ca, clen, cs, isTrusted);
         } else {
             ByteBuffer bb = ByteBuffer.wrap(ba, off, len);
