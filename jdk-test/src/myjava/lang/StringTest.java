@@ -43,19 +43,19 @@ public class StringTest {
     @Test
     public void cons7() throws UnsupportedEncodingException {
         byte[] arr = {96, 97, 98, 99, 100};
-        String s = new String(arr,0, arr.length, "UTF-8");
+        String s = new String(arr, 0, arr.length, "UTF-8");
     }
 
     @Test
     public void cons8() {
         byte[] arr = {96, 97, 98, 99, 100};
-        String s = new String(arr,0, arr.length, Charset.defaultCharset());
+        String s = new String(arr, 0, arr.length, Charset.defaultCharset());
     }
 
     @Test
     public void cons9() {
         byte[] arr = {96, 97, 98, 99, 100};
-        String s = new String(arr,0, arr.length);
+        String s = new String(arr, 0, arr.length);
     }
 
     @Test
@@ -92,7 +92,7 @@ public class StringTest {
     }
 
     @Test
-    public void equals()  {
+    public void equals() {
         boolean b = "as".equals("as");
         boolean c = "as1".equals("a1s");
     }
@@ -124,7 +124,7 @@ public class StringTest {
 
     @Test
     public void regionMatches() {
-       boolean b = "asas".regionMatches(true, 0, "AsAs", 0, 4);
+        boolean b = "asas".regionMatches(true, 0, "AsAs", 0, 4);
     }
 
     @Test
@@ -192,30 +192,6 @@ public class StringTest {
     public void trim() {
         String s = "  Ab  aB  ".trim();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }
