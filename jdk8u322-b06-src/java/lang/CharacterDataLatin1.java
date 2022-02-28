@@ -129,14 +129,14 @@ class CharacterDataLatin1 extends CharacterData {
         return ((props & 0x00007000) == 0x00001000);
     }
 
-    int toLowerCase(int ch) {
+    int toLowerCase(int ch) { //转小写
         int mapChar = ch;
         int val = getProperties(ch);
 
         if (((val & 0x00020000) != 0) && 
                 ((val & 0x07FC0000) != 0x07FC0000)) { 
             int offset = val << 5 >> (5+18);
-            mapChar = ch + offset;
+            mapChar = ch + offset; //+35
         }
         return mapChar;
     }
@@ -148,7 +148,7 @@ class CharacterDataLatin1 extends CharacterData {
         if ((val & 0x00010000) != 0) {
             if ((val & 0x07FC0000) != 0x07FC0000) {
                 int offset = val  << 5 >> (5+18);
-                mapChar =  ch - offset;
+                mapChar =  ch - offset; //不能直接减35吗
             } else if (ch == 0x00B5) {
                 mapChar = 0x039C;
             }

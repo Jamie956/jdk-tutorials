@@ -187,7 +187,7 @@ public final class String
      *          If the {@code offset} and {@code count} arguments index
      *          characters outside the bounds of the {@code value} array
      */
-    public String(char value[], int offset, int count) {
+    public String(char value[], int offset, int count) { //将value 复制到参数数组
         if (offset < 0) { //偏移索引位置必须>0
             throw new StringIndexOutOfBoundsException(offset);
         }
@@ -779,7 +779,7 @@ public final class String
      * Copy characters from this string into dst starting at dstBegin.
      * This method doesn't perform any range checking.
      */
-    void getChars(char dst[], int dstBegin) {
+    void getChars(char dst[], int dstBegin) { //value数组复制到参数数组dst
         System.arraycopy(value, 0, dst, dstBegin, value.length);
     }
 
@@ -1104,8 +1104,8 @@ public final class String
      */
     public boolean equalsIgnoreCase(String anotherString) {
         return (this == anotherString) ? true
-                : (anotherString != null)
-                && (anotherString.value.length == value.length)
+                : (anotherString != null) //非同一实例，非空判断
+                && (anotherString.value.length == value.length) //长度判断
                 && regionMatches(true, 0, anotherString, 0, value.length);
     }
 
@@ -1166,7 +1166,7 @@ public final class String
             }
             k++;
         }
-        return len1 - len2;
+        return len1 - len2; //最小长度的片段都是一致，最后比较长度
     }
 
     /**
@@ -1198,17 +1198,17 @@ public final class String
                 if (c1 != c2) {
                     c1 = Character.toUpperCase(c1);
                     c2 = Character.toUpperCase(c2);
-                    if (c1 != c2) {
+                    if (c1 != c2) { //转大写比较
                         c1 = Character.toLowerCase(c1);
                         c2 = Character.toLowerCase(c2);
-                        if (c1 != c2) {
+                        if (c1 != c2) { //转小写比较
                             // No overflow because of numeric promotion
-                            return c1 - c2;
+                            return c1 - c2; //大小写都不一致
                         }
                     }
                 }
             }
-            return n1 - n2;
+            return n1 - n2; //长度比较
         }
 
         /** Replaces the de-serialized object. */
@@ -1342,7 +1342,7 @@ public final class String
      *          argument.
      */
     public boolean regionMatches(boolean ignoreCase, int toffset,
-            String other, int ooffset, int len) {
+            String other, int ooffset, int len) { //转成大写比较
         char ta[] = value;
         int to = toffset;
         char pa[] = other.value;
@@ -1356,7 +1356,7 @@ public final class String
         while (len-- > 0) {
             char c1 = ta[to++];
             char c2 = pa[po++];
-            if (c1 == c2) {
+            if (c1 == c2) { //小写 或大写比较通过
                 continue;
             }
             if (ignoreCase) {
@@ -1366,7 +1366,7 @@ public final class String
                 // continue.
                 char u1 = Character.toUpperCase(c1);
                 char u2 = Character.toUpperCase(c2);
-                if (u1 == u2) {
+                if (u1 == u2) { //字符都转成大写比较，也就忽略了小写
                     continue;
                 }
                 // Unfortunately, conversion to uppercase does not work properly
@@ -1401,9 +1401,9 @@ public final class String
      */
     public boolean startsWith(String prefix, int toffset) {
         char ta[] = value;
-        int to = toffset;
+        int to = toffset; //String 起始位置
         char pa[] = prefix.value;
-        int po = 0;
+        int po = 0; //prefix 起始位置
         int pc = prefix.value.length;
         // Note: toffset might be near -1>>>1.
         if ((toffset < 0) || (toffset > value.length - pc)) {
@@ -1752,7 +1752,7 @@ public final class String
      */
     static int indexOf(char[] source, int sourceOffset, int sourceCount,
             char[] target, int targetOffset, int targetCount,
-            int fromIndex) {
+            int fromIndex) { //在source数组sourceOffset偏移，sourceCount个数范围内，搜索target数组
         if (fromIndex >= sourceCount) {
             return (targetCount == 0 ? sourceCount : -1);
         }
@@ -1763,21 +1763,21 @@ public final class String
             return fromIndex;
         }
 
-        char first = target[targetOffset];
+        char first = target[targetOffset]; //目标数组起始元素
         int max = sourceOffset + (sourceCount - targetCount);
 
         for (int i = sourceOffset + fromIndex; i <= max; i++) {
             /* Look for first character. */
             if (source[i] != first) {
-                while (++i <= max && source[i] != first);
+                while (++i <= max && source[i] != first); //从souce数组找与target数组第一个元素相同的位置
             }
 
             /* Found first character, now look at the rest of v2 */
             if (i <= max) {
-                int j = i + 1;
-                int end = j + targetCount - 1;
-                for (int k = targetOffset + 1; j < end && source[j]
-                        == target[k]; j++, k++);
+                int j = i + 1; //source 的起始位置
+                int end = j + targetCount - 1; //source 的结束位置
+                for (int k = targetOffset + 1; j < end && source[j] //k: target 的起始位置
+                        == target[k]; j++, k++); //如果范围内全部元素匹配，k最终与j一致
 
                 if (j == end) {
                     /* Found whole string. */
@@ -1885,20 +1885,20 @@ public final class String
 
     startSearchForLastChar:
         while (true) {
-            while (i >= min && source[i] != strLastChar) {
+            while (i >= min && source[i] != strLastChar) { //首个元素搜索
                 i--;
             }
             if (i < min) {
                 return -1;
             }
-            int j = i - 1;
+            int j = i - 1; //界定范围
             int start = j - (targetCount - 1);
-            int k = strLastIndex - 1;
+            int k = strLastIndex - 1; //target 索引起始
 
             while (j > start) {
-                if (source[j--] != target[k--]) {
+                if (source[j--] != target[k--]) { //虽然首个元素匹配，但是后续某个元素不匹配
                     i--;
-                    continue startSearchForLastChar;
+                    continue startSearchForLastChar; //继续往前查找
                 }
             }
             return start - sourceOffset + 1;
@@ -1930,7 +1930,7 @@ public final class String
         if (subLen < 0) {
             throw new StringIndexOutOfBoundsException(subLen);
         }
-        return (beginIndex == 0) ? this : new String(value, beginIndex, subLen);
+        return (beginIndex == 0) ? this : new String(value, beginIndex, subLen); //0 不需要截取
     }
 
     /**
@@ -1967,7 +1967,7 @@ public final class String
             throw new StringIndexOutOfBoundsException(subLen);
         }
         return ((beginIndex == 0) && (endIndex == value.length)) ? this
-                : new String(value, beginIndex, subLen);
+                : new String(value, beginIndex, subLen); //数组复制
     }
 
     /**
@@ -2000,7 +2000,7 @@ public final class String
      * @spec JSR-51
      */
     public CharSequence subSequence(int beginIndex, int endIndex) {
-        return this.substring(beginIndex, endIndex);
+        return this.substring(beginIndex, endIndex); //返回 CharSequence 类型
     }
 
     /**
@@ -2030,7 +2030,7 @@ public final class String
         }
         int len = value.length;
         char buf[] = Arrays.copyOf(value, len + otherLen);
-        str.getChars(buf, len);
+        str.getChars(buf, len); //str 复制到buf
         return new String(buf, true);
     }
 
@@ -2063,25 +2063,25 @@ public final class String
      * @return  a string derived from this string by replacing every
      *          occurrence of {@code oldChar} with {@code newChar}.
      */
-    public String replace(char oldChar, char newChar) {
+    public String replace(char oldChar, char newChar) { //替换value上的字符
         if (oldChar != newChar) {
             int len = value.length;
             int i = -1;
             char[] val = value; /* avoid getfield opcode */
 
             while (++i < len) {
-                if (val[i] == oldChar) {
+                if (val[i] == oldChar) { //找到第一个匹配的元素索引
                     break;
                 }
             }
             if (i < len) {
                 char buf[] = new char[len];
                 for (int j = 0; j < i; j++) {
-                    buf[j] = val[j];
+                    buf[j] = val[j]; //把匹配位置前段元素装入buf
                 }
                 while (i < len) {
                     char c = val[i];
-                    buf[i] = (c == oldChar) ? newChar : c;
+                    buf[i] = (c == oldChar) ? newChar : c; //把匹配位置后面的与oldChar相同的元素 替换
                     i++;
                 }
                 return new String(buf, true);
@@ -2335,7 +2335,7 @@ public final class String
          */
         char ch = 0;
         if (((regex.value.length == 1 &&
-             ".$|()[{^?*+\\".indexOf(ch = regex.charAt(0)) == -1) ||
+             ".$|()[{^?*+\\".indexOf(ch = regex.charAt(0)) == -1) || //ch: 参数regex的第一位字符
              (regex.length() == 2 &&
               regex.charAt(0) == '\\' &&
               (((ch = regex.charAt(1))-'0')|('9'-ch)) < 0 &&
@@ -2348,10 +2348,10 @@ public final class String
             int next = 0;
             boolean limited = limit > 0;
             ArrayList<String> list = new ArrayList<>();
-            while ((next = indexOf(ch, off)) != -1) {
+            while ((next = indexOf(ch, off)) != -1) { //next: 分隔符索引
                 if (!limited || list.size() < limit - 1) {
-                    list.add(substring(off, next));
-                    off = next + 1;
+                    list.add(substring(off, next)); //截取并且存入集合
+                    off = next + 1; //更新搜索偏移量
                 } else {    // last one
                     //assert (list.size() == limit - 1);
                     list.add(substring(off, value.length));
@@ -2365,7 +2365,7 @@ public final class String
 
             // Add remaining segment
             if (!limited || list.size() < limit)
-                list.add(substring(off, value.length));
+                list.add(substring(off, value.length)); //截取最后一小段
 
             // Construct result
             int resultSize = list.size();
@@ -2375,7 +2375,7 @@ public final class String
                 }
             }
             String[] result = new String[resultSize];
-            return list.subList(0, resultSize).toArray(result);
+            return list.subList(0, resultSize).toArray(result); //集合转数组
         }
         return Pattern.compile(regex).split(this, limit);
     }
@@ -2453,7 +2453,7 @@ public final class String
         // Number of elements not likely worth Arrays.stream overhead.
         StringJoiner joiner = new StringJoiner(delimiter);
         for (CharSequence cs: elements) {
-            joiner.add(cs);
+            joiner.add(cs); //追加分隔符和元素
         }
         return joiner.toString();
     }
@@ -2579,7 +2579,7 @@ public final class String
                     firstUpper += Character.charCount(supplChar);
                 } else {
                     if (c != Character.toLowerCase(c)) {
-                        break scan;
+                        break scan; //找到了第一个大写字符
                     }
                     firstUpper++;
                 }
@@ -2592,7 +2592,7 @@ public final class String
                                 * is the write location in result */
 
         /* Just copy the first few lowerCase characters. */
-        System.arraycopy(value, 0, result, 0, firstUpper);
+        System.arraycopy(value, 0, result, 0, firstUpper); //前段，到第一个大写字母位置为止
 
         String lang = locale.getLanguage();
         boolean localeDependent =
@@ -2615,7 +2615,7 @@ public final class String
                 srcChar == '\u0130') { // LATIN CAPITAL LETTER I WITH DOT ABOVE
                 lowerChar = ConditionalSpecialCasing.toLowerCaseEx(this, i, locale);
             } else {
-                lowerChar = Character.toLowerCase(srcChar);
+                lowerChar = Character.toLowerCase(srcChar); //转小写
             }
             if ((lowerChar == Character.ERROR)
                     || (lowerChar >= Character.MIN_SUPPLEMENTARY_CODE_POINT)) {
@@ -2641,7 +2641,7 @@ public final class String
                 }
                 resultOffset += (mapLen - srcCount);
             } else {
-                result[i + resultOffset] = (char)lowerChar;
+                result[i + resultOffset] = (char)lowerChar; //小写char 写入数组
             }
         }
         return new String(result, 0, len + resultOffset);
@@ -2740,7 +2740,7 @@ public final class String
                 }
                 int upperCaseChar = Character.toUpperCaseEx(c);
                 if ((upperCaseChar == Character.ERROR)
-                        || (c != upperCaseChar)) {
+                        || (c != upperCaseChar)) { //匹配到小写中止循环
                     break scan;
                 }
                 firstLower += srcCount;
@@ -2774,7 +2774,7 @@ public final class String
             if (localeDependent) {
                 upperChar = ConditionalSpecialCasing.toUpperCaseEx(this, i, locale);
             } else {
-                upperChar = Character.toUpperCaseEx(srcChar);
+                upperChar = Character.toUpperCaseEx(srcChar); //转小写
             }
             if ((upperChar == Character.ERROR)
                     || (upperChar >= Character.MIN_SUPPLEMENTARY_CODE_POINT)) {
@@ -2804,7 +2804,7 @@ public final class String
                 }
                 resultOffset += (mapLen - srcCount);
             } else {
-                result[i + resultOffset] = (char)upperChar;
+                result[i + resultOffset] = (char)upperChar; //写入数组
             }
         }
         return new String(result, 0, len + resultOffset);
@@ -2870,12 +2870,12 @@ public final class String
         char[] val = value;    /* avoid getfield opcode */
 
         while ((st < len) && (val[st] <= ' ')) {
-            st++;
+            st++; //查找第一个不为空字符的索引
         }
         while ((st < len) && (val[len - 1] <= ' ')) {
-            len--;
+            len--; //从后往前，查找第一个不为空字符的索引
         }
-        return ((st > 0) || (len < value.length)) ? substring(st, len) : this;
+        return ((st > 0) || (len < value.length)) ? substring(st, len) : this; //截取
     }
 
     /**

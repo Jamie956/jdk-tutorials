@@ -103,6 +103,95 @@ public class StringTest {
         boolean b = "asd".contentEquals(sb);
     }
 
+    @Test
+    public void equalsIgnoreCase() {
+        String a = new String("asd");
+        String b = new String("ASD");
+        boolean c = a.equalsIgnoreCase(b);
+    }
+
+    @Test
+    public void compareTo() {
+        int i = "aada".compareTo("aadb");
+        int j = "aad".compareTo("aadb");
+    }
+
+    @Test
+    public void compareToIgnoreCase() {
+        int b = "aab".compareToIgnoreCase("Aab");
+        int d = "zab".compareToIgnoreCase("Aab");
+    }
+
+    @Test
+    public void regionMatches() {
+       boolean b = "asas".regionMatches(true, 0, "AsAs", 0, 4);
+    }
+
+    @Test
+    public void startsWith() {
+        boolean a = "asdasd".startsWith("asd", 0);
+    }
+
+    @Test
+    public void endsWith() {
+        boolean a = "1111rk".endsWith("rk");
+    }
+
+    @Test
+    public void hashCode1() {
+        int a = "ab".hashCode();
+    }
+
+    @Test
+    public void indexOf() {
+        int a = "aab".indexOf("b");
+    }
+
+    @Test
+    public void lastIndexOf() {
+        int a = "11111ba111a11".lastIndexOf("ba");
+    }
+
+    @Test
+    public void substring() {
+        String a = "123456".substring(2);
+    }
+
+    @Test
+    public void concat() {
+        String a = "123456".concat("789");
+    }
+
+    @Test
+    public void replace() {
+        String a = "1234561".replace('1', 'a');
+    }
+
+    @Test
+    public void split() {
+        String[] split = "1111#dddd#sdf".split("#");
+    }
+
+    @Test
+    public void join() {
+        String[] arr = {"12", "as", "f"};
+        String a = String.join("#", arr);
+    }
+
+    @Test
+    public void toLowerCase() {
+        String s = "AbaB".toLowerCase();
+    }
+
+    @Test
+    public void toUpperCase() {
+        String s = "AbaB".toUpperCase();
+    }
+
+    @Test
+    public void trim() {
+        String s = "  Ab  aB  ".trim();
+    }
 
 
 

@@ -181,7 +181,7 @@ public final class StringJoiner {
      * @param  newElement The element to add
      * @return a reference to this {@code StringJoiner}
      */
-    public StringJoiner add(CharSequence newElement) {
+    public StringJoiner add(CharSequence newElement) { //StringBuilder 追加分隔符和元素
         prepareBuilder().append(newElement);
         return this;
     }
@@ -222,7 +222,7 @@ public final class StringJoiner {
         if (value != null) {
             value.append(delimiter);
         } else {
-            value = new StringBuilder().append(prefix);
+            value = new StringBuilder().append(prefix); //初始化
         }
         return value;
     }
