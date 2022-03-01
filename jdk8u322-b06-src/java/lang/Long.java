@@ -121,7 +121,7 @@ public final class Long extends Number implements Comparable<Long> {
         if (radix < Character.MIN_RADIX || radix > Character.MAX_RADIX)
             radix = 10;
         if (radix == 10)
-            return toString(i);
+            return toString(i); //10进制的long 转字符串
         char[] buf = new char[65];
         int charPos = 64;
         boolean negative = (i < 0);
@@ -169,7 +169,7 @@ public final class Long extends Number implements Comparable<Long> {
      * @see     #toString(long, int)
      * @since 1.8
      */
-    public static String toUnsignedString(long i, int radix) {
+    public static String toUnsignedString(long i, int radix) { //long 转字符串; radix 基数
         if (i >= 0)
             return toString(i, radix);
         else {
@@ -394,7 +394,7 @@ public final class Long extends Number implements Comparable<Long> {
         if (i == Long.MIN_VALUE)
             return "-9223372036854775808";
         int size = (i < 0) ? stringSize(-i) + 1 : stringSize(i);
-        char[] buf = new char[size];
+        char[] buf = new char[size]; //按位数创建char数组
         getChars(i, size, buf);
         return new String(buf, true);
     }
@@ -426,7 +426,7 @@ public final class Long extends Number implements Comparable<Long> {
      *
      * Will fail if i == Long.MIN_VALUE
      */
-    static void getChars(long i, int index, char[] buf) {
+    static void getChars(long i, int index, char[] buf) { //long 写入char数组，核心方法
         long q;
         int r;
         int charPos = index;
@@ -438,7 +438,7 @@ public final class Long extends Number implements Comparable<Long> {
         }
 
         // Get 2 digits/iteration using longs until quotient fits into an int
-        while (i > Integer.MAX_VALUE) {
+        while (i > Integer.MAX_VALUE) { //64-32位的转换
             q = i / 100;
             // really: r = i - (q * 100);
             r = (int)(i - ((q << 6) + (q << 5) + (q << 2)));
@@ -450,7 +450,7 @@ public final class Long extends Number implements Comparable<Long> {
         // Get 2 digits/iteration using ints
         int q2;
         int i2 = (int)i;
-        while (i2 >= 65536) {
+        while (i2 >= 65536) { //Math.pow(2,16) = 65536, 32-16位的转换
             q2 = i2 / 100;
             // really: r = i2 - (q * 100);
             r = i2 - ((q2 << 6) + (q2 << 5) + (q2 << 2));
@@ -461,7 +461,7 @@ public final class Long extends Number implements Comparable<Long> {
 
         // Fall thru to fast mode for smaller numbers
         // assert(i2 <= 65536, i2);
-        for (;;) {
+        for (;;) { //16-0位的转换
             q2 = (i2 * 52429) >>> (16+3);
             r = i2 - ((q2 << 3) + (q2 << 1));  // r = i2-(q2*10) ...
             buf[--charPos] = Integer.digits[r];
@@ -474,12 +474,12 @@ public final class Long extends Number implements Comparable<Long> {
     }
 
     // Requires positive x
-    static int stringSize(long x) {
+    static int stringSize(long x) { //计算long的位数
         long p = 10;
-        for (int i=1; i<19; i++) {
-            if (x < p)
-                return i;
-            p = 10*p;
+        for (int i=1; i<19; i++) { //Math.pow(2,64) = 18446744073709552000 19位
+            if (x < p) //直到x 小于p, 4294967277 < 10000000000
+                return i; //i就是x的位数
+            p = 10*p; //每次p按10倍递增
         }
         return 19;
     }

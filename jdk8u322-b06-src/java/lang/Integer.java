@@ -229,7 +229,7 @@ public final class Integer extends Number implements Comparable<Integer> {
      * @see #toUnsignedString(int, int)
      * @since   JDK1.0.2
      */
-    public static String toHexString(int i) {
+    public static String toHexString(int i) { //10进制转16
         return toUnsignedString0(i, 4);
     }
 
@@ -267,7 +267,7 @@ public final class Integer extends Number implements Comparable<Integer> {
      * @see #toUnsignedString(int, int)
      * @since   JDK1.0.2
      */
-    public static String toOctalString(int i) {
+    public static String toOctalString(int i) { //10转8进制
         return toUnsignedString0(i, 3);
     }
 
@@ -299,7 +299,7 @@ public final class Integer extends Number implements Comparable<Integer> {
      * @see #toUnsignedString(int, int)
      * @since   JDK1.0.2
      */
-    public static String toBinaryString(int i) {
+    public static String toBinaryString(int i) { //10转2进制
         return toUnsignedString0(i, 1);
     }
 
@@ -309,7 +309,7 @@ public final class Integer extends Number implements Comparable<Integer> {
     private static String toUnsignedString0(int val, int shift) {
         // assert shift > 0 && shift <=5 : "Illegal shift value";
         int mag = Integer.SIZE - Integer.numberOfLeadingZeros(val);
-        int chars = Math.max(((mag + (shift - 1)) / shift), 1);
+        int chars = Math.max(((mag + (shift - 1)) / shift), 1); //计算转换后的位数
         char[] buf = new char[chars];
 
         formatUnsignedInt(val, shift, buf, 0, chars);
@@ -332,8 +332,8 @@ public final class Integer extends Number implements Comparable<Integer> {
         int radix = 1 << shift;
         int mask = radix - 1;
         do {
-            buf[offset + --charPos] = Integer.digits[val & mask];
-            val >>>= shift;
+            buf[offset + --charPos] = Integer.digits[val & mask]; //映射digits值，写入char[]
+            val >>>= shift; //shift=4 表示每次右移4位(1111)，即16进制每一位转换的单位
         } while (val != 0 && charPos > 0);
 
         return charPos;
@@ -430,18 +430,18 @@ public final class Integer extends Number implements Comparable<Integer> {
      *
      * Will fail if i == Integer.MIN_VALUE
      */
-    static void getChars(int i, int index, char[] buf) { //i: 需要写入数组的integer
+    static void getChars(int i, int index, char[] buf) { //i 进制转换写入char[]
         int q, r;
         int charPos = index;
         char sign = 0;
 
         if (i < 0) {
-            sign = '-';
-            i = -i; //负号转换
+            sign = '-'; //sign != 0
+            i = -i; //负号转正
         }
 
         // Generate two digits per iteration
-        while (i >= 65536) {
+        while (i >= 65536) { //?-16位
             q = i / 100;
         // really: r = i - (q * 100);
             r = i - ((q << 6) + (q << 5) + (q << 2));
@@ -452,7 +452,7 @@ public final class Integer extends Number implements Comparable<Integer> {
 
         // Fall thru to fast mode for smaller numbers
         // assert(i <= 65536, i);
-        for (;;) {
+        for (;;) { //16-0位
             q = (i * 52429) >>> (16+3); //?
             r = i - ((q << 3) + (q << 1));  // r = i-(q*10) ...
             buf [--charPos] = digits [r]; //char写入buf，i通过运算能够对应数组digits的字符
@@ -529,7 +529,7 @@ public final class Integer extends Number implements Comparable<Integer> {
      * @exception  NumberFormatException if the {@code String}
      *             does not contain a parsable {@code int}.
      */
-    public static int parseInt(String s, int radix)
+    public static int parseInt(String s, int radix) //字符串转int; radix: 参数s的进制
                 throws NumberFormatException
     {
         /*
@@ -658,7 +658,7 @@ public final class Integer extends Number implements Comparable<Integer> {
      *             does not contain a parsable {@code int}.
      * @since 1.8
      */
-    public static int parseUnsignedInt(String s, int radix)
+    public static int parseUnsignedInt(String s, int radix) //无符号字符串转int
                 throws NumberFormatException {
         if (s == null)  {
             throw new NumberFormatException("null");
@@ -667,7 +667,7 @@ public final class Integer extends Number implements Comparable<Integer> {
         int len = s.length();
         if (len > 0) {
             char firstChar = s.charAt(0);
-            if (firstChar == '-') {
+            if (firstChar == '-') { //不能包含符号
                 throw new
                     NumberFormatException(String.format("Illegal leading minus sign " +
                                                        "on unsigned string %s.", s));
@@ -828,7 +828,7 @@ public final class Integer extends Number implements Comparable<Integer> {
      */
     public static Integer valueOf(int i) {
         if (i >= IntegerCache.low && i <= IntegerCache.high)
-            return IntegerCache.cache[i + (-IntegerCache.low)];
+            return IntegerCache.cache[i + (-IntegerCache.low)]; //从缓存取
         return new Integer(i);
     }
 
@@ -1267,7 +1267,7 @@ public final class Integer extends Number implements Comparable<Integer> {
      *         conversion
      * @since 1.8
      */
-    public static long toUnsignedLong(int x) {
+    public static long toUnsignedLong(int x) { //int 转 long，不保留符号，32-16位全是0
         return ((long) x) & 0xffffffffL;
     }
 
