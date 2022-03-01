@@ -133,7 +133,7 @@ public final class Integer extends Number implements Comparable<Integer> {
 
         /* Use the faster version */
         if (radix == 10) {
-            return toString(i);
+            return toString(i); //
         }
 
         char buf[] = new char[33];
@@ -399,7 +399,7 @@ public final class Integer extends Number implements Comparable<Integer> {
             return "-2147483648";
         int size = (i < 0) ? stringSize(-i) + 1 : stringSize(i);
         char[] buf = new char[size];
-        getChars(i, size, buf);
+        getChars(i, size, buf); //int转成char写入buf
         return new String(buf, true);
     }
 
@@ -430,14 +430,14 @@ public final class Integer extends Number implements Comparable<Integer> {
      *
      * Will fail if i == Integer.MIN_VALUE
      */
-    static void getChars(int i, int index, char[] buf) {
+    static void getChars(int i, int index, char[] buf) { //i: 需要写入数组的integer
         int q, r;
         int charPos = index;
         char sign = 0;
 
         if (i < 0) {
             sign = '-';
-            i = -i;
+            i = -i; //负号转换
         }
 
         // Generate two digits per iteration
@@ -453,9 +453,9 @@ public final class Integer extends Number implements Comparable<Integer> {
         // Fall thru to fast mode for smaller numbers
         // assert(i <= 65536, i);
         for (;;) {
-            q = (i * 52429) >>> (16+3);
+            q = (i * 52429) >>> (16+3); //?
             r = i - ((q << 3) + (q << 1));  // r = i-(q*10) ...
-            buf [--charPos] = digits [r];
+            buf [--charPos] = digits [r]; //char写入buf，i通过运算能够对应数组digits的字符
             i = q;
             if (i == 0) break;
         }
@@ -471,7 +471,7 @@ public final class Integer extends Number implements Comparable<Integer> {
     static int stringSize(int x) {
         for (int i=0; ; i++)
             if (x <= sizeTable[i])
-                return i+1;
+                return i+1; //获取数字长度
     }
 
     /**
