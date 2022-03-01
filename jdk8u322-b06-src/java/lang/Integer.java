@@ -944,7 +944,7 @@ public final class Integer extends Number implements Comparable<Integer> {
      */
     @Override
     public int hashCode() {
-        return Integer.hashCode(value);
+        return Integer.hashCode(value); //value 作为hashcode
     }
 
     /**
@@ -972,7 +972,7 @@ public final class Integer extends Number implements Comparable<Integer> {
      */
     public boolean equals(Object obj) {
         if (obj instanceof Integer) {
-            return value == ((Integer)obj).intValue();
+            return value == ((Integer)obj).intValue(); //向下转型获取value比较
         }
         return false;
     }
@@ -1098,7 +1098,7 @@ public final class Integer extends Number implements Comparable<Integer> {
     public static Integer getInteger(String nm, Integer val) {
         String v = null;
         try {
-            v = System.getProperty(nm);
+            v = System.getProperty(nm); //环境变量
         } catch (IllegalArgumentException | NullPointerException e) {
         }
         if (v != null) {
@@ -1213,7 +1213,7 @@ public final class Integer extends Number implements Comparable<Integer> {
      * @since   1.2
      */
     public int compareTo(Integer anotherInteger) {
-        return compare(this.value, anotherInteger.value);
+        return compare(this.value, anotherInteger.value); //value 比较
     }
 
     /**
@@ -1246,8 +1246,8 @@ public final class Integer extends Number implements Comparable<Integer> {
      *         unsigned values
      * @since 1.8
      */
-    public static int compareUnsigned(int x, int y) {
-        return compare(x + MIN_VALUE, y + MIN_VALUE);
+    public static int compareUnsigned(int x, int y) { //无符号的数字比较
+        return compare(x + MIN_VALUE, y + MIN_VALUE); //MIN_VALUE=-2147483648
     }
 
     /**
@@ -1289,7 +1289,7 @@ public final class Integer extends Number implements Comparable<Integer> {
      * @see #remainderUnsigned
      * @since 1.8
      */
-    public static int divideUnsigned(int dividend, int divisor) {
+    public static int divideUnsigned(int dividend, int divisor) { //无符号转成long，相除
         // In lieu of tricky code, for now just use long arithmetic.
         return (int)(toUnsignedLong(dividend) / toUnsignedLong(divisor));
     }
@@ -1306,7 +1306,7 @@ public final class Integer extends Number implements Comparable<Integer> {
      * @see #divideUnsigned
      * @since 1.8
      */
-    public static int remainderUnsigned(int dividend, int divisor) {
+    public static int remainderUnsigned(int dividend, int divisor) { //无符号转成long，取模
         // In lieu of tricky code, for now just use long arithmetic.
         return (int)(toUnsignedLong(dividend) % toUnsignedLong(divisor));
     }
@@ -1320,7 +1320,7 @@ public final class Integer extends Number implements Comparable<Integer> {
      *
      * @since 1.5
      */
-    @Native public static final int SIZE = 32;
+    @Native public static final int SIZE = 32; //32位
 
     /**
      * The number of bytes used to represent a {@code int} value in two's
@@ -1343,7 +1343,7 @@ public final class Integer extends Number implements Comparable<Integer> {
      *     the specified value is itself equal to zero.
      * @since 1.5
      */
-    public static int highestOneBit(int i) {
+    public static int highestOneBit(int i) { //保留最高位1，其余为0
         // HD, Figure 3-1
         i |= (i >>  1);
         i |= (i >>  2);
@@ -1366,9 +1366,9 @@ public final class Integer extends Number implements Comparable<Integer> {
      *     the specified value is itself equal to zero.
      * @since 1.5
      */
-    public static int lowestOneBit(int i) {
+    public static int lowestOneBit(int i) { //最低位的1的值
         // HD, Section 2-1
-        return i & -i;
+        return i & -i; //1100 & 11111111111111111111111111110100
     }
 
     /**
@@ -1392,7 +1392,7 @@ public final class Integer extends Number implements Comparable<Integer> {
      *     is equal to zero.
      * @since 1.5
      */
-    public static int numberOfLeadingZeros(int i) {
+    public static int numberOfLeadingZeros(int i) { //计算二级制开头0的个数
         // HD, Figure 5-6
         if (i == 0)
             return 32;
@@ -1419,7 +1419,7 @@ public final class Integer extends Number implements Comparable<Integer> {
      *     to zero.
      * @since 1.5
      */
-    public static int numberOfTrailingZeros(int i) {
+    public static int numberOfTrailingZeros(int i) { //二级制尾部0的个数
         // HD, Figure 5-14
         int y;
         if (i == 0) return 32;

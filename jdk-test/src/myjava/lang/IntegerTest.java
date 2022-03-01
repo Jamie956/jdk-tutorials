@@ -70,45 +70,58 @@ public class IntegerTest {
     @Test
     public void valueOf2() {
         Integer i = Integer.valueOf(122);
+        Integer j = Integer.valueOf(128);
     }
 
+    @Test
+    public void Integer() {
+        Integer i = new Integer(5);
+    }
 
+    @Test
+    public void Integer1() {
+        Integer i = new Integer("67");
+    }
 
+    @Test
+    public void hashCode1() {
+        Integer i = new Integer("67");
+        int c = i.hashCode();
+    }
 
+    @Test
+    public void getInteger() {
+        Integer i = Integer.getInteger("sun.arch.data.model");
+    }
 
+    @Test
+    public void compareTo() {
+        Integer a = new Integer(67);
+        Integer b = new Integer(1);
+        int r = a.compareTo(b);
+    }
 
+    @Test
+    public void compareUnsigned() {
+        int a = Integer.compareUnsigned(-2, 1);
+        int b = Integer.compareUnsigned(2, 1);
+    }
 
+    @Test
+    public void toUnsignedLong() {
+        long a = Integer.toUnsignedLong(-2);
+    }
 
+    @Test
+    public void bitTwiddling() {
+        int a = Integer.SIZE;
+        int b = Integer.BYTES;
+        int c = Integer.highestOneBit(12);
+        int d = Integer.lowestOneBit(12);
+        int e = Integer.numberOfLeadingZeros(12);
+        int f = Integer.rotateLeft(-2, 2);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    }
 
 
 }
