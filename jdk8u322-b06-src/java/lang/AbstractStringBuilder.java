@@ -65,7 +65,7 @@ abstract class AbstractStringBuilder implements Appendable, CharSequence {
      * Creates an AbstractStringBuilder of the specified capacity.
      */
     AbstractStringBuilder(int capacity) {
-        value = new char[capacity];
+        value = new char[capacity]; //创建char[]
     }
 
     /**
@@ -122,7 +122,7 @@ abstract class AbstractStringBuilder implements Appendable, CharSequence {
         // overflow-conscious code
         if (minimumCapacity - value.length > 0) {
             value = Arrays.copyOf(value,
-                    newCapacity(minimumCapacity));
+                    newCapacity(minimumCapacity)); //计算新容量，复制char[]
         }
     }
 
@@ -147,7 +147,7 @@ abstract class AbstractStringBuilder implements Appendable, CharSequence {
      */
     private int newCapacity(int minCapacity) {
         // overflow-conscious code
-        int newCapacity = (value.length << 1) + 2;
+        int newCapacity = (value.length << 1) + 2; //扩容 2倍+2
         if (newCapacity - minCapacity < 0) {
             newCapacity = minCapacity;
         }
@@ -445,8 +445,8 @@ abstract class AbstractStringBuilder implements Appendable, CharSequence {
         if (str == null)
             return appendNull();
         int len = str.length();
-        ensureCapacityInternal(count + len);
-        str.getChars(0, len, value, count);
+        ensureCapacityInternal(count + len); //扩容
+        str.getChars(0, len, value, count); //str 复制到value[]
         count += len;
         return this;
     }
@@ -457,7 +457,7 @@ abstract class AbstractStringBuilder implements Appendable, CharSequence {
             return appendNull();
         int len = sb.length();
         ensureCapacityInternal(count + len);
-        sb.getChars(0, len, value, count);
+        sb.getChars(0, len, value, count); //sb 复制到value[]
         count += len;
         return this;
     }
@@ -488,7 +488,7 @@ abstract class AbstractStringBuilder implements Appendable, CharSequence {
         return this.append(s, 0, s.length());
     }
 
-    private AbstractStringBuilder appendNull() {
+    private AbstractStringBuilder appendNull() { //null 字符串写入char[]
         int c = count;
         ensureCapacityInternal(c + 4);
         final char[] value = this.value;
@@ -564,7 +564,7 @@ abstract class AbstractStringBuilder implements Appendable, CharSequence {
     public AbstractStringBuilder append(char[] str) {
         int len = str.length;
         ensureCapacityInternal(count + len);
-        System.arraycopy(str, 0, value, count, len);
+        System.arraycopy(str, 0, value, count, len); //直接复制
         count += len;
         return this;
     }
@@ -591,7 +591,7 @@ abstract class AbstractStringBuilder implements Appendable, CharSequence {
      *         if {@code offset < 0} or {@code len < 0}
      *         or {@code offset+len > str.length}
      */
-    public AbstractStringBuilder append(char str[], int offset, int len) {
+    public AbstractStringBuilder append(char str[], int offset, int len) { //指定偏移和长度插入
         if (len > 0)                // let arraycopy report AIOOBE for len < 0
             ensureCapacityInternal(count + len);
         System.arraycopy(str, offset, value, count, len);
@@ -611,7 +611,7 @@ abstract class AbstractStringBuilder implements Appendable, CharSequence {
      * @param   b   a {@code boolean}.
      * @return  a reference to this object.
      */
-    public AbstractStringBuilder append(boolean b) {
+    public AbstractStringBuilder append(boolean b) { //追加字符串boolean
         if (b) {
             ensureCapacityInternal(count + 4);
             value[count++] = 't';
@@ -645,7 +645,7 @@ abstract class AbstractStringBuilder implements Appendable, CharSequence {
      * @return  a reference to this object.
      */
     @Override
-    public AbstractStringBuilder append(char c) {
+    public AbstractStringBuilder append(char c) { //追加一个char
         ensureCapacityInternal(count + 1);
         value[count++] = c;
         return this;
@@ -669,10 +669,10 @@ abstract class AbstractStringBuilder implements Appendable, CharSequence {
             return this;
         }
         int appendedLength = (i < 0) ? Integer.stringSize(-i) + 1
-                                     : Integer.stringSize(i);
+                                     : Integer.stringSize(i); //int 10进制位数
         int spaceNeeded = count + appendedLength;
         ensureCapacityInternal(spaceNeeded);
-        Integer.getChars(i, spaceNeeded, value);
+        Integer.getChars(i, spaceNeeded, value); //写入value[]
         count = spaceNeeded;
         return this;
     }
@@ -760,7 +760,7 @@ abstract class AbstractStringBuilder implements Appendable, CharSequence {
             throw new StringIndexOutOfBoundsException();
         int len = end - start;
         if (len > 0) {
-            System.arraycopy(value, start+len, value, start, count-end);
+            System.arraycopy(value, start+len, value, start, count-end); //覆盖要删除的char
             count -= len;
         }
         return this;
@@ -822,7 +822,7 @@ abstract class AbstractStringBuilder implements Appendable, CharSequence {
     public AbstractStringBuilder deleteCharAt(int index) {
         if ((index < 0) || (index >= count))
             throw new StringIndexOutOfBoundsException(index);
-        System.arraycopy(value, index+1, value, index, count-index-1);
+        System.arraycopy(value, index+1, value, index, count-index-1); //覆盖
         count--;
         return this;
     }
@@ -857,11 +857,11 @@ abstract class AbstractStringBuilder implements Appendable, CharSequence {
         if (end > count)
             end = count;
         int len = str.length();
-        int newCount = count + len - (end - start);
+        int newCount = count + len - (end - start); //计算新长度
         ensureCapacityInternal(newCount);
 
-        System.arraycopy(value, end, value, start + len, count - end);
-        str.getChars(value, start);
+        System.arraycopy(value, end, value, start + len, count - end); //腾空位置
+        str.getChars(value, start); //str 复制到value[]
         count = newCount;
         return this;
     }
@@ -967,8 +967,8 @@ abstract class AbstractStringBuilder implements Appendable, CharSequence {
                 "offset " + offset + ", len " + len + ", str.length "
                 + str.length);
         ensureCapacityInternal(count + len);
-        System.arraycopy(value, index, value, index + len, count - index);
-        System.arraycopy(str, offset, value, index, len);
+        System.arraycopy(value, index, value, index + len, count - index); //腾空位置
+        System.arraycopy(str, offset, value, index, len); //str插入
         count += len;
         return this;
     }
@@ -1326,7 +1326,7 @@ abstract class AbstractStringBuilder implements Appendable, CharSequence {
      *          substring, {@code -1} is returned.
      */
     public int indexOf(String str) {
-        return indexOf(str, 0);
+        return indexOf(str, 0); //从0开始找
     }
 
     /**
@@ -1409,15 +1409,15 @@ abstract class AbstractStringBuilder implements Appendable, CharSequence {
      *
      * @return  a reference to this object.
      */
-    public AbstractStringBuilder reverse() {
+    public AbstractStringBuilder reverse() { //逆序
         boolean hasSurrogates = false;
         int n = count - 1;
-        for (int j = (n-1) >> 1; j >= 0; j--) {
+        for (int j = (n-1) >> 1; j >= 0; j--) { //中点 (n-1) >> 1
             int k = n - j;
             char cj = value[j];
             char ck = value[k];
             value[j] = ck;
-            value[k] = cj;
+            value[k] = cj; //对称交换
             if (Character.isSurrogate(cj) ||
                 Character.isSurrogate(ck)) {
                 hasSurrogates = true;

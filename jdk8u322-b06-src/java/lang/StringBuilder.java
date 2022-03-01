@@ -138,7 +138,7 @@ public final class StringBuilder
 
     @Override
     public StringBuilder append(String str) {
-        super.append(str);
+        super.append(str); //父类append
         return this;
     }
 
