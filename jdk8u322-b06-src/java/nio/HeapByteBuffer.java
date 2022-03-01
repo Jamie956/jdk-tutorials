@@ -54,7 +54,7 @@ class HeapByteBuffer
 
     HeapByteBuffer(int cap, int lim) {            // package-private
 
-        super(-1, 0, lim, cap, new byte[cap], 0);
+        super(-1, 0, lim, cap, new byte[cap], 0); //创建byte[]
         /*
         hb = new byte[cap];
         offset = 0;
@@ -98,7 +98,7 @@ class HeapByteBuffer
         int pos = this.position();
         int lim = this.limit();
         int rem = (pos <= lim ? lim - pos : 0);
-        return new HeapByteBuffer(hb,
+        return new HeapByteBuffer(hb, //再新创建一个 HeapByteBuffer 实例，共享同一个hb
                                         -1,
                                         0,
                                         rem,

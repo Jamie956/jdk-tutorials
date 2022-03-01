@@ -182,10 +182,10 @@ public abstract class Buffer {
         Spliterator.SIZED | Spliterator.SUBSIZED | Spliterator.ORDERED;
 
     // Invariants: mark <= position <= limit <= capacity
-    private int mark = -1;
-    private int position = 0;
-    private int limit;
-    private int capacity;
+    private int mark = -1; //标记索引
+    private int position = 0; //下一个准备读写的元素的索引
+    private int limit; //首个不可读写元素的索引
+    private int capacity; //容纳元素的数量
 
     // Used only by direct buffers
     // NOTE: hoisted here for speed in JNI GetDirectBufferAddress
@@ -239,7 +239,7 @@ public abstract class Buffer {
      * @throws  IllegalArgumentException
      *          If the preconditions on <tt>newPosition</tt> do not hold
      */
-    public final Buffer position(int newPosition) {
+    public final Buffer position(int newPosition) { //初始化position
         if ((newPosition > limit) || (newPosition < 0))
             throw new IllegalArgumentException();
         if (mark > newPosition) mark = -1;
@@ -270,7 +270,7 @@ public abstract class Buffer {
      * @throws  IllegalArgumentException
      *          If the preconditions on <tt>newLimit</tt> do not hold
      */
-    public final Buffer limit(int newLimit) {
+    public final Buffer limit(int newLimit) { //初始化limit
         if ((newLimit > capacity) || (newLimit < 0))
             throw new IllegalArgumentException();
         limit = newLimit;

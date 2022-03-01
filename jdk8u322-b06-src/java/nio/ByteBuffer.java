@@ -332,7 +332,7 @@ public abstract class ByteBuffer
     public static ByteBuffer allocate(int capacity) {
         if (capacity < 0)
             throw new IllegalArgumentException();
-        return new HeapByteBuffer(capacity, capacity);
+        return new HeapByteBuffer(capacity, capacity); //创建HeapByteBuffer 实例、ByteBuffer 实例、Buffer 实例
     }
 
     /**
@@ -366,7 +366,7 @@ public abstract class ByteBuffer
      *          If the preconditions on the <tt>offset</tt> and <tt>length</tt>
      *          parameters do not hold
      */
-    public static ByteBuffer wrap(byte[] array,
+    public static ByteBuffer wrap(byte[] array, //参数array 写入 Buffer
                                     int offset, int length)
     {
         try {
@@ -514,7 +514,7 @@ public abstract class ByteBuffer
      *
      * @return  The new byte buffer
      */
-    public abstract ByteBuffer slice();
+    public abstract ByteBuffer slice(); //方法由实现类 HeapByteBuffer 实现
 
     /**
      * Creates a new byte buffer that shares this buffer's content.
