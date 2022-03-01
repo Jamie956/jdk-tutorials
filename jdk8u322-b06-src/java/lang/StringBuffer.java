@@ -176,7 +176,7 @@ import java.util.Arrays;
 
 
     @Override
-    public synchronized void ensureCapacity(int minimumCapacity) {
+    public synchronized void ensureCapacity(int minimumCapacity) { //主动扩容
         super.ensureCapacity(minimumCapacity);
     }
 
@@ -247,7 +247,7 @@ import java.util.Arrays;
     @Override
     public synchronized void getChars(int srcBegin, int srcEnd, char[] dst,
                                       int dstBegin)
-    {
+    { //StringBuffer srcBegin-srcEnd范围的数组数据 写到 dst数组，从dstBegin开始
         super.getChars(srcBegin, srcEnd, dst, dstBegin);
     }
 

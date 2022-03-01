@@ -171,7 +171,7 @@ abstract class AbstractStringBuilder implements Appendable, CharSequence {
      * Calling this method may, but is not required to, affect the value
      * returned by a subsequent call to the {@link #capacity()} method.
      */
-    public void trimToSize() {
+    public void trimToSize() { //value复制、替换
         if (count < value.length) {
             value = Arrays.copyOf(value, count);
         }
@@ -208,10 +208,10 @@ abstract class AbstractStringBuilder implements Appendable, CharSequence {
         ensureCapacityInternal(newLength);
 
         if (count < newLength) {
-            Arrays.fill(value, count, newLength, '\0');
+            Arrays.fill(value, count, newLength, '\0'); //填充数组设为0
         }
 
-        count = newLength;
+        count = newLength; //更新count
     }
 
     /**
