@@ -55,14 +55,73 @@ public class ByteBufferTest {
         ByteBuffer s = b.slice();
     }
 
+    @Test
+    public void duplicate() {
+        byte[] bs = {96, 97, 98, 99};
+        ByteBuffer b = ByteBuffer.wrap(bs, 0, 4);
+        ByteBuffer s = b.duplicate();
+    }
 
+    @Test
+    public void asReadOnlyBuffer() {
+        byte[] bs = {96, 97, 98, 99};
+        ByteBuffer b = ByteBuffer.wrap(bs, 0, 4);
+        ByteBuffer s = b.asReadOnlyBuffer();
+    }
 
+    @Test
+    public void get() {
+        byte[] bs = {96, 97, 98, 99};
+        ByteBuffer b = ByteBuffer.wrap(bs, 0, 4);
+        byte c1 = b.get();
+        byte c2 = b.get();
+        byte c3 = b.get();
+    }
 
+    @Test
+    public void put() {
+        byte[] bs = {96, 97, 98, 99};
+        ByteBuffer b = ByteBuffer.wrap(bs, 0, 4);
+        byte bt = 100;
+        b.put(bt);
+    }
 
+    @Test
+    public void get2() {
+        byte[] bs = {96, 97, 98, 99};
+        ByteBuffer b = ByteBuffer.wrap(bs, 0, 4);
+        byte c1 = b.get(0);
+        byte c2 = b.get(1);
+        byte c3 = b.get(3);
+    }
 
+    @Test
+    public void put2() {
+        byte[] bs = {96, 97, 98, 99};
+        ByteBuffer b = ByteBuffer.wrap(bs, 0, 4);
+        byte bt = 100;
+        b.put(3, bt);
+    }
 
+    @Test
+    public void get3() {
+        byte[] bs = {96, 97, 98, 99};
+        ByteBuffer b = ByteBuffer.wrap(bs, 0, 4);
 
+        byte[] dst = new byte[12];
+        ByteBuffer c = b.get(dst, 0, 3);
+    }
 
+    @Test
+    public void put3() {
+        byte[] bs = {96, 97, 98, 99};
+        ByteBuffer b = ByteBuffer.wrap(bs, 0, 4);
+
+        byte[] bs2 = {100, 101, 102, 103};
+        ByteBuffer b2 = ByteBuffer.wrap(bs2, 0, 4);
+
+        b.put(b2);
+    }
 
 
 

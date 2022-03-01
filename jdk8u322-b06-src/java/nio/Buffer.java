@@ -500,7 +500,7 @@ public abstract class Buffer {
         int p = position;
         if (p >= limit)
             throw new BufferUnderflowException();
-        position = p + 1;
+        position = p + 1; //更新读取下一个元素的索引
         return p;
     }
 

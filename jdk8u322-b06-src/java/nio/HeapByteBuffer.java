@@ -99,7 +99,7 @@ class HeapByteBuffer
         int lim = this.limit();
         int rem = (pos <= lim ? lim - pos : 0);
         return new HeapByteBuffer(hb, //再新创建一个 HeapByteBuffer 实例，共享同一个hb
-                                        -1,
+                                        -1, //重置mark
                                         0,
                                         rem,
                                         rem,
@@ -107,8 +107,8 @@ class HeapByteBuffer
     }
 
     public ByteBuffer duplicate() {
-        return new HeapByteBuffer(hb,
-                                        this.markValue(),
+        return new HeapByteBuffer(hb, //共用同一个byte[]
+                                        this.markValue(), //使用原来的mark
                                         this.position(),
                                         this.limit(),
                                         this.capacity(),
@@ -135,11 +135,11 @@ class HeapByteBuffer
     }
 
     public byte get() {
-        return hb[ix(nextGetIndex())];
+        return hb[ix(nextGetIndex())]; //读取byte[]，索引是 position+offset
     }
 
     public byte get(int i) {
-        return hb[ix(checkIndex(i))];
+        return hb[ix(checkIndex(i))]; //读取byte[]，索引是 i+offset
     }
 
 
@@ -148,13 +148,13 @@ class HeapByteBuffer
 
 
 
-    public ByteBuffer get(byte[] dst, int offset, int length) {
+    public ByteBuffer get(byte[] dst, int offset, int length) { //将byte[]写到参数数组
         checkBounds(offset, length, dst.length);
         int pos = position();
         if (length > limit() - pos)
             throw new BufferUnderflowException();
         System.arraycopy(hb, ix(pos), dst, offset, length);
-        position(pos + length);
+        position(pos + length); //已读length个元素，更新position
         return this;
     }
 
@@ -170,7 +170,7 @@ class HeapByteBuffer
 
     public ByteBuffer put(byte x) {
 
-        hb[ix(nextPutIndex())] = x;
+        hb[ix(nextPutIndex())] = x; //position 位置写入参数x
         return this;
 
 
@@ -179,7 +179,7 @@ class HeapByteBuffer
 
     public ByteBuffer put(int i, byte x) {
 
-        hb[ix(checkIndex(i))] = x;
+        hb[ix(checkIndex(i))] = x; //指定索引位置，参数x写入byte[]
         return this;
 
 
@@ -200,19 +200,19 @@ class HeapByteBuffer
 
     }
 
-    public ByteBuffer put(ByteBuffer src) {
+    public ByteBuffer put(ByteBuffer src) { //将参数buffer byte[] 写到本类的byte[]
 
         if (src instanceof HeapByteBuffer) {
             if (src == this)
                 throw new IllegalArgumentException();
-            HeapByteBuffer sb = (HeapByteBuffer)src;
+            HeapByteBuffer sb = (HeapByteBuffer)src; //instanceof 的前提下，向下转型
             int pos = position();
             int sbpos = sb.position();
             int n = sb.limit() - sbpos;
             if (n > limit() - pos)
                 throw new BufferOverflowException();
             System.arraycopy(sb.hb, sb.ix(sbpos),
-                             hb, ix(pos), n);
+                             hb, ix(pos), n); //参数byte[] 写到本类byte[]
             sb.position(sbpos + n);
             position(pos + n);
         } else if (src.isDirect()) {

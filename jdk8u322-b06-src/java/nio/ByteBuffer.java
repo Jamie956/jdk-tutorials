@@ -773,7 +773,7 @@ public abstract class ByteBuffer
         if (isReadOnly())
             throw new ReadOnlyBufferException();
         int n = src.remaining();
-        if (n > remaining())
+        if (n > remaining()) //剩余空间不够
             throw new BufferOverflowException();
         for (int i = 0; i < n; i++)
             put(src.get());
