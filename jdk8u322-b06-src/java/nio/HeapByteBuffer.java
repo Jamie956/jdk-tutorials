@@ -186,13 +186,13 @@ class HeapByteBuffer
 
     }
 
-    public ByteBuffer put(byte[] src, int offset, int length) {
+    public ByteBuffer put(byte[] src, int offset, int length) { //将参数src[]写入byte[]
 
         checkBounds(offset, length, src.length);
         int pos = position();
         if (length > limit() - pos)
             throw new BufferOverflowException();
-        System.arraycopy(src, offset, hb, ix(pos), length);
+        System.arraycopy(src, offset, hb, ix(pos), length); //复制到hb 的position+offset位置
         position(pos + length);
         return this;
 
@@ -231,13 +231,13 @@ class HeapByteBuffer
 
     }
 
-    public ByteBuffer compact() {
+    public ByteBuffer compact() { //剩余可读复制到0位置(加offset)开始
 
         int pos = position();
         int lim = limit();
         assert (pos <= lim);
-        int rem = (pos <= lim ? lim - pos : 0);
-        System.arraycopy(hb, ix(pos), hb, ix(0), rem);
+        int rem = (pos <= lim ? lim - pos : 0); //剩余可读长度
+        System.arraycopy(hb, ix(pos), hb, ix(0), rem); //剩余可读复制到0位置开始
         position(rem);
         limit(capacity());
         discardMark();
@@ -252,12 +252,12 @@ class HeapByteBuffer
 
 
     byte _get(int i) {                          // package-private
-        return hb[i];
+        return hb[i]; //直接从byte[]取值，default 修饰，包私有，同一包下才能访问
     }
 
     void _put(int i, byte b) {                  // package-private
 
-        hb[i] = b;
+        hb[i] = b; //直接写入
 
 
 
@@ -267,8 +267,8 @@ class HeapByteBuffer
 
 
 
-    public char getChar() {
-        return Bits.getChar(this, ix(nextGetIndex(2)), bigEndian);
+    public char getChar() { //从Byte[]读取2位byte元素，将它们组成cahr
+        return Bits.getChar(this, ix(nextGetIndex(2)), bigEndian); //position 移动2位
     }
 
     public char getChar(int i) {
@@ -295,7 +295,7 @@ class HeapByteBuffer
 
     }
 
-    public CharBuffer asCharBuffer() {
+    public CharBuffer asCharBuffer() { //byteBuffer 转成 charBuffer
         int pos = position();
         int size = (limit() - pos) >> 1;
         int off = offset + pos;

@@ -65,7 +65,7 @@ class Bits {                            // package-private
     // -- get/put char --
 
     static private char makeChar(byte b1, byte b0) {
-        return (char)((b1 << 8) | (b0 & 0xff));
+        return (char)((b1 << 8) | (b0 & 0xff)); //b1 升高八位 按位或 b0(保留1补0)
     }
 
     static char getCharL(ByteBuffer bb, int bi) {
@@ -78,7 +78,7 @@ class Bits {                            // package-private
                         _get(a    ));
     }
 
-    static char getCharB(ByteBuffer bb, int bi) {
+    static char getCharB(ByteBuffer bb, int bi) { //读两位byte 转成char
         return makeChar(bb._get(bi    ),
                         bb._get(bi + 1));
     }
@@ -96,7 +96,7 @@ class Bits {                            // package-private
         return bigEndian ? getCharB(a) : getCharL(a);
     }
 
-    private static byte char1(char x) { return (byte)(x >> 8); }
+    private static byte char1(char x) { return (byte)(x >> 8); } //与get 相反计算，右移8位
     private static byte char0(char x) { return (byte)(x     ); }
 
     static void putCharL(ByteBuffer bb, int bi, char x) {

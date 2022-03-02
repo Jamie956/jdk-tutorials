@@ -259,7 +259,7 @@ package java.nio;
  * @since 1.4
  */
 
-public abstract class ByteBuffer
+public abstract class ByteBuffer //ByteBuffer 是抽象类不能直接实例化，但是定义了静态方法去实例化 HeapByteBuffer 和 DirectByteBuffer，它们直接或间接继承了 ByteBuffer，根据不同的实例重载方法
     extends Buffer
     implements Comparable<ByteBuffer>
 {
@@ -1080,7 +1080,7 @@ public abstract class ByteBuffer
      *
      * @return  <tt>true</tt> if, and only if, this buffer is direct
      */
-    public abstract boolean isDirect();
+    public abstract boolean isDirect(); //判断是否直接内存
 
 
 
@@ -1123,7 +1123,7 @@ public abstract class ByteBuffer
     public int hashCode() {
         int h = 1;
         int p = position();
-        for (int i = limit() - 1; i >= p; i--)
+        for (int i = limit() - 1; i >= p; i--) //对 position-limit 范围内的元素 hash
 
 
 
@@ -1165,21 +1165,21 @@ public abstract class ByteBuffer
      *           given object
      */
     public boolean equals(Object ob) {
-        if (this == ob)
+        if (this == ob) //同一实例
             return true;
-        if (!(ob instanceof ByteBuffer))
+        if (!(ob instanceof ByteBuffer)) //非ByteBuffer
             return false;
-        ByteBuffer that = (ByteBuffer)ob;
+        ByteBuffer that = (ByteBuffer)ob; //instanceof true 向下转型
         int thisPos = this.position();
         int thisLim = this.limit();
         int thatPos = that.position();
         int thatLim = that.limit();
         int thisRem = thisLim - thisPos;
         int thatRem = thatLim - thatPos;
-        if (thisRem < 0 || thisRem != thatRem)
+        if (thisRem < 0 || thisRem != thatRem) //this 没有可读元素就认为不相等，或者this 和参数实例对象的剩余可读元素不一致也认为不相等
             return false;
         for (int i = thisLim - 1, j = thatLim - 1; i >= thisPos; i--, j--)
-            if (!equals(this.get(i), that.get(j)))
+            if (!equals(this.get(i), that.get(j))) //从后往前双指针遍历，byte元素不相等返回false
                 return false;
         return true;
     }
@@ -1221,15 +1221,15 @@ public abstract class ByteBuffer
         int thatPos = that.position();
         int thatRem = that.limit() - thatPos;
         int length = Math.min(thisRem, thatRem);
-        if (length < 0)
+        if (length < 0) //无可读byte 返回-1
             return -1;
         int n = thisPos + Math.min(thisRem, thatRem);
-        for (int i = thisPos, j = thatPos; i < n; i++, j++) {
-            int cmp = compare(this.get(i), that.get(j));
+        for (int i = thisPos, j = thatPos; i < n; i++, j++) { //2个byte[] 从各自的position开始遍历
+            int cmp = compare(this.get(i), that.get(j)); //逐个比较
             if (cmp != 0)
                 return cmp;
         }
-        return thisRem - thatRem;
+        return thisRem - thatRem; //2个byte[] 剩余可读元素的个数不一致 且可读元素个数比较小的那一组元素与另一组一一对象相等时，最终比较它们的长度，thisRem - thatRem 表示 this.compare(that)
     }
 
     private static int compare(byte x, byte y) {
