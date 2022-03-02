@@ -69,7 +69,7 @@ class ServerSocketAdaptor                        // package-private
     // ## super will create a useless impl
     private ServerSocketAdaptor(ServerSocketChannelImpl ssc)
         throws IOException
-    {
+    { //构造父类 ServerSocket，setImpl 实例化server socket
         this.ssc = ssc;
     }
 

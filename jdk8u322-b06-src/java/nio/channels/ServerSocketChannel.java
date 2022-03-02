@@ -266,7 +266,7 @@ public abstract class ServerSocketChannel
      * @throws  IOException
      *          If some other I/O error occurs
      */
-    public abstract SocketChannel accept() throws IOException;
+    public abstract SocketChannel accept() throws IOException; //监听 SocketChannel
 
     /**
      * {@inheritDoc}

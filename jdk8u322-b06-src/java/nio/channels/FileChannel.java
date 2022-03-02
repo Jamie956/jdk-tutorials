@@ -551,7 +551,7 @@ public abstract class FileChannel
      * @throws  IOException
      *          If some other I/O error occurs
      */
-    public abstract void force(boolean metaData) throws IOException;
+    public abstract void force(boolean metaData) throws IOException; //将数据刷出到磁盘，但不包括元数据
 
     /**
      * Transfers bytes from this channel's file to the given writable byte

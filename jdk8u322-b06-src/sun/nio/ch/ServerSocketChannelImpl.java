@@ -228,7 +228,7 @@ class ServerSocketChannelImpl
         return this;
     }
 
-    public SocketChannel accept() throws IOException {
+    public SocketChannel accept() throws IOException { //监听socket channel
         synchronized (lock) {
             if (!isOpen())
                 throw new ClosedChannelException();
@@ -246,8 +246,8 @@ class ServerSocketChannelImpl
                     return null;
                 thread = NativeThread.current();
                 for (;;) {
-                    n = accept(this.fd, newfd, isaa);
-                    if ((n == IOStatus.INTERRUPTED) && isOpen())
+                    n = accept(this.fd, newfd, isaa); //native accept, 监听、阻塞
+                    if ((n == IOStatus.INTERRUPTED) && isOpen()) //当监听到连接会继续往下执行
                         continue;
                     break;
                 }
@@ -429,7 +429,7 @@ class ServerSocketChannelImpl
     // connections are pending) or IOStatus.INTERRUPTED.
     //
     private native int accept0(FileDescriptor ssfd, FileDescriptor newfd,
-                               InetSocketAddress[] isaa)
+                               InetSocketAddress[] isaa) //成功则返回1
         throws IOException;
 
     private static native void initIDs();
