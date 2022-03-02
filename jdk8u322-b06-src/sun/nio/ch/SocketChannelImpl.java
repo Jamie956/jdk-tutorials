@@ -132,7 +132,7 @@ class SocketChannelImpl
         this.remoteAddress = remote;
     }
 
-    public Socket socket() {
+    public Socket socket() { //实现父类的抽象方法
         synchronized (stateLock) {
             if (socket == null)
                 socket = SocketAdaptor.create(this);
@@ -295,7 +295,7 @@ class SocketChannelImpl
         if (buf == null)
             throw new NullPointerException();
 
-        synchronized (readLock) {
+        synchronized (readLock) { //不允许其他线程进入readLock
             if (!ensureReadOpen())
                 return -1;
             int n = 0;
@@ -376,7 +376,7 @@ class SocketChannelImpl
                 // except that the shutdown operation plays the role of
                 // nd.preClose().
                 for (;;) {
-                    n = IOUtil.read(fd, buf, -1, nd);
+                    n = IOUtil.read(fd, buf, -1, nd); //缓冲区读取到ByteBuffer
                     if ((n == IOStatus.INTERRUPTED) && isOpen()) {
                         // The system call was interrupted but the channel
                         // is still open, so retry
@@ -591,7 +591,7 @@ class SocketChannelImpl
 
     public boolean isConnected() {
         synchronized (stateLock) {
-            return (state == ST_CONNECTED);
+            return (state == ST_CONNECTED); //ST_CONNECTED == 2
         }
     }
 
@@ -692,7 +692,7 @@ class SocketChannelImpl
     public boolean finishConnect() throws IOException {
         synchronized (readLock) {
             synchronized (writeLock) {
-                synchronized (stateLock) {
+                synchronized (stateLock) { //不允许其他线程进入 stateLock
                     if (!isOpen())
                         throw new ClosedChannelException();
                     if (state == ST_CONNECTED)

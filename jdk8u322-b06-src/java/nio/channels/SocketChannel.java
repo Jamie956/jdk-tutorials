@@ -299,7 +299,7 @@ public abstract class SocketChannel
      *
      * @return  A socket associated with this channel
      */
-    public abstract Socket socket();
+    public abstract Socket socket(); //获取net socket, 由子类实现
 
     /**
      * Tells whether or not this channel's network socket is connected.
@@ -317,7 +317,7 @@ public abstract class SocketChannel
      *          initiated on this channel but not yet completed by invoking the
      *          {@link #finishConnect finishConnect} method
      */
-    public abstract boolean isConnectionPending();
+    public abstract boolean isConnectionPending(); //是否正在连接
 
     /**
      * Connects this channel's socket.
@@ -464,7 +464,7 @@ public abstract class SocketChannel
      * @throws  NotYetConnectedException
      *          If this channel is not yet connected
      */
-    public abstract int read(ByteBuffer dst) throws IOException;
+    public abstract int read(ByteBuffer dst) throws IOException; //子类实现
 
     /**
      * @throws  NotYetConnectedException

@@ -74,7 +74,7 @@ class SocketAdaptor
         this.sc = sc;
     }
 
-    public static Socket create(SocketChannelImpl sc) {
+    public static Socket create(SocketChannelImpl sc) { //nio包下的socket适配器创建socket
         try {
             return new SocketAdaptor(sc);
         } catch (SocketException e) {
