@@ -79,6 +79,7 @@ Debug and comments step
 - channels
   - ServerSocketChannel 注释
   - SocketChannel 当前
+  - AbstractSelectableChannel
   - DatagramChannel
   - Selector
   - SelectionKey

@@ -164,7 +164,7 @@ class SocketChannelImpl
     {
         if (name == null)
             throw new NullPointerException();
-        if (!supportedOptions().contains(name))
+        if (!supportedOptions().contains(name)) //排除不支持的options
             throw new UnsupportedOperationException("'" + name + "' not supported");
 
         synchronized (stateLock) {
@@ -185,7 +185,7 @@ class SocketChannelImpl
             }
 
             // no options that require special handling
-            Net.setSocketOption(fd, Net.UNSPEC, name, value);
+            Net.setSocketOption(fd, Net.UNSPEC, name, value); //设置 option
             return this;
         }
     }
@@ -581,7 +581,7 @@ class SocketChannelImpl
                         sm.checkListen(isa.getPort());
                     }
                     NetHooks.beforeTcpBind(fd, isa.getAddress(), isa.getPort());
-                    Net.bind(fd, isa.getAddress(), isa.getPort());
+                    Net.bind(fd, isa.getAddress(), isa.getPort()); //绑定地址
                     localAddress = Net.localAddress(fd);
                 }
             }
@@ -780,7 +780,7 @@ class SocketChannelImpl
             if (!isConnected())
                 throw new NotYetConnectedException();
             if (isInputOpen) {
-                Net.shutdown(fd, Net.SHUT_RD);
+                Net.shutdown(fd, Net.SHUT_RD); //关闭read
                 if (readerThread != 0)
                     NativeThread.signal(readerThread);
                 isInputOpen = false;
@@ -797,7 +797,7 @@ class SocketChannelImpl
             if (!isConnected())
                 throw new NotYetConnectedException();
             if (isOutputOpen) {
-                Net.shutdown(fd, Net.SHUT_WR);
+                Net.shutdown(fd, Net.SHUT_WR); //关闭write
                 if (writerThread != 0)
                     NativeThread.signal(writerThread);
                 isOutputOpen = false;

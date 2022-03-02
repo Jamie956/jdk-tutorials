@@ -235,7 +235,7 @@ public abstract class SocketChannel
      * @since 1.7
      */
     @Override
-    public abstract SocketChannel bind(SocketAddress local)
+    public abstract SocketChannel bind(SocketAddress local) //子类 SocketChannelImpl 实现
         throws IOException;
 
     /**
@@ -248,7 +248,7 @@ public abstract class SocketChannel
      */
     @Override
     public abstract <T> SocketChannel setOption(SocketOption<T> name, T value)
-        throws IOException;
+        throws IOException; //子类 SocketChannelImpl 实现
 
     /**
      * Shutdown the connection for reading without closing the channel.
