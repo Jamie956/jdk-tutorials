@@ -696,7 +696,7 @@ public abstract class ByteBuffer //ByteBuffer 是抽象类不能直接实例化�
             throw new BufferUnderflowException();
         int end = offset + length;
         for (int i = offset; i < end; i++)
-            dst[i] = get();
+            dst[i] = get(); //写到参数dst byte[]
         return this;
     }
 
@@ -831,7 +831,7 @@ public abstract class ByteBuffer //ByteBuffer 是抽象类不能直接实例化�
      * @throws  ReadOnlyBufferException
      *          If this buffer is read-only
      */
-    public ByteBuffer put(byte[] src, int offset, int length) {
+    public ByteBuffer put(byte[] src, int offset, int length) { //参数src 数组写入this byte数组
         checkBounds(offset, length, src.length);
         if (length > remaining())
             throw new BufferOverflowException();

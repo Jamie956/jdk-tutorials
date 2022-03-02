@@ -75,7 +75,7 @@ public class FileChannelImpl
     private final NativeThreadSet threads = new NativeThreadSet(2);
 
     // Lock for operations involving position and size
-    private final Object positionLock = new Object();
+    private final Object positionLock = new Object(); //读写数据时上锁
 
     private FileChannelImpl(FileDescriptor fd, String path, boolean readable,
                             boolean writable, boolean append, Object parent)
@@ -143,7 +143,7 @@ public class FileChannelImpl
 
     }
 
-    public int read(ByteBuffer dst) throws IOException {
+    public int read(ByteBuffer dst) throws IOException { //实现父类方法，将file channel数据写入dst
         ensureOpen();
         if (!readable)
             throw new NonReadableChannelException();
@@ -156,8 +156,8 @@ public class FileChannelImpl
                 if (!isOpen())
                     return 0;
                 do {
-                    n = IOUtil.read(fd, dst, -1, nd);
-                } while ((n == IOStatus.INTERRUPTED) && isOpen());
+                    n = IOUtil.read(fd, dst, -1, nd); //写入byteBuffer
+                } while ((n == IOStatus.INTERRUPTED) && isOpen()); //如果IO状态是中断，需要重试
                 return IOStatus.normalize(n);
             } finally {
                 threads.remove(ti);
@@ -169,7 +169,7 @@ public class FileChannelImpl
 
     public long read(ByteBuffer[] dsts, int offset, int length)
         throws IOException
-    {
+    { //file channel 数据写到buffer数组，从buffer数组的offset位置开始写，写的buffer个数为length
         if ((offset < 0) || (length < 0) || (offset > dsts.length - length))
             throw new IndexOutOfBoundsException();
         ensureOpen();
@@ -261,7 +261,7 @@ public class FileChannelImpl
                     return 0;
                 do {
                     // in append-mode then position is advanced to end before writing
-                    p = (append) ? nd.size(fd) : nd.seek(fd, -1);
+                    p = (append) ? nd.size(fd) : nd.seek(fd, -1); //查position
                 } while ((p == IOStatus.INTERRUPTED) && isOpen());
                 return IOStatus.normalize(p);
             } finally {
@@ -307,7 +307,7 @@ public class FileChannelImpl
                 if (!isOpen())
                     return -1;
                 do {
-                    s = nd.size(fd);
+                    s = nd.size(fd); //描述符方法，取数据长度大小
                 } while ((s == IOStatus.INTERRUPTED) && isOpen());
                 return IOStatus.normalize(s);
             } finally {
@@ -318,7 +318,7 @@ public class FileChannelImpl
         }
     }
 
-    public FileChannel truncate(long newSize) throws IOException {
+    public FileChannel truncate(long newSize) throws IOException { //对file 的前size位进行截取
         ensureOpen();
         if (newSize < 0)
             throw new IllegalArgumentException("Negative size");

@@ -329,7 +329,7 @@ public abstract class FileChannel
      */
     public static FileChannel open(Path path, OpenOption... options)
         throws IOException
-    {
+    { //打开管道
         Set<OpenOption> set = new HashSet<OpenOption>(options.length);
         Collections.addAll(set, options);
         return open(path, set, NO_ATTRIBUTES);
@@ -345,7 +345,7 @@ public abstract class FileChannel
      * read.  Otherwise this method behaves exactly as specified in the {@link
      * ReadableByteChannel} interface. </p>
      */
-    public abstract int read(ByteBuffer dst) throws IOException;
+    public abstract int read(ByteBuffer dst) throws IOException; //file channel 数据写到 buffer
 
     /**
      * Reads a sequence of bytes from this channel into a subsequence of the
@@ -382,7 +382,7 @@ public abstract class FileChannel
      * behaves exactly as specified by the {@link WritableByteChannel}
      * interface. </p>
      */
-    public abstract int write(ByteBuffer src) throws IOException;
+    public abstract int write(ByteBuffer src) throws IOException; //src 写到file channel
 
     /**
      * Writes a sequence of bytes to this channel from a subsequence of the
@@ -396,7 +396,7 @@ public abstract class FileChannel
      * behaves exactly as specified in the {@link GatheringByteChannel}
      * interface.  </p>
      */
-    public abstract long write(ByteBuffer[] srcs, int offset, int length)
+    public abstract long write(ByteBuffer[] srcs, int offset, int length) //多个buf 写到 file channel
         throws IOException;
 
     /**
@@ -458,7 +458,7 @@ public abstract class FileChannel
      * @throws  IOException
      *          If some other I/O error occurs
      */
-    public abstract FileChannel position(long newPosition) throws IOException;
+    public abstract FileChannel position(long newPosition) throws IOException; //设置position
 
     /**
      * Returns the current size of this channel's file.
@@ -501,7 +501,7 @@ public abstract class FileChannel
      * @throws  IOException
      *          If some other I/O error occurs
      */
-    public abstract FileChannel truncate(long size) throws IOException;
+    public abstract FileChannel truncate(long size) throws IOException; //对file 的前size位进行截取
 
     /**
      * Forces any updates to this channel's file to be written to the storage

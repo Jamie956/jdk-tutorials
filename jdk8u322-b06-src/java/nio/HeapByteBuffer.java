@@ -220,7 +220,7 @@ class HeapByteBuffer
             int pos = position();
             if (n > limit() - pos)
                 throw new BufferOverflowException();
-            src.get(hb, ix(pos), n);
+            src.get(hb, ix(pos), n); //src写到hb
             position(pos + n);
         } else {
             super.put(src);

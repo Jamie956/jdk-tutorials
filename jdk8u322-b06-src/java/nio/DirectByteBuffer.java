@@ -338,7 +338,7 @@ class DirectByteBuffer
             assert (spos <= slim);
             int srem = (spos <= slim ? slim - spos : 0);
 
-            put(src.hb, src.offset + spos, srem);
+            put(src.hb, src.offset + spos, srem); //src.hb 写入buffer
             src.position(spos + srem);
 
         } else {
@@ -375,7 +375,7 @@ class DirectByteBuffer
                                    (long)length << 0);
             position(pos + length);
         } else {
-            super.put(src, offset, length);
+            super.put(src, offset, length); //src写入 this
         }
         return this;
 

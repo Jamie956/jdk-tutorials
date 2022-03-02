@@ -86,7 +86,7 @@ class FileDispatcherImpl extends FileDispatcher {
     }
 
     long seek(FileDescriptor fd, long offset) throws IOException {
-        return seek0(fd, offset);
+        return seek0(fd, offset); //设置position
     }
 
     int force(FileDescriptor fd, boolean metaData) throws IOException {
@@ -98,7 +98,7 @@ class FileDispatcherImpl extends FileDispatcher {
     }
 
     long size(FileDescriptor fd) throws IOException {
-        return size0(fd);
+        return size0(fd); //数据长度大小
     }
 
     int lock(FileDescriptor fd, boolean blocking, long pos, long size,

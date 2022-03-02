@@ -57,7 +57,7 @@ public class IOUtil {
         int rem = (pos <= lim ? lim - pos : 0);
         ByteBuffer bb = Util.getTemporaryDirectBuffer(rem);
         try {
-            bb.put(src);
+            bb.put(src); //src 写入bb
             bb.flip();
             // Do not update src until we see how many bytes were written
             src.position(pos);
@@ -197,7 +197,7 @@ public class IOUtil {
             int n = readIntoNativeBuffer(fd, bb, position, nd);
             bb.flip();
             if (n > 0)
-                dst.put(bb);
+                dst.put(bb); //将直接内存的数据写入参数dst 堆内存byte buffer
             return n;
         } finally {
             Util.offerFirstTemporaryDirectBuffer(bb);
@@ -247,7 +247,7 @@ public class IOUtil {
             int count = offset + length;
             int i = offset;
             while (i < count && iov_len < IOV_MAX) {
-                ByteBuffer buf = bufs[i];
+                ByteBuffer buf = bufs[i]; //取其中一个bytebuffer
                 if (buf.isReadOnly())
                     throw new IllegalArgumentException("Read-only buffer");
                 int pos = buf.position();
@@ -290,7 +290,7 @@ public class IOUtil {
                         buf.position(pos + n);
                     } else {
                         shadow.limit(shadow.position() + n);
-                        buf.put(shadow);
+                        buf.put(shadow); //shadow 写到 buf
                     }
                     left -= n;
                 }

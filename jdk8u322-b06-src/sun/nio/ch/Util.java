@@ -244,7 +244,7 @@ public class Util {
                 buf = cache.removeFirst();
                 free(buf);
             }
-            return ByteBuffer.allocateDirect(size);
+            return ByteBuffer.allocateDirect(size); //申请直接内存
         }
     }
 
