@@ -513,7 +513,7 @@ public class FileChannelImpl
                 MappedByteBuffer dbb = map(MapMode.READ_ONLY, position, size);
                 try {
                     // ## Bug: Closing this channel will not terminate the write
-                    int n = target.write(dbb);
+                    int n = target.write(dbb); //写到taget
                     assert n >= 0;
                     remaining -= n;
                     if (isSelChImpl) {
@@ -630,7 +630,7 @@ public class FileChannelImpl
                 // ## Bug: Closing this channel will not terminate the write
                 MappedByteBuffer bb = src.map(MapMode.READ_ONLY, p, size);
                 try {
-                    long n = write(bb, position);
+                    long n = write(bb, position); //读取bb写入file
                     assert n > 0;
                     p += n;
                     position += n;
@@ -705,7 +705,7 @@ public class FileChannelImpl
         return transferFromArbitraryChannel(src, position, count);
     }
 
-    public int read(ByteBuffer dst, long position) throws IOException {
+    public int read(ByteBuffer dst, long position) throws IOException { //file data 写到参数dst，从position 位置开始读
         if (dst == null)
             throw new NullPointerException();
         if (position < 0)
@@ -742,7 +742,7 @@ public class FileChannelImpl
         }
     }
 
-    public int write(ByteBuffer src, long position) throws IOException {
+    public int write(ByteBuffer src, long position) throws IOException { //将参数crs buffer 写入file
         if (src == null)
             throw new NullPointerException();
         if (position < 0)
@@ -888,7 +888,7 @@ public class FileChannelImpl
             synchronized (positionLock) {
                 long filesize;
                 do {
-                    filesize = nd.size(fd);
+                    filesize = nd.size(fd); //文件大小
                 } while ((filesize == IOStatus.INTERRUPTED) && isOpen());
                 if (!isOpen())
                     return null;
@@ -1069,7 +1069,7 @@ public class FileChannelImpl
                 return null;
             int n;
             do {
-                n = nd.lock(fd, true, position, size, shared);
+                n = nd.lock(fd, true, position, size, shared); //lock, blocking==true
             } while ((n == FileDispatcher.INTERRUPTED) && isOpen());
             if (isOpen()) {
                 if (n == FileDispatcher.RET_EX_LOCK) {

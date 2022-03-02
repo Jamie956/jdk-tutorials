@@ -63,7 +63,7 @@ import sun.misc.Unsafe;
  * @since 1.4
  */
 
-public abstract class MappedByteBuffer
+public abstract class MappedByteBuffer //对外内存的映射
     extends ByteBuffer
 {
 

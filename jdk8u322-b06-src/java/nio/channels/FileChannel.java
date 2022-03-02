@@ -616,7 +616,7 @@ public abstract class FileChannel
      * @throws  IOException
      *          If some other I/O error occurs
      */
-    public abstract long transferTo(long position, long count,
+    public abstract long transferTo(long position, long count, //channel data 写到参数 target
                                     WritableByteChannel target)
         throws IOException;
 
@@ -684,7 +684,7 @@ public abstract class FileChannel
      *          If some other I/O error occurs
      */
     public abstract long transferFrom(ReadableByteChannel src,
-                                      long position, long count)
+                                      long position, long count) //参数src 写到 file channel
         throws IOException;
 
     /**
@@ -730,7 +730,7 @@ public abstract class FileChannel
      * @throws  IOException
      *          If some other I/O error occurs
      */
-    public abstract int read(ByteBuffer dst, long position) throws IOException;
+    public abstract int read(ByteBuffer dst, long position) throws IOException; //file data 写到参数dst，从position 位置开始读
 
     /**
      * Writes a sequence of bytes to this channel from the given buffer,
@@ -775,7 +775,7 @@ public abstract class FileChannel
      * @throws  IOException
      *          If some other I/O error occurs
      */
-    public abstract int write(ByteBuffer src, long position) throws IOException;
+    public abstract int write(ByteBuffer src, long position) throws IOException; //将参数crs buffer 写入file
 
 
     // -- Memory-mapped buffers --
