@@ -467,7 +467,7 @@ class SocketChannelImpl
                     writerThread = NativeThread.current();
                 }
                 for (;;) {
-                    n = IOUtil.write(fd, buf, -1, nd);
+                    n = IOUtil.write(fd, buf, -1, nd); //buf 写到直接缓冲区
                     if ((n == IOStatus.INTERRUPTED) && isOpen())
                         continue;
                     return IOStatus.normalize(n);

@@ -78,8 +78,7 @@ Debug and comments step
 - HeapByteBuffer 注释
 - channels
   - ServerSocketChannel 注释
-  - SocketChannel 当前
-  - AbstractSelectableChannel
+  - SocketChannel 注释
   - DatagramChannel
   - Selector
   - SelectionKey
