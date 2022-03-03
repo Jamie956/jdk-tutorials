@@ -75,15 +75,22 @@ Debug and comments step
 
 # java.nio
 
-- HeapByteBuffer 注释
+- Buffer
+    - HeapByteBuffer 注释
+    - ByteBuffer
+    - CharBuffer
+    - DoubleBuffer
+    - FloatBuffer
+    - IntBuffer
+    - LongBuffer
+    - ShortBuffer
 - channels
   - ServerSocketChannel 注释
   - SocketChannel 注释
   - DatagramChannel
-  - Selector 当前
-  - SelectionKey
   - FileChannel 注释
-
+- Selector 当前
+- SelectionKey
 
 
 # java8

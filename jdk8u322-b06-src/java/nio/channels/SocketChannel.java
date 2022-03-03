@@ -113,7 +113,7 @@ import java.nio.channels.spi.SelectorProvider;
  * @since 1.4
  */
 
-public abstract class SocketChannel
+public abstract class SocketChannel //TCP
     extends AbstractSelectableChannel
     implements ByteChannel, ScatteringByteChannel, GatheringByteChannel, NetworkChannel
 {
