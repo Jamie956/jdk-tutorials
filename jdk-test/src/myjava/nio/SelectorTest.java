@@ -194,4 +194,38 @@ public class SelectorTest {
         } catch (IOException e) {
         }
     }
+
+    @Test
+    public void selectorDemo() throws IOException {
+        SocketChannel channel = SocketChannel.open();
+        channel.connect(new InetSocketAddress("127.0.0.1", 8000));
+
+        Selector selector = Selector.open();
+
+        channel.configureBlocking(false);
+        channel.register(selector, SelectionKey.OP_READ);
+
+        while (true) {
+            int readyChannels = selector.selectNow();
+            if (readyChannels == 0) {
+                continue;
+            }
+
+            Set<SelectionKey> selectedKeys = selector.selectedKeys();
+            Iterator<SelectionKey> keyIterator = selectedKeys.iterator();
+            while (keyIterator.hasNext()) {
+                SelectionKey key = keyIterator.next();
+                if (key.isAcceptable()) {
+                    // a connection was accepted by a ServerSocketChannel.
+                } else if (key.isConnectable()) {
+                    // a connection was established with a remote server.
+                } else if (key.isReadable()) {
+                    // a channel is ready for reading
+                } else if (key.isWritable()) {
+                    // a channel is ready for writing
+                }
+                keyIterator.remove();
+            }
+        }
+    }
 }
