@@ -43,7 +43,7 @@ public class DefaultSelectorProvider {
      * Returns the default SelectorProvider.
      */
     public static SelectorProvider create() {
-        return new sun.nio.ch.WindowsSelectorProvider();
+        return new sun.nio.ch.WindowsSelectorProvider(); //windows 初始化选择器provider
     }
 
 }

@@ -161,7 +161,7 @@ public abstract class SelectorProvider {
      *
      * @return  The system-wide default selector provider
      */
-    public static SelectorProvider provider() {
+    public static SelectorProvider provider() { //初始化/获取 选择器provider
         synchronized (lock) {
             if (provider != null)
                 return provider;

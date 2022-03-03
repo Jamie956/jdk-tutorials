@@ -80,7 +80,7 @@ Debug and comments step
   - ServerSocketChannel 注释
   - SocketChannel 注释
   - DatagramChannel
-  - Selector
+  - Selector 当前
   - SelectionKey
   - FileChannel 注释
 
