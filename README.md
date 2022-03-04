@@ -32,7 +32,7 @@ Debug and comments step
   - HashSet 注释
   - LinkedHashSet 注释
   - LinkedList 注释
-  - PriorityQueue
+  - PriorityQueue 当前
   - TreeSet 注释
 - Map
   - HashMap 注释
@@ -49,7 +49,7 @@ Debug and comments step
     - CountDownLatch 注释
     - LockSupport
     - ReentrantLock 注释
-    - ReentrantReadWriteLock
+    - ReentrantReadWriteLock 注释
     - Semaphore 注释
     - CyclicBarrier 注释
   - Atomic
