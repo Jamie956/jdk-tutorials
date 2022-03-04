@@ -252,7 +252,7 @@ public class PriorityQueue<E> extends AbstractQueue<E>
         }
     }
 
-    private void initElementsFromCollection(Collection<? extends E> c) {
+    private void initElementsFromCollection(Collection<? extends E> c) { //将集合的元素转化为本实例的数组对象
         Object[] a = c.toArray();
         if (c.getClass() != ArrayList.class)
             a = Arrays.copyOf(a, a.length, Object[].class);
@@ -261,7 +261,7 @@ public class PriorityQueue<E> extends AbstractQueue<E>
             for (int i = 0; i < len; i++)
                 if (a[i] == null)
                     throw new NullPointerException();
-        this.queue = a; //指向集合转换的数组
+        this.queue = a; //指向集合数组复制的数组
         this.size = a.length;
     }
 
@@ -710,15 +710,15 @@ public class PriorityQueue<E> extends AbstractQueue<E>
 
     @SuppressWarnings("unchecked")
     private void siftDownUsingComparator(int k, E x) {
-        int half = size >>> 1;
-        while (k < half) {
-            int child = (k << 1) + 1;
-            Object c = queue[child];
-            int right = child + 1;
+        int half = size >>> 1; //数组中点
+        while (k < half) { //索引在中点左边
+            int child = (k << 1) + 1; //索引中点
+            Object c = queue[child]; //索引中点的元素
+            int right = child + 1; //索引中点右边的索引
             if (right < size &&
-                comparator.compare((E) c, (E) queue[right]) > 0)
-                c = queue[child = right];
-            if (comparator.compare(x, (E) c) <= 0)
+                comparator.compare((E) c, (E) queue[right]) > 0) //中点元素比中点右边元素大
+                c = queue[child = right]; //大的元素作为c
+            if (comparator.compare(x, (E) c) <= 0) //参数元素x与中点元素比较（大的那个）
                 break;
             queue[k] = c;
             k = child;
@@ -733,7 +733,7 @@ public class PriorityQueue<E> extends AbstractQueue<E>
     @SuppressWarnings("unchecked")
     private void heapify() { //堆化
         for (int i = (size >>> 1) - 1; i >= 0; i--) //中点往前遍历
-            siftDown(i, (E) queue[i]); //索引，元素
+            siftDown(i, (E) queue[i]);
     }
 
     /**

@@ -3205,7 +3205,7 @@ public class Arrays {
      *     an array of class <tt>newType</tt>
      * @since 1.6
      */
-    public static <T,U> T[] copyOf(U[] original, int newLength, Class<? extends T[]> newType) {//复制数组
+    public static <T,U> T[] copyOf(U[] original, int newLength, Class<? extends T[]> newType) { //复制数组
         @SuppressWarnings("unchecked")
         T[] copy = ((Object)newType == (Object)Object[].class)
             ? (T[]) new Object[newLength]//数组类型，创建数组

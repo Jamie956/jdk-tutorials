@@ -26,13 +26,13 @@ public class PriorityQueueTest {
         Comparator<Object> c = Comparator.comparingInt(e -> (int) e);
         PriorityQueue<Object> q = new PriorityQueue<>(7, c);
     }
-//
+
     @Test
     public void cons3() {
         List<String> l = new ArrayList<>();
         PriorityQueue<Object> q = new PriorityQueue<>(l);
     }
-
+//
     @Test
     public void cons4() {
         PriorityQueue<Object> q0 = new PriorityQueue<>();
