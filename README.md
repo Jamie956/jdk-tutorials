@@ -124,6 +124,7 @@ Debug and comments step
     - RuntimeException 注释
       - NullPointerException 注释
   - Error 注释
+- ThreadLocal
 - String 注释
 - Byte
 - Short

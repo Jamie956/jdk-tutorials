@@ -1,9 +1,81 @@
 package myjava.util.concurrency.lock;
 
+import org.junit.Test;
+
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class ReentrantReadWriteLockTest {
+    @Test
+    public void cons() {
+        ReentrantReadWriteLock l = new ReentrantReadWriteLock();
+    }
+
+    @Test
+    public void cons2() {
+        ReentrantReadWriteLock l = new ReentrantReadWriteLock(true);
+    }
+
+    @Test
+    public void writeLock() {
+        ReentrantReadWriteLock l = new ReentrantReadWriteLock();
+        ReentrantReadWriteLock.WriteLock wl = l.writeLock();
+    }
+
+    @Test
+    public void readLock() {
+        ReentrantReadWriteLock l = new ReentrantReadWriteLock();
+        ReentrantReadWriteLock.ReadLock rl = l.readLock();
+    }
+
+    @Test
+    public void lockInterruptibly() throws InterruptedException {
+        ReentrantReadWriteLock l = new ReentrantReadWriteLock();
+        ReentrantReadWriteLock.ReadLock rl = l.readLock();
+        rl.lockInterruptibly();
+    }
+
+    @Test
+    public void tryLock() {
+        ReentrantReadWriteLock l = new ReentrantReadWriteLock();
+        ReentrantReadWriteLock.ReadLock rl = l.readLock();
+        boolean b = rl.tryLock();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //-----------------------------
+
     public static void main(String[] args) {
         ReentrantReadWriteLockTest t = new ReentrantReadWriteLockTest();
         t.testReadWriteLock();

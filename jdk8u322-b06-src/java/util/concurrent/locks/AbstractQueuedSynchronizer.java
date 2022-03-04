@@ -491,7 +491,7 @@ public abstract class AbstractQueuedSynchronizer
          *
          * @return the predecessor of this node
          */
-        final Node predecessor() throws NullPointerException {//获取当前节点的 prev node
+        final Node predecessor() throws NullPointerException { //获取前驱节点
             Node p = prev;
             if (p == null)
                 throw new NullPointerException();
@@ -624,9 +624,9 @@ public abstract class AbstractQueuedSynchronizer
      *
      * @param node the node
      */
-    private void setHead(Node node) {//设置wait queue head
+    private void setHead(Node node) { //设置wait queue head
         head = node;
-        node.thread = null;
+        node.thread = null; //head 的 thread 和prev都为空
         node.prev = null;
     }
 
@@ -683,12 +683,12 @@ public abstract class AbstractQueuedSynchronizer
             Node h = head;
             if (h != null && h != tail) {
                 int ws = h.waitStatus;
-                if (ws == Node.SIGNAL) {//移除 SIGNAL 状态节点 SIGNAL 的状态
+                if (ws == Node.SIGNAL) { //移除 SIGNAL 状态节点 SIGNAL 的状态
                     if (!compareAndSetWaitStatus(h, Node.SIGNAL, 0))
                         continue;            // loop to recheck cases
                     unparkSuccessor(h);
                 }
-                else if (ws == 0 &&//无状态节点改为 PROPAGATE状态
+                else if (ws == 0 && //无状态节点改为 PROPAGATE状态
                         !compareAndSetWaitStatus(h, 0, Node.PROPAGATE))
                     continue;                // loop on failed CAS
             }
@@ -707,7 +707,7 @@ public abstract class AbstractQueuedSynchronizer
      */
     private void setHeadAndPropagate(Node node, int propagate) {
         Node h = head; // Record old head for check below
-        setHead(node);//参数节点设为head
+        setHead(node); //参数节点设为head
         /*
          * Try to signal next queued node if:
          *   Propagation was indicated by caller,
@@ -978,15 +978,15 @@ public abstract class AbstractQueuedSynchronizer
      * @param arg the acquire argument
      */
     private void doAcquireSharedInterruptibly(int arg)
-        throws InterruptedException {
+        throws InterruptedException { //共享节点入队
         final Node node = addWaiter(Node.SHARED);
         boolean failed = true;
         try {
             for (;;) {
                 final Node p = node.predecessor();
-                if (p == head) {
-                    int r = tryAcquireShared(arg);//获取共享锁，由子类实现
-                    if (r >= 0) {
+                if (p == head) { //前驱节点是head
+                    int r = tryAcquireShared(arg); //获取共享锁，由子类实现
+                    if (r >= 0) { //获取锁成功
                         setHeadAndPropagate(node, r);
                         p.next = null; // help GC
                         failed = false;
@@ -995,7 +995,7 @@ public abstract class AbstractQueuedSynchronizer
                 }
                 if (shouldParkAfterFailedAcquire(p, node) &&
                     parkAndCheckInterrupt())
-                    throw new InterruptedException();//Interruptibly
+                    throw new InterruptedException(); //可抛异常
             }
         } finally {
             if (failed)
@@ -1298,10 +1298,10 @@ public abstract class AbstractQueuedSynchronizer
      */
     public final void acquireSharedInterruptibly(int arg)
             throws InterruptedException {
-        if (Thread.interrupted())//Interruptibly
+        if (Thread.interrupted()) //Interruptibly
             throw new InterruptedException();
         if (tryAcquireShared(arg) < 0)
-            doAcquireSharedInterruptibly(arg);
+            doAcquireSharedInterruptibly(arg); //try 获取失败就再获取
     }
 
     /**
@@ -1458,7 +1458,7 @@ public abstract class AbstractQueuedSynchronizer
      * is not the first queued thread.  Used only as a heuristic in
      * ReentrantReadWriteLock.
      */
-    final boolean apparentlyFirstQueuedIsExclusive() {//判断head.next 的锁是否是独占类型
+    final boolean apparentlyFirstQueuedIsExclusive() { //判断head.next 的锁是否是独占类型
         Node h, s;
         return (h = head) != null &&
             (s = h.next)  != null &&
