@@ -32,7 +32,7 @@ Debug and comments step
   - HashSet 注释
   - LinkedHashSet 注释
   - LinkedList 注释
-  - PriorityQueue 当前
+  - PriorityQueue 注释
   - TreeSet 注释
 - Map
   - HashMap 注释

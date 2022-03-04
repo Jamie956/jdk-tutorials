@@ -30,9 +30,17 @@ public class PriorityQueueTest {
     @Test
     public void cons3() {
         List<String> l = new ArrayList<>();
+        l.add("8");
+        l.add("4");
+        l.add("7");
+        l.add("1");
+        l.add("6");
+        l.add("5");
+        l.add("9");
+        l.add("0");
         PriorityQueue<Object> q = new PriorityQueue<>(l);
     }
-//
+
     @Test
     public void cons4() {
         PriorityQueue<Object> q0 = new PriorityQueue<>();
@@ -101,7 +109,7 @@ public class PriorityQueueTest {
 
     @Test
     public void toArray2() {
-        Object[] os = new Object[]{"7", "8"};
+        Object[] os = new Object[]{"7", "8", "9"};
         PriorityQueue<Object> q = new PriorityQueue<>();
         q.add("1");
         q.add("2");

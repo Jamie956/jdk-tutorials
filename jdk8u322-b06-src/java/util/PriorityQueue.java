@@ -291,13 +291,13 @@ public class PriorityQueue<E> extends AbstractQueue<E>
     private void grow(int minCapacity) {
         int oldCapacity = queue.length;
         // Double size if small; else grow by 50%
-        int newCapacity = oldCapacity + ((oldCapacity < 64) ?
+        int newCapacity = oldCapacity + ((oldCapacity < 64) ? //计算新容量
                                          (oldCapacity + 2) :
                                          (oldCapacity >> 1));
         // overflow-conscious code
         if (newCapacity - MAX_ARRAY_SIZE > 0)
             newCapacity = hugeCapacity(minCapacity);
-        queue = Arrays.copyOf(queue, newCapacity);
+        queue = Arrays.copyOf(queue, newCapacity); //复制到新数组
     }
 
     private static int hugeCapacity(int minCapacity) {
@@ -614,11 +614,11 @@ public class PriorityQueue<E> extends AbstractQueue<E>
         modCount++;
         int s = --size;
         if (s == i) // removed last element
-            queue[i] = null;
+            queue[i] = null; //移除的元素位置在末尾
         else {
             E moved = (E) queue[s];
             queue[s] = null;
-            siftDown(i, moved);
+            siftDown(i, moved); //末尾元素替换了要删除的元素
             if (queue[i] == moved) {
                 siftUp(i, moved);
                 if (queue[i] != moved)
@@ -690,16 +690,16 @@ public class PriorityQueue<E> extends AbstractQueue<E>
     }
 
     @SuppressWarnings("unchecked")
-    private void siftDownComparable(int k, E x) { //索引，元素
+    private void siftDownComparable(int k, E x) {
         Comparable<? super E> key = (Comparable<? super E>)x; //使用元素的比较器
-        int half = size >>> 1;        // loop while a non-leaf //中点
+        int half = size >>> 1;        // loop while a non-leaf //数组中点
         while (k < half) {
-            int child = (k << 1) + 1; // assume left child is least
+            int child = (k << 1) + 1; // assume left child is least //k*2+1
             Object c = queue[child];
             int right = child + 1;
             if (right < size &&
-                ((Comparable<? super E>) c).compareTo((E) queue[right]) > 0) //左 > 右
-                c = queue[child = right]; //child 右移
+                ((Comparable<? super E>) c).compareTo((E) queue[right]) > 0) //
+                c = queue[child = right]; //
             if (key.compareTo((E) c) <= 0)
                 break;
             queue[k] = c;
@@ -711,16 +711,16 @@ public class PriorityQueue<E> extends AbstractQueue<E>
     @SuppressWarnings("unchecked")
     private void siftDownUsingComparator(int k, E x) {
         int half = size >>> 1; //数组中点
-        while (k < half) { //索引在中点左边
-            int child = (k << 1) + 1; //索引中点
-            Object c = queue[child]; //索引中点的元素
-            int right = child + 1; //索引中点右边的索引
+        while (k < half) { //k在中点左边
+            int child = (k << 1) + 1; //k*2+1
+            Object c = queue[child]; //
+            int right = child + 1; //
             if (right < size &&
-                comparator.compare((E) c, (E) queue[right]) > 0) //中点元素比中点右边元素大
-                c = queue[child = right]; //大的元素作为c
-            if (comparator.compare(x, (E) c) <= 0) //参数元素x与中点元素比较（大的那个）
+                comparator.compare((E) c, (E) queue[right]) > 0)
+                c = queue[child = right]; //c > queue[right]
+            if (comparator.compare(x, (E) c) <= 0)
                 break;
-            queue[k] = c;
+            queue[k] = c; //x > c
             k = child;
         }
         queue[k] = x;
