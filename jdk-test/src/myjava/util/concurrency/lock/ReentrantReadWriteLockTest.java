@@ -42,11 +42,27 @@ public class ReentrantReadWriteLockTest {
         boolean b = rl.tryLock();
     }
 
+    @Test
+    public void tryLock2() throws InterruptedException {
+        ReentrantReadWriteLock l = new ReentrantReadWriteLock();
+        ReentrantReadWriteLock.ReadLock rl = l.readLock();
+        boolean b = rl.tryLock(3, TimeUnit.SECONDS);
+    }
 
+    @Test
+    public void unlock() {
+        ReentrantReadWriteLock l = new ReentrantReadWriteLock();
+        ReentrantReadWriteLock.ReadLock rl = l.readLock();
+        boolean b = rl.tryLock();
+        rl.unlock();
+    }
 
-
-
-
+    @Test
+    public void lock() {
+        ReentrantReadWriteLock l = new ReentrantReadWriteLock();
+        ReentrantReadWriteLock.WriteLock wl = l.writeLock();
+        wl.lock();
+    }
 
 
 

@@ -602,18 +602,18 @@ public abstract class AbstractQueuedSynchronizer
      * @param mode Node.EXCLUSIVE for exclusive, Node.SHARED for shared
      * @return the new node
      */
-    private Node addWaiter(Node mode) {//wait queue 尾插新节点
+    private Node addWaiter(Node mode) { //wait queue 尾插新节点
         Node node = new Node(Thread.currentThread(), mode);
         // Try the fast path of enq; backup to full enq on failure
         Node pred = tail;
         if (pred != null) {
             node.prev = pred;
-            if (compareAndSetTail(pred, node)) {//update tail 指针
+            if (compareAndSetTail(pred, node)) { //update tail 指针
                 pred.next = node;
                 return node;
             }
         }
-        enq(node);//tail节点为空，节点入队
+        enq(node); //tail节点为空，节点入队
         return node;
     }
 
@@ -1011,30 +1011,30 @@ public abstract class AbstractQueuedSynchronizer
      * @return {@code true} if acquired
      */
     private boolean doAcquireSharedNanos(int arg, long nanosTimeout)
-            throws InterruptedException {
+            throws InterruptedException { //等待队列入队，轮到入队节点则尝试获取锁，指定时间内没用成功获取读锁则超时
         if (nanosTimeout <= 0L)
-            return false;
-        final long deadline = System.nanoTime() + nanosTimeout;
-        final Node node = addWaiter(Node.SHARED);//共享节点
+            return false; //超时 直接失败
+        final long deadline = System.nanoTime() + nanosTimeout; //超时的绝对时间
+        final Node node = addWaiter(Node.SHARED); //共享节点入队
         boolean failed = true;
         try {
             for (;;) {
                 final Node p = node.predecessor();
-                if (p == head) {
-                    int r = tryAcquireShared(arg);
+                if (p == head) { //首位节点
+                    int r = tryAcquireShared(arg); //再次尝试
                     if (r >= 0) {
                         setHeadAndPropagate(node, r);
                         p.next = null; // help GC
                         failed = false;
-                        return true;
+                        return true; //终止，成功获取读锁
                     }
                 }
-                nanosTimeout = deadline - System.nanoTime();
+                nanosTimeout = deadline - System.nanoTime(); //剩下的时间
                 if (nanosTimeout <= 0L)
-                    return false;
+                    return false; //超时 没用剩余时间
                 if (shouldParkAfterFailedAcquire(p, node) &&
                     nanosTimeout > spinForTimeoutThreshold)
-                    LockSupport.parkNanos(this, nanosTimeout);
+                    LockSupport.parkNanos(this, nanosTimeout); //阻塞一会
                 if (Thread.interrupted())
                     throw new InterruptedException();
             }
@@ -1195,7 +1195,7 @@ public abstract class AbstractQueuedSynchronizer
      *        can represent anything you like.
      */
     public final void acquire(int arg) {
-        if (!tryAcquire(arg) &&//由子类实现//非公平锁实现：抢占资源并设置独占线程
+        if (!tryAcquire(arg) && //由子类实现//非公平锁实现：抢占资源并设置独占线程
             acquireQueued(addWaiter(Node.EXCLUSIVE), arg))//抢占失败放入wait queue
             selfInterrupt();//挂起
     }
@@ -1325,7 +1325,7 @@ public abstract class AbstractQueuedSynchronizer
         if (Thread.interrupted())
             throw new InterruptedException();
         return tryAcquireShared(arg) >= 0 ||
-            doAcquireSharedNanos(arg, nanosTimeout);//尝试入队等待，轮到就抢锁，直到超时返回
+            doAcquireSharedNanos(arg, nanosTimeout);
     }
 
     /**
@@ -1339,7 +1339,7 @@ public abstract class AbstractQueuedSynchronizer
      */
     public final boolean releaseShared(int arg) {
         if (tryReleaseShared(arg)) {
-            doReleaseShared();//唤醒节点
+            doReleaseShared(); //唤醒节点
             return true;
         }
         return false;
