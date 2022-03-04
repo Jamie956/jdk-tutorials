@@ -635,14 +635,14 @@ public abstract class AbstractQueuedSynchronizer
      *
      * @param node the node
      */
-    private void unparkSuccessor(Node node) {//移除节点状态，唤醒下一结点
+    private void unparkSuccessor(Node node) { //移除节点状态，唤醒下一结点
         /*
          * If status is negative (i.e., possibly needing signal) try
          * to clear in anticipation of signalling.  It is OK if this
          * fails or if status is changed by waiting thread.
          */
-        int ws = node.waitStatus;//CANCELLED=1、SIGNAL=-1、CONDITION=-2、PROPAGATE=-3
-        if (ws < 0)//去除节点 SIGNAL、CONDITION、PROPAGATE 状态
+        int ws = node.waitStatus; //CANCELLED=1、SIGNAL=-1、CONDITION=-2、PROPAGATE=-3
+        if (ws < 0) //去除节点 SIGNAL、CONDITION、PROPAGATE 状态
             compareAndSetWaitStatus(node, ws, 0);
 
         /*
@@ -651,15 +651,15 @@ public abstract class AbstractQueuedSynchronizer
          * traverse backwards from tail to find the actual
          * non-cancelled successor.
          */
-        Node s = node.next;//一般取下一节点唤醒，但是队列节点可能存在CANCELLED节点或者空节点，这时需要从队尾往前遍历找到最前的一个指定状态的节点去唤醒
+        Node s = node.next; //一般取下一节点唤醒，但是队列节点可能存在CANCELLED节点或者空节点，这时需要从队尾往前遍历找到最前的一个指定状态的节点去唤醒
         if (s == null || s.waitStatus > 0) {//节点为空 或者 状态为CANCELLED
             s = null;
-            for (Node t = tail; t != null && t != node; t = t.prev)//从队尾开始遍历
-                if (t.waitStatus <= 0)//找到最前的一个 SIGNAL、CONDITION、PROPAGATE 的结点
+            for (Node t = tail; t != null && t != node; t = t.prev) //从队尾开始遍历
+                if (t.waitStatus <= 0) //找到最前的一个 SIGNAL、CONDITION、PROPAGATE 的结点
                     s = t;
         }
         if (s != null)
-            LockSupport.unpark(s.thread);//唤醒结点
+            LockSupport.unpark(s.thread); //唤醒结点
     }
 
     /**
@@ -824,7 +824,7 @@ public abstract class AbstractQueuedSynchronizer
      * Convenience method to interrupt current thread.
      */
     static void selfInterrupt() {
-        Thread.currentThread().interrupt();//挂起线程
+        Thread.currentThread().interrupt(); //挂起线程
     }
 
     /**
@@ -854,20 +854,20 @@ public abstract class AbstractQueuedSynchronizer
      * @param arg the acquire argument
      * @return {@code true} if interrupted while waiting
      */
-    final boolean acquireQueued(final Node node, int arg) {
+    final boolean acquireQueued(final Node node, int arg) { //获取锁，获取失败就挂起，唤醒后继续自旋获取
         boolean failed = true;
         try {
             boolean interrupted = false;
-            for (;;) {//自旋直到 前驱节点成为head 且 成功获取锁
-                final Node p = node.predecessor();//前驱节点
-                if (p == head && tryAcquire(arg)) {//如果前驱节点是 wait queue head，就获取锁//tryAcquire 的ReentrantLock 实现：
-                    setHead(node);//node 设为 head
+            for (;;) { //自旋直到node获取锁
+                final Node p = node.predecessor(); //前驱节点
+                if (p == head && tryAcquire(arg)) { //如果前驱节点是 wait queue head，说明参数node就是第一个真实节点，因为head 只是一个thread变量为空的节点
+                    setHead(node); //参数node设为head，相当于把node从等待队列上移除
                     p.next = null; // help GC, unlink
                     failed = false;
-                    return interrupted;//终止循环
-                }
-                if (shouldParkAfterFailedAcquire(p, node) &&//节点是否需要挂起
-                    parkAndCheckInterrupt())//挂起线程
+                    return interrupted; //终止循环，循环唯一出口//返回值说明线程是否被中断过，如果没有被中断过说明第一次进入时node已经是等待队列的首个节点
+                } //如果wait queue还没轮到参数node，park 挂起，之后如果被唤醒就继续自旋
+                if (shouldParkAfterFailedAcquire(p, node) && //节点是否需要挂起
+                    parkAndCheckInterrupt()) //挂起线程
                     interrupted = true;
             }
         } finally {
@@ -881,14 +881,14 @@ public abstract class AbstractQueuedSynchronizer
      * @param arg the acquire argument
      */
     private void doAcquireInterruptibly(int arg)
-        throws InterruptedException {//自旋抢锁，还没轮到或者失败时就park
-        final Node node = addWaiter(Node.EXCLUSIVE);//添加节点到wait queue
+        throws InterruptedException { //自旋获取锁，还没轮到或者失败时就park
+        final Node node = addWaiter(Node.EXCLUSIVE); //等待队列wait queue尾插新节点，节点类型是独占
         boolean failed = true;
         try {
-            for (;;) {//自旋直到轮到head节点 并且抢到锁
+            for (;;) { //自旋直到node抢到锁
                 final Node p = node.predecessor();
-                if (p == head && tryAcquire(arg)) {//tryAcquire 由子类实现
-                    setHead(node);
+                if (p == head && tryAcquire(arg)) { //wait queue 轮到参数node//tryAcquire 由子类实现
+                    setHead(node); //相当于node 出队
                     p.next = null; // help GC
                     failed = false;
                     return;
@@ -911,29 +911,29 @@ public abstract class AbstractQueuedSynchronizer
      * @return {@code true} if acquired
      */
     private boolean doAcquireNanos(int arg, long nanosTimeout)
-            throws InterruptedException {
+            throws InterruptedException { //自旋等待队列节点获取锁，可超时
         if (nanosTimeout <= 0L)
             return false;
-        final long deadline = System.nanoTime() + nanosTimeout;
-        final Node node = addWaiter(Node.EXCLUSIVE);
+        final long deadline = System.nanoTime() + nanosTimeout; //超时时间的绝对时间
+        final Node node = addWaiter(Node.EXCLUSIVE); //独占状态节点入队
         boolean failed = true;
         try {
             for (;;) {
                 final Node p = node.predecessor();
-                if (p == head && tryAcquire(arg)) {
+                if (p == head && tryAcquire(arg)) { //队列轮到参数node 抢锁
                     setHead(node);
                     p.next = null; // help GC
                     failed = false;
-                    return true;
+                    return true; //成功获取锁
                 }
-                nanosTimeout = deadline - System.nanoTime();//还没轮到前驱节点<-head，计算距离deadline 还有多久
+                nanosTimeout = deadline - System.nanoTime(); //剩余的超时时间
                 if (nanosTimeout <= 0L)
-                    return false;//超时
+                    return false; //超时
                 if (shouldParkAfterFailedAcquire(p, node) &&
                     nanosTimeout > spinForTimeoutThreshold)
-                    LockSupport.parkNanos(this, nanosTimeout);
+                    LockSupport.parkNanos(this, nanosTimeout); //挂起一会
                 if (Thread.interrupted())
-                    throw new InterruptedException();
+                    throw new InterruptedException(); //中断抛异常
             }
         } finally {
             if (failed)
@@ -1195,9 +1195,9 @@ public abstract class AbstractQueuedSynchronizer
      *        can represent anything you like.
      */
     public final void acquire(int arg) {
-        if (!tryAcquire(arg) && //由子类实现//非公平锁实现：抢占资源并设置独占线程
-            acquireQueued(addWaiter(Node.EXCLUSIVE), arg))//抢占失败放入wait queue
-            selfInterrupt();//挂起
+        if (!tryAcquire(arg) && //由子类实现
+            acquireQueued(addWaiter(Node.EXCLUSIVE), arg)) //抢锁失败时，新增节点并加入等待队列
+            selfInterrupt(); //第一次获取锁失败 且 acquireQueued 被中断过
     }
 
     /**
@@ -1214,12 +1214,12 @@ public abstract class AbstractQueuedSynchronizer
      *        can represent anything you like.
      * @throws InterruptedException if the current thread is interrupted
      */
-    public final void acquireInterruptibly(int arg)//抢占锁，可中断
+    public final void acquireInterruptibly(int arg) //抢占锁，可中断
             throws InterruptedException {
         if (Thread.interrupted())
             throw new InterruptedException(); //如果线程已经被中断，抛出异常，不参与抢锁了
         if (!tryAcquire(arg))
-            doAcquireInterruptibly(arg);//自旋抢锁，还没轮到或者失败时就park
+            doAcquireInterruptibly(arg); //自旋抢锁，还没轮到或者失败时就park
     }
 
     /**
@@ -1244,7 +1244,7 @@ public abstract class AbstractQueuedSynchronizer
         if (Thread.interrupted())
             throw new InterruptedException();
         return tryAcquire(arg) ||
-            doAcquireNanos(arg, nanosTimeout);
+            doAcquireNanos(arg, nanosTimeout); //第一次尝试获取锁失败，就doAcquireNanos
     }
 
     /**
@@ -1257,11 +1257,11 @@ public abstract class AbstractQueuedSynchronizer
      *        can represent anything you like.
      * @return the value returned from {@link #tryRelease}
      */
-    public final boolean release(int arg) {//尝试释放锁，如果全部锁都释放了就唤醒下一节点
-        if (tryRelease(arg)) {//由AQS子类实现//ReentrantLock 实现：修改state释放锁，state==0时返回true，否则返回false
+    public final boolean release(int arg) { //尝试释放线程持有的锁，如果全部锁都释放了就唤醒下一节点，使下一个节点的线程对象继续运行
+        if (tryRelease(arg)) { //由AQS子类实现//true 全部锁已经释放
             Node h = head;
             if (h != null && h.waitStatus != 0)
-                unparkSuccessor(h);//移除节点状态，唤醒下一结点
+                unparkSuccessor(h); //移除节点状态，唤醒下一结点
             return true;
         }
         return false;

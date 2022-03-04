@@ -3,6 +3,7 @@ package myjava.util.concurrency.lock;
 import org.junit.Test;
 
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class ReentrantReadWriteLockTest {
@@ -64,30 +65,62 @@ public class ReentrantReadWriteLockTest {
         wl.lock();
     }
 
+    @Test
+    public void lockInterruptibly2() throws InterruptedException {
+        ReentrantReadWriteLock l = new ReentrantReadWriteLock();
+        ReentrantReadWriteLock.WriteLock wl = l.writeLock();
+        wl.lockInterruptibly();
+    }
 
+    @Test
+    public void tryLock3() {
+        ReentrantReadWriteLock l = new ReentrantReadWriteLock();
+        ReentrantReadWriteLock.WriteLock wl = l.writeLock();
+        boolean b = wl.tryLock();
+    }
 
+    @Test
+    public void tryLock4() throws InterruptedException {
+        ReentrantReadWriteLock l = new ReentrantReadWriteLock();
+        ReentrantReadWriteLock.WriteLock wl = l.writeLock();
+        boolean b = wl.tryLock(3, TimeUnit.SECONDS);
+    }
 
+    @Test
+    public void unlock2() {
+        ReentrantReadWriteLock l = new ReentrantReadWriteLock();
+        ReentrantReadWriteLock.WriteLock wl = l.writeLock();
+        wl.lock();
+        wl.unlock();
+    }
 
+    @Test
+    public void newCondition() {
+        ReentrantReadWriteLock l = new ReentrantReadWriteLock();
+        ReentrantReadWriteLock.WriteLock wl = l.writeLock();
+        Condition c = wl.newCondition();
+    }
 
+    @Test
+    public void isHeldByCurrentThread() {
+        ReentrantReadWriteLock l = new ReentrantReadWriteLock();
+        ReentrantReadWriteLock.WriteLock wl = l.writeLock();
+        boolean b = wl.isHeldByCurrentThread();
+    }
 
+    @Test
+    public void getHoldCount() {
+        ReentrantReadWriteLock l = new ReentrantReadWriteLock();
+        ReentrantReadWriteLock.WriteLock wl = l.writeLock();
+        wl.lock();
+        int b = wl.getHoldCount();
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    @Test
+    public void isFair() {
+        ReentrantReadWriteLock l = new ReentrantReadWriteLock();
+        boolean b = l.isFair();
+    }
 
 
     //-----------------------------

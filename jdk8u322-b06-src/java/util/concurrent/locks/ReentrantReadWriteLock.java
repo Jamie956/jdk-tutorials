@@ -366,18 +366,18 @@ public class ReentrantReadWriteLock
          * condition wait and re-established in tryAcquire.
          */
 
-        protected final boolean tryRelease(int releases) { //重写父类AQS方法
+        protected final boolean tryRelease(int releases) { //重写父类AQS方法//尝试一次释放写锁
             if (!isHeldExclusively())
-                throw new IllegalMonitorStateException();
+                throw new IllegalMonitorStateException(); //当前线程非独占线程，抛异常
             int nextc = getState() - releases; //0-16位表示独占锁数目，可以直接减
             boolean free = exclusiveCount(nextc) == 0;
             if (free)
                 setExclusiveOwnerThread(null); //独占锁全部释放时，移除独占线程
             setState(nextc);//减持锁
-            return free;
+            return free; //是否释放全部写锁
         }
 
-        protected final boolean tryAcquire(int acquires) {
+        protected final boolean tryAcquire(int acquires) { //尝试一次抢独占锁
             /*
              * Walkthrough:
              * 1. If read count nonzero or write count nonzero
@@ -392,21 +392,21 @@ public class ReentrantReadWriteLock
             Thread current = Thread.currentThread();
             int c = getState();
             int w = exclusiveCount(c);
-            if (c != 0) { //state !=0 读锁或者写锁持有锁//写锁重入
+            if (c != 0) { //有线程持有读写锁
                 // (Note: if c != 0 and w == 0 then shared count != 0)
-                if (w == 0 || current != getExclusiveOwnerThread())//锁已经都释放了 或者 非独占线程
-                    return false;//读锁持有锁，而写锁没有持有锁
-                if (w + exclusiveCount(acquires) > MAX_COUNT)//原来的锁加上需要获取的锁已经超过最大值（16位全1）
+                if (w == 0 || current != getExclusiveOwnerThread()) //没有线程持有写锁，或者当前线程非独占线程
+                    return false; //获取失败
+                if (w + exclusiveCount(acquires) > MAX_COUNT) //原来的锁加上需要获取的锁已经超过持有锁的最大值
                     throw new Error("Maximum lock count exceeded");
                 // Reentrant acquire
-                setState(c + acquires);//写锁重入加持
-                return true;
-            }
-            if (writerShouldBlock() ||//非公平锁 false
-                !compareAndSetState(c, c + acquires))//state==0时，抢锁
-                return false;
-            setExclusiveOwnerThread(current);//设置独占线程
-            return true;
+                setState(c + acquires); //持有写锁的线程重入
+                return true; //重入，获取成功
+            } //以下 state==0
+            if (writerShouldBlock() || //非公平锁返回false
+                !compareAndSetState(c, c + acquires))
+                return false; //获取失败
+            setExclusiveOwnerThread(current); //当前线程设为独占线程
+            return true; //CAS成功，获取成功
         }
 
         protected final boolean tryReleaseShared(int unused) {
@@ -552,20 +552,20 @@ public class ReentrantReadWriteLock
          * This is identical in effect to tryAcquire except for lack
          * of calls to writerShouldBlock.
          */
-        final boolean tryWriteLock() {
+        final boolean tryWriteLock() { //尝试一次获取写锁
             Thread current = Thread.currentThread();
             int c = getState();
-            if (c != 0) {//写锁或者读锁持有锁
+            if (c != 0) { //有线程持有读写锁
                 int w = exclusiveCount(c);
                 if (w == 0 || current != getExclusiveOwnerThread())
-                    return false;//读锁占用着锁 或者非重入 fail
+                    return false; //有线程持有读锁 或者 当前线程非独占线程//获取写锁失败
                 if (w == MAX_COUNT)
                     throw new Error("Maximum lock count exceeded");
-            }
-            if (!compareAndSetState(c, c + 1))//一次CAS
-                return false;
-            setExclusiveOwnerThread(current);//独占线程
-            return true;
+            } //以下 c==0
+            if (!compareAndSetState(c, c + 1))
+                return false; //CAS 失败，获取写锁失败
+            setExclusiveOwnerThread(current); //CAS 成功，当前线程设为独占线程
+            return true; //成功获取写锁
         }
 
         /**
@@ -602,7 +602,7 @@ public class ReentrantReadWriteLock
             }
         }
 
-        protected final boolean isHeldExclusively() {
+        protected final boolean isHeldExclusively() { //当前线程是否是独占线程
             // While we must in general read state before owner,
             // we don't need to do so to check if current thread is owner
             return getExclusiveOwnerThread() == Thread.currentThread();
@@ -629,7 +629,7 @@ public class ReentrantReadWriteLock
             return exclusiveCount(getState()) != 0;
         }
 
-        final int getWriteHoldCount() {
+        final int getWriteHoldCount() { //持有写锁的线程个数
             return isHeldExclusively() ? exclusiveCount(getState()) : 0;
         }
 
@@ -1028,7 +1028,7 @@ public class ReentrantReadWriteLock
          * by the current thread; and {@code false} otherwise.
          */
         public boolean tryLock( ) {
-            return sync.tryWriteLock();
+            return sync.tryWriteLock(); //父类Sync 方法
         }
 
         /**
