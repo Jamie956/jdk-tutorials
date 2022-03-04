@@ -44,7 +44,7 @@ public class SelectionKeyImpl
     // Index for a pollfd array in Selector that this key is registered with
     private int index;
 
-    private volatile int interestOps;
+    private volatile int interestOps; //?
     private int readyOps;
 
     SelectionKeyImpl(SelChImpl ch, SelectorImpl sel) {
@@ -53,7 +53,7 @@ public class SelectionKeyImpl
     }
 
     public SelectableChannel channel() {
-        return (SelectableChannel)channel;
+        return (SelectableChannel)channel; //向上转型
     }
 
     public Selector selector() {

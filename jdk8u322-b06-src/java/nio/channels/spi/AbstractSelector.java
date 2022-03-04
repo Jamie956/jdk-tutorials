@@ -88,8 +88,8 @@ public abstract class AbstractSelector
     private final Set<SelectionKey> cancelledKeys = new HashSet<SelectionKey>();
 
     void cancel(SelectionKey k) {                       // package-private
-        synchronized (cancelledKeys) {
-            cancelledKeys.add(k);
+        synchronized (cancelledKeys) { //其他线程不能操作 cancelledKeys 对象
+            cancelledKeys.add(k); //把key 加到删除key 的集合
         }
     }
 

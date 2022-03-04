@@ -68,7 +68,7 @@ public abstract class AbstractSelectionKey
         // multiple times by different threads, which might cause race
         // condition between selector's select() and channel's close().
         synchronized (this) {
-            if (valid) {
+            if (valid) { //true 表示key 还没cancel
                 valid = false;
                 ((AbstractSelector)selector()).cancel(this);
             }

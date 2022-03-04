@@ -89,8 +89,8 @@ Debug and comments step
   - SocketChannel 注释
   - DatagramChannel
   - FileChannel 注释
-- Selector 当前
-- SelectionKey
+- Selector 注释
+- SelectionKey 注释
 
 
 # java8

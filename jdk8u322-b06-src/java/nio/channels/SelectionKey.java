@@ -157,7 +157,7 @@ public abstract class SelectionKey {
      * concurrently with a cancellation or selection operation involving the
      * same selector.  </p>
      */
-    public abstract void cancel();
+    public abstract void cancel(); //key 加入删除集合
 
 
     // -- Operation-set accessors --
@@ -384,7 +384,7 @@ public abstract class SelectionKey {
      * @return  The previously-attached object, if any,
      *          otherwise <tt>null</tt>
      */
-    public final Object attach(Object ob) {
+    public final Object attach(Object ob) { //参数ob 原子设置到变量 attachment
         return attachmentUpdater.getAndSet(this, ob);
     }
 
