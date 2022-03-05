@@ -47,7 +47,7 @@ Debug and comments step
     - LinkedBlockingQueue 注释
   - Lock
     - CountDownLatch 注释
-    - LockSupport
+    - LockSupport 注释
     - ReentrantLock 注释
     - ReentrantReadWriteLock 注释
     - Semaphore 注释
