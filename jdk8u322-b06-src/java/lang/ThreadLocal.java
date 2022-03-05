@@ -104,7 +104,7 @@ public class ThreadLocal<T> {
      * Returns the next hash code.
      */
     private static int nextHashCode() {
-        return nextHashCode.getAndAdd(HASH_INCREMENT);
+        return nextHashCode.getAndAdd(HASH_INCREMENT); //递增hash
     }
 
     /**
@@ -162,7 +162,7 @@ public class ThreadLocal<T> {
         Thread t = Thread.currentThread();
         ThreadLocalMap map = getMap(t);
         if (map != null) {
-            ThreadLocalMap.Entry e = map.getEntry(this);
+            ThreadLocalMap.Entry e = map.getEntry(this); //get value by ThreadLocal
             if (e != null) {
                 @SuppressWarnings("unchecked")
                 T result = (T)e.value;
@@ -326,7 +326,7 @@ public class ThreadLocal<T> {
          * entry can be expunged from table.  Such entries are referred to
          * as "stale entries" in the code that follows.
          */
-        static class Entry extends WeakReference<ThreadLocal<?>> {
+        static class Entry extends WeakReference<ThreadLocal<?>> { //泛型约定 ThreadLocal
             /** The value associated with this ThreadLocal. */
             Object value;
 
@@ -397,7 +397,7 @@ public class ThreadLocal<T> {
          *
          * @param parentMap the map associated with parent thread.
          */
-        private ThreadLocalMap(ThreadLocalMap parentMap) {
+        private ThreadLocalMap(ThreadLocalMap parentMap) { //parentMap 元素添加到 table
             Entry[] parentTable = parentMap.table;
             int len = parentTable.length;
             setThreshold(len);
@@ -489,7 +489,7 @@ public class ThreadLocal<T> {
                 ThreadLocal<?> k = e.get();
 
                 if (k == key) {
-                    e.value = value;
+                    e.value = value; //遍历table数组，找到匹配key(同一ThreadLocal 实例) 并更新value
                     return;
                 }
 
@@ -499,7 +499,7 @@ public class ThreadLocal<T> {
                 }
             }
 
-            tab[i] = new Entry(key, value);
+            tab[i] = new Entry(key, value); //key 不存在，实例化一个新节点
             int sz = ++size;
             if (!cleanSomeSlots(i, sz) && sz >= threshold)
                 rehash();

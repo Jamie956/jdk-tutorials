@@ -57,7 +57,6 @@ Debug and comments step
   - ForkJoinPool
   - FutureTask 注释
   - ThreadPoolExecutor 注释
-  - Timeunit
 - regex
 
 
@@ -124,7 +123,7 @@ Debug and comments step
     - RuntimeException 注释
       - NullPointerException 注释
   - Error 注释
-- ThreadLocal
+- ThreadLocal 注释
 - String 注释
 - Byte
 - Short
