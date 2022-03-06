@@ -628,7 +628,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
         Node<K,V>[] tab; Node<K,V> p; int n, i;//tab是节点数组；n是tab的长度；i是tab的索引；p是tab的元素；
         if ((tab = table) == null || (n = tab.length) == 0)
             n = (tab = resize()).length;//节点数组空，需要扩容
-        if ((p = tab[i = (n - 1) & hash]) == null)//hash 大小不能超过容量，所以 (n - 1) & hash 只保留低位hash
+        if ((p = tab[i = (n - 1) & hash]) == null)//hash 大小不能超过容量，所以 (n - 1) & hash 只保留低位hash//此处线程不安全，并发 == null，后来线程覆盖前面的
             tab[i] = newNode(hash, key, value, null);//实例化节点//tab[i] 元素为空，直接插入节点
         else {//节点元素不为空
             Node<K,V> e; K k;//k是节点key，e是要更新的节点
