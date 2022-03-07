@@ -112,19 +112,19 @@ public class ArrayList<E> extends AbstractList<E>
     /**
      * Default initial capacity.
      */
-    private static final int DEFAULT_CAPACITY = 10;
+    private static final int DEFAULT_CAPACITY = 10; //默认容量
 
     /**
      * Shared empty array instance used for empty instances.
      */
-    private static final Object[] EMPTY_ELEMENTDATA = {};
+    private static final Object[] EMPTY_ELEMENTDATA = {}; //非无参构造函数使用的空数组
 
     /**
      * Shared empty array instance used for default sized empty instances. We
      * distinguish this from EMPTY_ELEMENTDATA to know how much to inflate when
      * first element is added.
      */
-    private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
+    private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {}; //无参构造函数使用的空数组
 
     /**
      * The array buffer into which the elements of the ArrayList are stored.
@@ -132,14 +132,14 @@ public class ArrayList<E> extends AbstractList<E>
      * empty ArrayList with elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA
      * will be expanded to DEFAULT_CAPACITY when the first element is added.
      */
-    transient Object[] elementData; // non-private to simplify nested class access
+    transient Object[] elementData; // non-private to simplify nested class access //存储List元素的数组
 
     /**
      * The size of the ArrayList (the number of elements it contains).
      *
      * @serial
      */
-    private int size;
+    private int size; //数组元素个数
 
     /**
      * Constructs an empty list with the specified initial capacity.
@@ -163,7 +163,7 @@ public class ArrayList<E> extends AbstractList<E>
      * Constructs an empty list with an initial capacity of ten.
      */
     public ArrayList() {
-        this.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;//默认使用常量池静态空数组
+        this.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA; //唯一使用 DEFAULTCAPACITY_EMPTY_ELEMENTDATA 赋值的地方//默认使用常量池静态空数组
     }
 
     /**
@@ -210,7 +210,7 @@ public class ArrayList<E> extends AbstractList<E>
      * @param   minCapacity   the desired minimum capacity
      */
     public void ensureCapacity(int minCapacity) {
-        int minExpand = (elementData != DEFAULTCAPACITY_EMPTY_ELEMENTDATA)
+        int minExpand = (elementData != DEFAULTCAPACITY_EMPTY_ELEMENTDATA) //是否是非无参构造
             // any size if not default element table
             ? 0
             // larger than default for default empty table. It's already
@@ -222,9 +222,9 @@ public class ArrayList<E> extends AbstractList<E>
         }
     }
 
-    private static int calculateCapacity(Object[] elementData, int minCapacity) {//计算初始容量，容量至少为10
-        if (elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA) {
-            return Math.max(DEFAULT_CAPACITY, minCapacity);//数组为空，容量至少为10
+    private static int calculateCapacity(Object[] elementData, int minCapacity) { //计算初始容量
+        if (elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA) { //是否是无参构造
+            return Math.max(DEFAULT_CAPACITY, minCapacity); //无参构造List的容量至少为10
         }
         return minCapacity;
     }
@@ -280,7 +280,7 @@ public class ArrayList<E> extends AbstractList<E>
      *
      * @return the number of elements in this list
      */
-    public int size() {//数组元素个数
+    public int size() { //数组元素个数
         return size;
     }
 
@@ -289,7 +289,7 @@ public class ArrayList<E> extends AbstractList<E>
      *
      * @return <tt>true</tt> if this list contains no elements
      */
-    public boolean isEmpty() {//数组元素个数是否为0
+    public boolean isEmpty() { //数组元素个数是否为0
         return size == 0;
     }
 
@@ -313,15 +313,15 @@ public class ArrayList<E> extends AbstractList<E>
      * <tt>(o==null&nbsp;?&nbsp;get(i)==null&nbsp;:&nbsp;o.equals(get(i)))</tt>,
      * or -1 if there is no such index.
      */
-    public int indexOf(Object o) {
+    public int indexOf(Object o) { //返回数组元素中第一个与参数o匹配的元素位置
         if (o == null) {
             for (int i = 0; i < size; i++)
                 if (elementData[i]==null)
-                    return i; //返回匹配的第一个空元素的索引
+                    return i; //返回匹配的第一个空元素的位置
         } else {
-            for (int i = 0; i < size; i++)
-                if (o.equals(elementData[i]))
-                    return i; //遍历查找匹配参数对象的元素所在索引
+            for (int i = 0; i < size; i++) //遍历查找
+                if (o.equals(elementData[i])) //数组元素与参数o匹配
+                    return i; //返回匹配元素的位置
         }
         return -1;
     }
@@ -333,7 +333,7 @@ public class ArrayList<E> extends AbstractList<E>
      * <tt>(o==null&nbsp;?&nbsp;get(i)==null&nbsp;:&nbsp;o.equals(get(i)))</tt>,
      * or -1 if there is no such index.
      */
-    public int lastIndexOf(Object o) {
+    public int lastIndexOf(Object o) { //从数组末尾开始遍历，返回数组元素中第一个与参数o匹配的元素位置
         if (o == null) {
             for (int i = size-1; i >= 0; i--)
                 if (elementData[i]==null)
@@ -378,8 +378,8 @@ public class ArrayList<E> extends AbstractList<E>
      * @return an array containing all of the elements in this list in
      *         proper sequence
      */
-    public Object[] toArray() {
-        return Arrays.copyOf(elementData, size); //创建一个size大小数组，elementData复制到新数组
+    public Object[] toArray() { //复制 elementData[]
+        return Arrays.copyOf(elementData, size);
     }
 
     /**
@@ -407,11 +407,11 @@ public class ArrayList<E> extends AbstractList<E>
      * @throws NullPointerException if the specified array is null
      */
     @SuppressWarnings("unchecked")
-    public <T> T[] toArray(T[] a) { //将 elementData 存到参数数组
-        if (a.length < size) //参数数组放不下
+    public <T> T[] toArray(T[] a) { //将 elementData[] 放到参数数组a
+        if (a.length < size) //参数数组a放不下elementData[]
             // Make a new array of a's runtime type, but my contents:
             return (T[]) Arrays.copyOf(elementData, size, a.getClass());
-        System.arraycopy(elementData, 0, a, 0, size);//elementData复制到参数数组
+        System.arraycopy(elementData, 0, a, 0, size); //elementData[] 复制到参数数组a
         if (a.length > size)
             a[size] = null;
         return a;
@@ -431,8 +431,8 @@ public class ArrayList<E> extends AbstractList<E>
      * @return the element at the specified position in this list
      * @throws IndexOutOfBoundsException {@inheritDoc}
      */
-    public E get(int index) {
-        rangeCheck(index);//数组越界检查
+    public E get(int index) { //O(1) 根据参数索引位置index，获取数组该位置元素的值
+        rangeCheck(index); //数组越界检查
 
         return elementData(index);
     }
@@ -446,7 +446,7 @@ public class ArrayList<E> extends AbstractList<E>
      * @return the element previously at the specified position
      * @throws IndexOutOfBoundsException {@inheritDoc}
      */
-    public E set(int index, E element) {
+    public E set(int index, E element) { //O(1) 数组index位置的元素替换为参数element
         rangeCheck(index);
 
         E oldValue = elementData(index);
@@ -460,9 +460,9 @@ public class ArrayList<E> extends AbstractList<E>
      * @param e element to be appended to this list
      * @return <tt>true</tt> (as specified by {@link Collection#add})
      */
-    public boolean add(E e) {
+    public boolean add(E e) { //O(1) 参数e加到数组末尾
         ensureCapacityInternal(size + 1);  // Increments modCount!!
-        elementData[size++] = e;//数组末尾添加元素
+        elementData[size++] = e; //数组末尾添加元素
         return true;
     }
 
@@ -475,7 +475,7 @@ public class ArrayList<E> extends AbstractList<E>
      * @param element element to be inserted
      * @throws IndexOutOfBoundsException {@inheritDoc}
      */
-    public void add(int index, E element) {
+    public void add(int index, E element) { //O(n) 数组index之后的元素向右移1位，接着数组index位置插入参数element
         rangeCheckForAdd(index);
 
         ensureCapacityInternal(size + 1);  // Increments modCount!!
@@ -494,7 +494,7 @@ public class ArrayList<E> extends AbstractList<E>
      * @return the element that was removed from the list
      * @throws IndexOutOfBoundsException {@inheritDoc}
      */
-    public E remove(int index) {//数组复制，覆盖原来的元素
+    public E remove(int index) { //O(n) 数组index之后的元素向左移1位，释放末尾元素
         rangeCheck(index);
 
         modCount++;
@@ -522,7 +522,7 @@ public class ArrayList<E> extends AbstractList<E>
      * @param o element to be removed from this list, if present
      * @return <tt>true</tt> if this list contained the specified element
      */
-    public boolean remove(Object o) {
+    public boolean remove(Object o) { //O(n) 遍历查找与参数o匹配的元素的位置，删除这个位置的元素
         if (o == null) { //如果要删除的是null，会把全部null删除
             for (int index = 0; index < size; index++)
                 if (elementData[index] == null) {
@@ -543,7 +543,7 @@ public class ArrayList<E> extends AbstractList<E>
      * Private remove method that skips bounds checking and does not
      * return the value removed.
      */
-    private void fastRemove(int index) {//与remove(int index) 一致，除了没有越界检查和返回删除元素
+    private void fastRemove(int index) { //与remove(int index) 一致，除了没有越界检查和返回删除元素
         modCount++;
         int numMoved = size - index - 1;
         if (numMoved > 0)
@@ -556,7 +556,7 @@ public class ArrayList<E> extends AbstractList<E>
      * Removes all of the elements from this list.  The list will
      * be empty after this call returns.
      */
-    public void clear() {
+    public void clear() { //O(n) 遍历数组，释放全部元素
         modCount++;
 
         // clear to let GC do its work
@@ -579,8 +579,8 @@ public class ArrayList<E> extends AbstractList<E>
      * @return <tt>true</tt> if this list changed as a result of the call
      * @throws NullPointerException if the specified collection is null
      */
-    public boolean addAll(Collection<? extends E> c) {
-        Object[] a = c.toArray(); //参数集合转数组，由集合实现的toArray方法进行转换
+    public boolean addAll(Collection<? extends E> c) { //参数集合c 复制到 数组
+        Object[] a = c.toArray(); //参数集合c转数组，由集合实现的toArray方法进行转换
         int numNew = a.length;
         ensureCapacityInternal(size + numNew);  // Increments modCount
         System.arraycopy(a, 0, elementData, size, numNew); //a数组0位置开始，长度numNew的元素，复制到elementData数组，由size位置开始
@@ -603,7 +603,7 @@ public class ArrayList<E> extends AbstractList<E>
      * @throws IndexOutOfBoundsException {@inheritDoc}
      * @throws NullPointerException if the specified collection is null
      */
-    public boolean addAll(int index, Collection<? extends E> c) {
+    public boolean addAll(int index, Collection<? extends E> c) { //数组元素右移，参数集合c再复制到数组
         rangeCheckForAdd(index);
 
         Object[] a = c.toArray();
@@ -613,9 +613,9 @@ public class ArrayList<E> extends AbstractList<E>
         int numMoved = size - index; //需要移动的元素个数
         if (numMoved > 0)
             System.arraycopy(elementData, index, elementData, index + numNew,
-                             numMoved); //elementData先腾些空位出来
+                             numMoved); //elementData[]先腾些空位出来
 
-        System.arraycopy(a, 0, elementData, index, numNew);//参数集合的数组复制到空位
+        System.arraycopy(a, 0, elementData, index, numNew); //参数集合的数组复制到空位
         size += numNew;
         return numNew != 0;
     }
@@ -691,7 +691,7 @@ public class ArrayList<E> extends AbstractList<E>
      *         or if the specified collection is null
      * @see Collection#contains(Object)
      */
-    public boolean removeAll(Collection<?> c) {
+    public boolean removeAll(Collection<?> c) { //删除存在于参数集合c的数组元素
         Objects.requireNonNull(c);
         return batchRemove(c, false);
     }
@@ -712,7 +712,7 @@ public class ArrayList<E> extends AbstractList<E>
      *         or if the specified collection is null
      * @see Collection#contains(Object)
      */
-    public boolean retainAll(Collection<?> c) { //removeAll 的取反
+    public boolean retainAll(Collection<?> c) { //删除不存在于参数集合c的数组元素
         Objects.requireNonNull(c);
         return batchRemove(c, true); //elementData 元素存在于参数集合c的才保留
     }
@@ -722,9 +722,9 @@ public class ArrayList<E> extends AbstractList<E>
         int r = 0, w = 0; //w 表示后续元素需要移动的位数
         boolean modified = false;
         try {
-            for (; r < size; r++)
-                if (c.contains(elementData[r]) == complement) //complement false时，参数集合不包含elementData的元素
-                    elementData[w++] = elementData[r];//不包含的元素需要移动
+            for (; r < size; r++) //遍历 elementData[]
+                if (c.contains(elementData[r]) == complement) //数组元素是否存在于集合C
+                    elementData[w++] = elementData[r]; //覆盖前面的元素
         } finally {
             // Preserve behavioral compatibility with AbstractCollection,
             // even if c.contains() throws.

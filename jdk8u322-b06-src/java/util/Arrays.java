@@ -3205,13 +3205,13 @@ public class Arrays {
      *     an array of class <tt>newType</tt>
      * @since 1.6
      */
-    public static <T,U> T[] copyOf(U[] original, int newLength, Class<? extends T[]> newType) { //复制数组
+    public static <T,U> T[] copyOf(U[] original, int newLength, Class<? extends T[]> newType) { //创建一个数组，参数数组original复制到新数组
         @SuppressWarnings("unchecked")
         T[] copy = ((Object)newType == (Object)Object[].class)
-            ? (T[]) new Object[newLength]//数组类型，创建数组
-            : (T[]) Array.newInstance(newType.getComponentType(), newLength); //按类型创建数组
+            ? (T[]) new Object[newLength] //数组类型，创建数组
+            : (T[]) Array.newInstance(newType.getComponentType(), newLength);
         System.arraycopy(original, 0, copy, 0,
-                         Math.min(original.length, newLength)); //数组original复制到数组copy
+                         Math.min(original.length, newLength)); //original[]复制到copy[]
         return copy;
     }
 
