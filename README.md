@@ -37,6 +37,7 @@ Debug and comments step
 - Map
   - HashMap 注释
   - Treemap 注释
+  - Hashtable
 
 - concurrent
   - Collection
