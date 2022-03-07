@@ -93,4 +93,37 @@ public class CollectorTest {
 //        String s = JSON.toJSONString(collect);
     }
 
+
+
+//    /**
+//     * map排序
+//     */
+//    @Test
+//    public void mapOrder() {
+//        Map<String, Integer> wordCounts = new HashMap<>();
+//        wordCounts.put("USA", 100);
+//        wordCounts.put("jobs", 200);
+//        wordCounts.put("software", 50);
+//        wordCounts.put("technology", 70);
+//        wordCounts.put("opportunity", 200);
+//
+//        //升序
+//        Map<String, Integer> a = wordCounts.entrySet().stream()
+//                .sorted(Map.Entry.comparingByValue())
+//                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+//        //降序
+//        Map<String, Integer> b = wordCounts.entrySet().stream()
+//                .sorted((Map.Entry.<String, Integer>comparingByValue().reversed()))
+//                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+//        //升序
+//        Map<String, Integer> c = wordCounts.entrySet().stream()
+//                .sorted((e1, e2) -> e1.getValue().compareTo(e2.getValue()))
+//                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+//        //降序
+//        Map<String, Integer> d = wordCounts.entrySet().stream()
+//                .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
+//                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+//    }
+
+
 }

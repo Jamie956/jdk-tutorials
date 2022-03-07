@@ -59,7 +59,7 @@ Debug and comments step
   - FutureTask 注释
   - ThreadPoolExecutor 注释
 - regex
-
+- Stream 注释
 
 
 # java.io
@@ -94,8 +94,6 @@ Debug and comments step
 
 
 # java8
-
-- StreamSupport
 - FunctionalInterface
 - Optional
 
