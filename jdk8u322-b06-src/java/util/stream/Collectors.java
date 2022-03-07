@@ -226,7 +226,7 @@ public final class Collectors {
      * {@code List}, in encounter order
      */
     public static <T>
-    Collector<T, ?, List<T>> toList() {
+    Collector<T, ?, List<T>> toList() { //转List
         return new CollectorImpl<>((Supplier<List<T>>) ArrayList::new, List::add,
                                    (left, right) -> { left.addAll(right); return left; },
                                    CH_ID);

@@ -6,11 +6,51 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class CollectorTest {
-    private static class Node  {
+    @Test
+    public void toList() {
+        Stream<Integer> s = Stream.of(1, 4, 6, 8);
+        Collector<Integer, ?, List<Integer>> c = Collectors.toList();
+        List<Integer> a = s.collect(c);
+    }
+
+    @Test
+    public void toMap() {
+        Stream<Integer> s = Stream.of(1, 4, 6, 8);
+        Collector<Integer, ?, Map<Integer, Integer>> c = Collectors.toMap(i -> i, i -> i * 2);
+        Map<Integer, Integer> a = s.collect(c);
+    }
+
+
+
+
+    //---------------------------------
+
+
+    @Test
+    public void testCollect() {
+
+        //list stream 元素分组
+        Map<String, List<Integer>> groupCollector = Stream.of(numArray).collect(Collectors.groupingBy(i -> i > 5 ? "大于5" : "小于5"));
+        //list stream 元素join 连接成字符串
+        String c = Stream.of(strArray).collect(Collectors.joining());
+        String d = Stream.of(strArray).collect(Collectors.joining(","));
+        String e = Stream.of(strArray).collect(Collectors.joining(",", "{", "}"));
+
+        List<String> collect = list.stream().collect(Collectors.mapping(Node::getName, Collectors.toList()));
+    }
+
+
+
+
+
+
+
+        private static class Node  {
         private String theme ;
         private String type ;
         private String name ;
@@ -60,21 +100,6 @@ public class CollectorTest {
         list.add(new Node("opinion", "damage", "致财产损失"));
     }
 
-    @Test
-    public void testCollect() {
-        //list stream 输出转 集合
-        List<Integer> listCollector = Stream.of(numArray).collect(Collectors.toList());
-        //list stream 转map
-        Map<Integer, Integer> mapCollector = Stream.of(numArray).collect(Collectors.toMap(i -> i, i -> i * 2));
-        //list stream 元素分组
-        Map<String, List<Integer>> groupCollector = Stream.of(numArray).collect(Collectors.groupingBy(i -> i > 5 ? "大于5" : "小于5"));
-        //list stream 元素join 连接成字符串
-        String c = Stream.of(strArray).collect(Collectors.joining());
-        String d = Stream.of(strArray).collect(Collectors.joining(","));
-        String e = Stream.of(strArray).collect(Collectors.joining(",", "{", "}"));
-
-        List<String> collect = list.stream().collect(Collectors.mapping(Node::getName, Collectors.toList()));
-    }
 
     /**
      * 多条件分组
