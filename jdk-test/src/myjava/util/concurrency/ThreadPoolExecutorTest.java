@@ -316,14 +316,13 @@ public class ThreadPoolExecutorTest {
      * - blockingQueue 满了，并且 任务数>maxPoolSize，采取拒绝策略
      */
     public static void main(String[] args) {
-
+        poolInitTest();
     }
 
     /**
      * 任务数<核心线程数corePoolSize，新建一个线程执行当前任务
      */
-    public void poolInitTest() {
-        //初始化变量
+    public static void poolInitTest() {
         ThreadPoolExecutor pool = new ThreadPoolExecutor(2, 2,
                 0L, TimeUnit.MILLISECONDS,
                 new LinkedBlockingQueue<>());
@@ -338,7 +337,6 @@ public class ThreadPoolExecutorTest {
             }
         };
         //线程数size < 核心corePoolSize，新建一个线程执行当前任务
-        pool.execute(task);
         pool.execute(task);
         pool.shutdown();
     }

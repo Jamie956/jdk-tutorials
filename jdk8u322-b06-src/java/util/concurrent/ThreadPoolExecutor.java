@@ -378,21 +378,21 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
      * that workerCount is 0 (which sometimes entails a recheck -- see
      * below).
      */
-    private final AtomicInteger ctl = new AtomicInteger(ctlOf(RUNNING, 0));//-536870912: 1110 0000 0000 0000 0000 0000 0000 0000
-    private static final int COUNT_BITS = Integer.SIZE - 3;//29
-    private static final int CAPACITY   = (1 << COUNT_BITS) - 1;//低29位代表容量//536870911: 0000 0000 0000 0000 0000 0000 0000 0001 -> 0010 0000 0000 0000 0000 0000 0000 0000 -> 0001 1111 1111 1111 1111 1111 1111 1111
+    private final AtomicInteger ctl = new AtomicInteger(ctlOf(RUNNING, 0)); //表示workerCount和runState，32-30位 表示线程池状态，29-0位 表示worker数量
+    private static final int COUNT_BITS = Integer.SIZE - 3; //29
+    private static final int CAPACITY   = (1 << COUNT_BITS) - 1; //29-0位都是1，表示worker的最大数量 //0001 1111 1111 1111 1111 1111 1111 1111
 
-    // runState is stored in the high-order bits//高3位表示线程池状态
-    private static final int RUNNING    = -1 << COUNT_BITS;//-536870912: 1111 1111 1111 1111 1111 1111 1111 1111 -> 1110 0000 0000 0000 0000 0000 0000 0000
-    private static final int SHUTDOWN   =  0 << COUNT_BITS;//0 -> 0
-    private static final int STOP       =  1 << COUNT_BITS;//536870912:  0000 0000 0000 0000 0000 0000 0000 0001 -> 0010 0000 0000 0000 0000 0000 0000 0000
-    private static final int TIDYING    =  2 << COUNT_BITS;//1073741824: 0000 0000 0000 0000 0000 0000 0000 0010 -> 0100 0000 0000 0000 0000 0000 0000 0000
-    private static final int TERMINATED =  3 << COUNT_BITS;//1610612736: 0000 0000 0000 0000 0000 0000 0000 0011 -> 0110 0000 0000 0000 0000 0000 0000 0000
+    // runState is stored in the high-order bits //32-30位 表示线程池状态
+    private static final int RUNNING    = -1 << COUNT_BITS; //可接受新任务，可处理阻塞队列中的任务 //1110 0000 0000 0000 0000 0000 0000 0000
+    private static final int SHUTDOWN   =  0 << COUNT_BITS; //不接受新任务，但是可以处理阻塞队列中的任务 //0
+    private static final int STOP       =  1 << COUNT_BITS; //不接受新任务，不处理阻塞队列中的任务 //0010 0000 0000 0000 0000 0000 0000 0000
+    private static final int TIDYING    =  2 << COUNT_BITS; //所有任务都终止，工作线程也为0，关闭之前的状态 //0100 0000 0000 0000 0000 0000 0000 0000
+    private static final int TERMINATED =  3 << COUNT_BITS; //线程池已关闭 //0110 0000 0000 0000 0000 0000 0000 0000
 
     // Packing and unpacking ctl
-    private static int runStateOf(int c)     { return c & ~CAPACITY; }//截取高位，即线程池状态//c & 1110 0000 0000 0000 0000 0000 0000 0000//~取反
-    private static int workerCountOf(int c)  { return c & CAPACITY; }//截取低29位，即容量//c & 0001 1111 1111 1111 1111 1111 1111 1111
-    private static int ctlOf(int rs, int wc) { return rs | wc; }//合并高位状态和低位容量//rs:runState;wc:workerCount; (RUNNING, 0): 1110 0000 0000 0000 0000 0000 0000 0000 | 0
+    private static int runStateOf(int c)     { return c & ~CAPACITY; } //截取32-30位，获取线程池状态 //c & 1110 0000 0000 0000 0000 0000 0000 0000 //~取反
+    private static int workerCountOf(int c)  { return c & CAPACITY; } //截取29-0位，获取worker数量 //c & 0001 1111 1111 1111 1111 1111 1111 1111
+    private static int ctlOf(int rs, int wc) { return rs | wc; } //合并线程池状态和worker数量
 
     /*
      * Bit field accessors that don't require unpacking ctl.
@@ -898,25 +898,25 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
      * state).
      * @return true if successful
      */
-    private boolean addWorker(Runnable firstTask, boolean core) {//新增任务节点
+    private boolean addWorker(Runnable firstTask, boolean core) { //新增worker节点
         retry:
         for (;;) {
             int c = ctl.get();
-            int rs = runStateOf(c);
+            int rs = runStateOf(c); //线程池状态
 
             // Check if queue empty only if necessary.
-            if (rs >= SHUTDOWN &&//STOP, TIDYING, TERMINATED
+            if (rs >= SHUTDOWN && //STOP, TIDYING, TERMINATED
                 ! (rs == SHUTDOWN &&
                    firstTask == null &&
                    ! workQueue.isEmpty()))
                 return false;
 
-            for (;;) {//add work count
+            for (;;) { //add work count
                 int wc = workerCountOf(c);
                 if (wc >= CAPACITY ||
-                    wc >= (core ? corePoolSize : maximumPoolSize))//是否创建核心线程core
+                    wc >= (core ? corePoolSize : maximumPoolSize)) //是否创建核心线程core
                     return false;
-                if (compareAndIncrementWorkerCount(c))//任务数+1
+                if (compareAndIncrementWorkerCount(c)) //任务数+1
                     break retry;
                 c = ctl.get();  // Re-read ctl
                 if (runStateOf(c) != rs)
@@ -1363,8 +1363,8 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
          * and so reject the task.
          */
         int c = ctl.get();
-        if (workerCountOf(c) < corePoolSize) {//任务数小于核心线程
-            if (addWorker(command, true))//新增任务节点
+        if (workerCountOf(c) < corePoolSize) { //worker数小于核心线程
+            if (addWorker(command, true)) //新增worker节点
                 return;
             c = ctl.get();
         }
