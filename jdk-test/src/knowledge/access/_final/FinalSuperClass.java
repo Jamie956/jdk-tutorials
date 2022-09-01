@@ -2,6 +2,7 @@ package knowledge.access._final;
 
 import org.junit.Test;
 
+//all function default final
 public final class FinalSuperClass {
     int i = 1;
 

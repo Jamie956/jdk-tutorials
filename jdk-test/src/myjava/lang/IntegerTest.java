@@ -8,7 +8,7 @@ public class IntegerTest {
         int a = Integer.MIN_VALUE;
         int b = Integer.MAX_VALUE;
         Class<Integer> c = Integer.TYPE;
-        String d = Integer.toString(12, 1);
+        String d = Integer.toString(12, 2);
     }
 
     @Test

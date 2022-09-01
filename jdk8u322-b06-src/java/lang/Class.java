@@ -2322,7 +2322,7 @@ public final class Class<T> implements java.io.Serializable,
      * Return the Virtual Machine's Class object for the named
      * primitive type.
      */
-    static native Class<?> getPrimitiveClass(String name);
+    static native Class<?> getPrimitiveClass(String name);//虚拟机存储的基本数据类型
 
     /*
      * Check if client is allowed to access members.  If access is denied,

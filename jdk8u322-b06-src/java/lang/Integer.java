@@ -127,13 +127,13 @@ public final class Integer extends Number implements Comparable<Integer> {
      * @see     java.lang.Character#MAX_RADIX
      * @see     java.lang.Character#MIN_RADIX
      */
-    public static String toString(int i, int radix) {
+    public static String toString(int i, int radix) {//int 按进制转换成字符串
         if (radix < Character.MIN_RADIX || radix > Character.MAX_RADIX)
             radix = 10;
 
         /* Use the faster version */
         if (radix == 10) {
-            return toString(i); //
+            return toString(i); //10进制直接转字符串
         }
 
         char buf[] = new char[33];
