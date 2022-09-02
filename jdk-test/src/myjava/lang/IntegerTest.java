@@ -9,12 +9,13 @@ public class IntegerTest {
         int b = Integer.MAX_VALUE;
         Class<Integer> c = Integer.TYPE;
         String d = Integer.toString(12, 2);
+        String e = Integer.toString(-12, 2);
     }
 
     @Test
     public void toUnsignedString() {
-        String s = Integer.toUnsignedString(19, 6);
-        String a = Integer.toUnsignedString(-19, 10);
+        String s = Integer.toUnsignedString(12, 2);
+        String a = Integer.toUnsignedString(-12, 10);
     }
 
     @Test

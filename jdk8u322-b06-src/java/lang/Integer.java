@@ -1392,7 +1392,7 @@ public final class Integer extends Number implements Comparable<Integer> {
      *     is equal to zero.
      * @since 1.5
      */
-    public static int numberOfLeadingZeros(int i) { //计算二级制开头0的个数
+    public static int numberOfLeadingZeros(int i) { //计算二进制开头0的个数
         // HD, Figure 5-6
         if (i == 0)
             return 32;
