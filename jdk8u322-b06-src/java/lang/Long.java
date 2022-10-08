@@ -121,7 +121,7 @@ public final class Long extends Number implements Comparable<Long> {
         if (radix < Character.MIN_RADIX || radix > Character.MAX_RADIX)
             radix = 10;
         if (radix == 10)
-            return toString(i); //10进制的long 转字符串
+            return toString(i); //long(radix=10) to string
         char[] buf = new char[65];
         int charPos = 64;
         boolean negative = (i < 0);
@@ -169,7 +169,7 @@ public final class Long extends Number implements Comparable<Long> {
      * @see     #toString(long, int)
      * @since 1.8
      */
-    public static String toUnsignedString(long i, int radix) { //long 转字符串; radix 基数
+    public static String toUnsignedString(long i, int radix) { //
         if (i >= 0)
             return toString(i, radix);
         else {
@@ -394,7 +394,7 @@ public final class Long extends Number implements Comparable<Long> {
         if (i == Long.MIN_VALUE)
             return "-9223372036854775808";
         int size = (i < 0) ? stringSize(-i) + 1 : stringSize(i);
-        char[] buf = new char[size]; //按位数创建char数组
+        char[] buf = new char[size];
         getChars(i, size, buf);
         return new String(buf, true);
     }
@@ -426,7 +426,7 @@ public final class Long extends Number implements Comparable<Long> {
      *
      * Will fail if i == Long.MIN_VALUE
      */
-    static void getChars(long i, int index, char[] buf) { //long 写入char数组，核心方法
+    static void getChars(long i, int index, char[] buf) { //long写入char[]
         long q;
         int r;
         int charPos = index;
@@ -476,10 +476,10 @@ public final class Long extends Number implements Comparable<Long> {
     // Requires positive x
     static int stringSize(long x) { //计算long的位数
         long p = 10;
-        for (int i=1; i<19; i++) { //Math.pow(2,64) = 18446744073709552000 19位
-            if (x < p) //直到x 小于p, 4294967277 < 10000000000
-                return i; //i就是x的位数
-            p = 10*p; //每次p按10倍递增
+        for (int i=1; i<19; i++) { //long 最高19位
+            if (x < p)
+                return i;
+            p = 10*p;
         }
         return 19;
     }
