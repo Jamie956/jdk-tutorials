@@ -1,139 +1,111 @@
 
-# 快速开始
+# Quickly Start
 
-下载地址 open jdk：
-https://mirrors.tuna.tsinghua.edu.cn/AdoptOpenJDK/8/jdk/x64/windows/
+- down load open jdk：https://mirrors.tuna.tsinghua.edu.cn/AdoptOpenJDK/8/jdk/x64/windows/
 
-- [测试代码](https://github.com/Jamie956/jdk-src/tree/main/jdk-test)
-- [jdk1.8.0_231  src.zip 解压文件](https://github.com/Jamie956/jdk-src/tree/main/jdk8u231-src)
-- [jdk8u322-b06-src  src.zip 解压文件](https://github.com/Jamie956/jdk-src/tree/main/jdk8u322-b06-src)
+- jdk8u322-b06-src  src.zip unzip files: https://github.com/Jamie956/jdk-src/tree/main/jdk8u322-b06-src
 
+- Import project jdk-test
 
-
-Debug and comments step
-
-1. Import project jdk-test
-2. Modify IDEA SDKs settings, Sourcepath set as /path/to/jdk-src/src
+- Modify IDEA SDKs settings, Sourcepath set as /path/to/jdk-src/src
 
 
 
-# 策略
-1. 粗看一下源码，看类的变量、内部类、实现接口、继承类、核心方法
-2. 写API 测试方法
-3. 调试API 方法，源码写注释
+# Plan
+
+| Package                     | Class                  | Status      |
+| --------------------------- | ---------------------- | ----------- |
+| java.util                   | ArrayDequeue           | Done        |
+| java.util                   | ArrayList              | Done        |
+| java.util                   | HashSet                | Done        |
+| java.util                   | LinkedHashSet          | Done        |
+| java.util                   | LinkedList             | Done        |
+| java.util                   | PriorityQueue          | Done        |
+| java.util                   | TreeSet                | Done        |
+|                             |                        |             |
+| java.util                   | HashMap                | Done        |
+| java.util                   | Treemap                | Done        |
+| java.util                   | Hashtable              |             |
+|                             |                        |             |
+| java.util.concurrent        | ArrayBlockingQueue     | Done        |
+| java.util.concurrent        | ConcurrentHashMap      | Done        |
+| java.util.concurrent        | CopyOnWriteArrayList   | Done        |
+| java.util.concurrent        | CopyOnWriteArraySet    | Done        |
+| java.util.concurrent        | LinkedBlockingQueue    | Done        |
+| java.util.concurrent        | CountDownLatch         | Done        |
+| java.util.concurrent.locks  | LockSupport            | Done        |
+| java.util.concurrent.locks  | ReentrantLock          | Done        |
+| java.util.concurrent.locks  | ReentrantReadWriteLock | Done        |
+| java.util.concurrent        | Semaphore              | Done        |
+| java.util.concurrent        | CyclicBarrier          | Done        |
+| java.util.concurrent.atomic | AtomicInteger          | Done        |
+| java.util.concurrent        | ForkJoinPool           |             |
+| java.util.concurrent        | FutureTask             | Done        |
+| java.util.concurrent        | ThreadPoolExecutor     | Done        |
+|                             |                        |             |
+|                             |                        |             |
+|                             | Stream                 | Done        |
+|                             |                        |             |
+| java.io                     | ByteArrayInputStream   | Done        |
+| java.io                     | ByteArrayOutputStream  | Done        |
+| java.io                     | FileInputStream        | Done        |
+| java.io                     | FileOutputStream       | Done        |
+| java.io                     | InputStreamReader      | Done        |
+| java.io                     | OutputStreamWriter     | Done        |
+|                             |                        |             |
+| java.nio                    | HeapByteBuffer         | Done        |
+| java.nio                    | ByteBuffer             |             |
+| java.nio                    | CharBuffer             |             |
+| java.nio                    | DoubleBuffer           |             |
+| java.nio                    | FloatBuffer            |             |
+| java.nio                    | IntBuffer              |             |
+| java.nio                    | LongBuffer             |             |
+| java.nio                    | ShortBuffer            |             |
+|                             |                        |             |
+| java.nio.channels           | ServerSocketChannel    | Done        |
+| java.nio.channels           | SocketChannel          | Done        |
+| java.nio.channels           | DatagramChannel        |             |
+| java.nio.channels           | FileChannel            | Done        |
+|                             |                        |             |
+| java.nio.channels           | Selector               | Done        |
+| java.nio.channels           | SelectionKey           | Done        |
+|                             |                        |             |
+| java.net                    | URL                    | Done        |
+| java.net                    | HttpURLConnection      | Done        |
+| java.net                    | ServerSocket           | Done        |
+| java.net                    | Socket                 | In progress |
+| java.net                    | URI                    |             |
+|                             |                        |             |
+| java.lang                   | Method                 |             |
+| java.lang                   | Proxy                  |             |
+| java.lang                   | InvocationHandler      |             |
+|                             |                        |             |
+| java.lang                   | Thread                 | Done        |
+|                             |                        |             |
+| java.lang                   | Throwable              | Done        |
+| java.lang                   | Exception              | Done        |
+| java.lang                   | IOException            | Done        |
+| java.lang                   | RuntimeException       | Done        |
+| java.lang                   | NullPointerException   | Done        |
+| java.lang                   | Error                  | Done        |
+| java.lang                   | ThreadLocal            | Done        |
+|                             |                        |             |
+| java.lang                   | String                 | Done        |
+| java.lang                   | Byte                   |             |
+| java.lang                   | Short                  |             |
+| java.lang                   | Integer                | Done        |
+| java.lang                   | Byte                   |             |
+| java.lang                   | Short                  |             |
+| java.lang                   | Integer                |             |
+| java.lang                   | Long                   |             |
+| java.lang                   | Float                  |             |
+| java.lang                   | Double                 |             |
+| java.lang                   | Char                   |             |
+| java.lang                   | Boolean                |             |
+| java.lang                   | StringBuilder          | Done        |
+| java.lang                   | StringBuffer           | Done        |
 
 
-
-# java.util
-
-- Collection
-  - ArrayDequeue 注释
-  - ArrayList 注释
-  - HashSet 注释
-  - LinkedHashSet 注释
-  - LinkedList 注释
-  - PriorityQueue 注释
-  - TreeSet 注释
-- Map
-  - HashMap 注释
-  - Treemap 注释
-  - Hashtable
-
-- concurrent
-  - Collection
-    - ArrayBlokingQueue 注释
-    - ConcurrentHashMap 注释
-    - CopyOnWriteArrayList 注释
-    - CopyOnWriteArraySet 注释
-    - LinkedBlockingQueue 注释
-  - Lock
-    - CountDownLatch 注释
-    - LockSupport 注释
-    - ReentrantLock 注释
-    - ReentrantReadWriteLock 注释
-    - Semaphore 注释
-    - CyclicBarrier 注释
-  - Atomic
-    - AtomicInteger 注释
-  - ForkJoinPool
-  - FutureTask 注释
-  - ThreadPoolExecutor 注释
-- regex
-- Stream 注释
-
-
-# java.io
-
-- ByteArrayInputStream 注释
-- ByteArrayOutputStream 注释
-- FileInputStream 注释
-- FileOutputStream 注释
-- InputStreamReader 注释
-- OutputStreamWriter 注释
-
-
-
-# java.nio
-
-- Buffer
-  - HeapByteBuffer 注释
-  - ByteBuffer
-  - CharBuffer
-  - DoubleBuffer
-  - FloatBuffer
-  - IntBuffer
-  - LongBuffer
-  - ShortBuffer
-- channels
-  - ServerSocketChannel 注释
-  - SocketChannel 注释
-  - DatagramChannel
-  - FileChannel 注释
-- Selector 注释
-- SelectionKey 注释
-
-
-# java8
-- FunctionalInterface
-- Optional
-
-
-
-# java.net/sun.net
-
-- URL 注释
-- HttpURLConnection 注释
-- ServerSocket 注释
-- Socket 未完
-- URI
-
-
-
-# java.lang
-
-- reflect
-  - Method
-  - Proxy
-  - InvocationHandler
-- Thread 注释
-- Throwable 注释
-  - Exception 注释
-    - IOException 注释
-    - RuntimeException 注释
-      - NullPointerException 注释
-  - Error 注释
-- ThreadLocal 注释
-- String 注释
-- Byte
-- Short
-- Integer 注释
-- Long
-- Float
-- Double
-- Char
-- Boolean
-- StringBuilder 注释
-- StringBuffer 注释
 
 
 
